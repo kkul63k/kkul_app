@@ -4,6 +4,13 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>꿀단지 자산관리</title>
+  <!-- 웹앱 설정: 홈 화면 바로가기를 주소창 없이 열기 -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="theme-color" content="#3B8579">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Flatpickr CSS -->
   <link rel="stylesheet" href="./꿀단지_자산관리_v1_04_files/flatpickr.min.css">
   <style>
@@ -7250,11 +7257,12 @@ textarea.add-product-input[data-filled="true"] {
         </div>
       </div>
 
-      <!-- 안내문구 설정 (메인 공지 티커 첫 줄) -->
+      <!-- 안내문구 설정 (메인 공지 티커 1줄·2줄) -->
       <div style="margin-bottom: 32px;">
         <div class="group-header">안내문구</div>
         <div class="summary-card" style="display: flex; flex-direction: column; gap: 12px;">
-          <input type="text" id="tickerNoticeInput" class="form-input" maxlength="100" placeholder="메인 공지 첫 줄에 표시할 문구를 입력하세요" style="width: 100%;">
+          <input type="text" id="tickerNoticeInput" class="form-input" maxlength="100" placeholder="메인 공지 1줄에 표시할 문구를 입력하세요" style="width: 100%;">
+          <input type="text" id="tickerNoticeInput2" class="form-input" maxlength="100" placeholder="메인 공지 2줄에 표시할 문구를 입력하세요" style="width: 100%;">
           <div style="display: flex; justify-content: center;"><button type="button" class="honeypot-button-save" onclick="saveTickerNotice()">적용</button></div>
         </div>
       </div>
@@ -20065,14 +20073,24 @@ function getTickerNoticeText() {
 function escapeTickerHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+function getTickerNoticeText2() {
+  try { return String(localStorage.getItem('tickerNoticeText2') || '').trim(); } catch (e) { return ''; }
+}
 function loadTickerNoticeInput() {
   const el = document.getElementById('tickerNoticeInput');
   if (el) el.value = getTickerNoticeText();
+  const el2 = document.getElementById('tickerNoticeInput2');
+  if (el2) el2.value = getTickerNoticeText2();
 }
 function saveTickerNotice() {
   const el = document.getElementById('tickerNoticeInput');
+  const el2 = document.getElementById('tickerNoticeInput2');
   const text = el ? el.value.trim() : '';
-  try { localStorage.setItem('tickerNoticeText', text); } catch (e) { console.warn('안내문구 저장 실패', e); }
+  const text2 = el2 ? el2.value.trim() : '';
+  try {
+    localStorage.setItem('tickerNoticeText', text);
+    localStorage.setItem('tickerNoticeText2', text2);
+  } catch (e) { console.warn('안내문구 저장 실패', e); }
   renderAnnouncementTicker();
   alert('안내 문구가 적용되었습니다.');
 }
@@ -20162,75 +20180,6 @@ function startIndexPolling() {
   indexPollTimer = setInterval(loadIndexQuotes, 300000);
 }
 
-// 뉴스 순환 표시: 시트 kkul_news 탭 (제목 / 기사 링크 / 분류) - 현재 사용 안 함
-let newsItems = null;
-let newsRotateTimer = null;
-let newsRotatePos = 0;
-let newsPollTimer = null;
-
-function loadNewsItems() {
-  const cbName = '__newsCb' + Date.now();
-  const script = document.createElement('script');
-  const cleanup = function () {
-    clearTimeout(timer);
-    delete window[cbName];
-    if (script.parentNode) script.parentNode.removeChild(script);
-  };
-  const timer = setTimeout(function () { cleanup(); renderNewsTickerLine(); }, 15000);
-  window[cbName] = function (resp) {
-    try {
-      const rows = (resp && resp.table && resp.table.rows) || [];
-      newsItems = rows.map(function (r) {
-        const c = r.c || [];
-        return {
-          title: String((c[0] && c[0].v) || '').trim(),
-          link: String((c[1] && c[1].v) || '').trim(),
-          cat: String((c[2] && c[2].v) || '').trim()
-        };
-      }).filter(function (n) { return n.title; });
-    } catch (e) {
-      console.warn('뉴스 해석 실패', e);
-    }
-    cleanup();
-    renderNewsTickerLine();
-  };
-  script.onerror = function () { cleanup(); renderNewsTickerLine(); };
-  script.src = 'https://docs.google.com/spreadsheets/d/1HQmgTeb-1oXXFe_67rg0Q5nUSzKC-XA0hcZnFFfY2DA/gviz/tq?tqx=responseHandler:' + cbName + '&sheet=kkul_news';
-  document.body.appendChild(script);
-}
-
-function renderNewsTickerLine() {
-  const el = document.getElementById('newsTickerLine');
-  if (!el) return;
-  if (newsRotateTimer) { clearInterval(newsRotateTimer); newsRotateTimer = null; }
-  if (!newsItems) {
-    el.innerHTML = '<span style="font-size: 12px; color: #888888;">뉴스 불러오는 중</span>';
-    return;
-  }
-  if (newsItems.length === 0) {
-    el.innerHTML = '<span style="font-size: 12px; color: #888888;">뉴스 없음</span>';
-    return;
-  }
-  const showNews = function () {
-    const n = newsItems[newsRotatePos % newsItems.length];
-    const label = (n.cat ? '[' + escapeTickerHtml(n.cat) + '] ' : '') + escapeTickerHtml(n.title);
-    const style = 'display: block; flex: 1; min-width: 0; font-size: 12px; font-weight: 600; color: var(--color-gray-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none;';
-    if (/^https?:\/\//.test(n.link)) {
-      el.innerHTML = '<a href="' + escapeTickerHtml(n.link) + '" target="_blank" rel="noopener noreferrer" style="' + style + '">' + label + '</a>';
-    } else {
-      el.innerHTML = '<span style="' + style + '">' + label + '</span>';
-    }
-    newsRotatePos++;
-  };
-  showNews();
-  if (newsItems.length > 1) newsRotateTimer = setInterval(showNews, 4000);
-}
-
-function startNewsPolling() {
-  loadNewsItems();
-  newsPollTimer = setInterval(loadNewsItems, 300000);
-}
-
 function renderAnnouncementTicker() {
   const container = document.getElementById('announcementTickerContainer');
   if (!container || announcementData.length === 0) return;
@@ -20238,6 +20187,7 @@ function renderAnnouncementTicker() {
   container.innerHTML = '';
 
   const noticeText = getTickerNoticeText();
+  const noticeText2 = getTickerNoticeText2();
   const newsItem = announcementData[0];
   const titleStyle = 'font-size: 12px; font-weight: 600; color: var(--color-gray-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
   const lineStyle = function (isLast) {
@@ -20249,6 +20199,12 @@ function renderAnnouncementTicker() {
   line1.style.cssText = lineStyle(false);
   line1.innerHTML = '<div style="flex: 1; min-width: 0;"><div style="' + titleStyle + '">' + (noticeText ? escapeTickerHtml(noticeText) : '&nbsp;') + '</div></div>';
   container.appendChild(line1);
+
+  // 2줄: 안내 문구 (기본설정 2줄 입력)
+  const line2 = document.createElement('div');
+  line2.style.cssText = lineStyle(false);
+  line2.innerHTML = '<div style="flex: 1; min-width: 0;"><div style="' + titleStyle + '">' + (noticeText2 ? escapeTickerHtml(noticeText2) : '&nbsp;') + '</div></div>';
+  container.appendChild(line2);
 
   // 3줄: 지수 순환 (3초마다 전환)
   const line3 = document.createElement('div');
@@ -21208,6 +21164,8 @@ function renderProductsList() {
     let totalSavingsCount = 0, totalDepositCount = 0, totalGeneralCount = 0, totalLowRateCount = 0;
     let totalInvestment = 0, totalGeneralInvestment = 0, totalLowRateInvestment = 0;
     let totalCurrentDeposit = 0, totalGeneralCurrentDeposit = 0, totalLowRateCurrentDeposit = 0;
+    // 현재 납입 3항목 표시용: 만기 지난 상품 제외 (만기상품 보기 체크와 무관)
+    let totalLiveCurrentDeposit = 0, totalLiveGeneralCurrentDeposit = 0, totalLiveLowRateCurrentDeposit = 0;
     let totalBeforeTaxInterest = 0, totalGeneralBeforeTaxInterest = 0, totalLowRateBeforeTaxInterest = 0;
     let totalAfterTaxInterest = 0, totalGeneralAfterTaxInterest = 0, totalLowRateAfterTaxInterest = 0;
     let totalTax = 0, totalGeneralTax = 0, totalLowRateTax = 0;  // ✅ 세금공제액 변수 추가
@@ -21316,6 +21274,7 @@ function renderProductsList() {
           savingsCount: 0, depositCount: 0, generalCount: 0, lowRateCount: 0,
           investment: 0, generalInvestment: 0, lowRateInvestment: 0,
           currentDeposit: 0, generalCurrentDeposit: 0, lowRateCurrentDeposit: 0,
+          liveCurrentDeposit: 0, liveGeneralCurrentDeposit: 0, liveLowRateCurrentDeposit: 0,  // 만기 지난 상품 제외 (표시용)
           beforeTaxInterest: 0, generalBeforeTaxInterest: 0, lowRateBeforeTaxInterest: 0,
           afterTaxInterest: 0, generalAfterTaxInterest: 0, lowRateAfterTaxInterest: 0,
           tax: 0, generalTax: 0, lowRateTax: 0,  // ✅ 세금공제액 필드 추가
@@ -21479,6 +21438,18 @@ function renderProductsList() {
       // 총합 계산
       groupedProducts[group].investment += investmentAmount;
       groupedProducts[group].currentDeposit += currentDepositAmount;
+      // 현재 납입 3항목(표시용): 만기 지난 상품은 합산하지 않음 (보기 체크와 무관)
+      if (!isEndedForTotals(product)) {
+        groupedProducts[group].liveCurrentDeposit += currentDepositAmount;
+        totalLiveCurrentDeposit += currentDepositAmount;
+        if (taxRate === '일반') {
+          groupedProducts[group].liveGeneralCurrentDeposit += currentDepositAmount;
+          totalLiveGeneralCurrentDeposit += currentDepositAmount;
+        } else if (taxRate === '저율') {
+          groupedProducts[group].liveLowRateCurrentDeposit += currentDepositAmount;
+          totalLiveLowRateCurrentDeposit += currentDepositAmount;
+        }
+      }
       groupedProducts[group].beforeTaxInterest += beforeTaxInterestAmount;
       groupedProducts[group].afterTaxInterest += afterTaxInterestAmount;
       groupedProducts[group].tax += taxAmount;  // ✅ 그룹별 총세금공제 계산
@@ -21603,19 +21574,19 @@ function renderProductsList() {
           <!-- 현재총납입액 -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
             <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">현재총납입액</span>
-            <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">${formatNumber(totalCurrentDeposit)}</span>
+            <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">${formatNumber(totalLiveCurrentDeposit)}</span>
           </div>
 
           <!-- 현재일반납입액 -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
             <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">현재일반납입액</span>
-            <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(totalGeneralCurrentDeposit)}</span>
+            <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(totalLiveGeneralCurrentDeposit)}</span>
           </div>
 
           <!-- 현재저율납입액 -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
             <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">현재저율납입액</span>
-            <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(totalLowRateCurrentDeposit)}</span>
+            <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(totalLiveLowRateCurrentDeposit)}</span>
           </div>
 
           <!-- 수평 구분선 -->
@@ -21778,19 +21749,19 @@ function renderProductsList() {
             <!-- 현재총납입액 -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
               <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">현재총납입액</span>
-              <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">${formatNumber(data.currentDeposit)}</span>
+              <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">${formatNumber(data.liveCurrentDeposit)}</span>
             </div>
 
             <!-- 현재일반납입액 -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
               <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">현재일반납입액</span>
-              <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(data.generalCurrentDeposit)}</span>
+              <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(data.liveGeneralCurrentDeposit)}</span>
             </div>
 
             <!-- 현재저율납입액 -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
               <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">현재저율납입액</span>
-              <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(data.lowRateCurrentDeposit)}</span>
+              <span style="font-size: 14px; font-weight: 400; color: #1A1A1A;">${formatNumber(data.liveLowRateCurrentDeposit)}</span>
             </div>
 
             <!-- 수평 구분선 -->
