@@ -5295,13 +5295,16 @@ textarea.add-product-input[data-filled="true"] {
           <span style="font-size: 17px; font-weight: 700; color: #00A8A8; white-space: nowrap;">공휴일관리<span style="font-size: 16px;">(등록/삭제)</span></span>
         </div></div>
         <div>
-      <div style="font-size: 12px; font-weight: 500; color: #000000; margin: 8px 0;">📢 토·일과 매년 일자가 동일한 고정 공휴일은 자동 반영됩니다.</div>
+      <div style="font-size: 12px; font-weight: 500; color: #000000; margin: 8px 0;">📢 토·일과 매년 일자가 동일한 고정 공휴일은 자동 반영됩니다.(MM-DD로 입력)</div>
       <div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:10px 12px; margin-top:0;">
       <div id="cfSolarList" style="color: #E60012; font-size: 14px; font-weight: 500; line-height: 1.8; margin-bottom: 8px;"><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-01-01 신정</span><button type="button" class="badge" onclick="cfDelSolar(&#39;0101&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-03-01 삼일절</span><button type="button" class="badge" onclick="cfDelSolar(&#39;0301&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-05-05 어린이날</span><button type="button" class="badge" onclick="cfDelSolar(&#39;0505&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-06-06 현충일</span><button type="button" class="badge" onclick="cfDelSolar(&#39;0606&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-07-17 제헌절</span><button type="button" class="badge" onclick="cfDelSolar(&#39;0717&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-08-15 광복절</span><button type="button" class="badge" onclick="cfDelSolar(&#39;0815&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-10-03 개천절</span><button type="button" class="badge" onclick="cfDelSolar(&#39;1003&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-10-09 한글날</span><button type="button" class="badge" onclick="cfDelSolar(&#39;1009&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span>2026-12-25 성탄절</span><button type="button" class="badge" onclick="cfDelSolar(&#39;1225&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div></div>
-      <div style="display: flex; gap: 8px; align-items: center;">
-        <input class="form-input" id="cfSolarMd" inputmode="numeric" placeholder="예) 07-17" style="flex: 1; font-size: 15px; height: 36px;">
-        <input class="form-input" id="cfSolarName" placeholder="예) 제헌절" style="flex: 1; font-size: 15px; height: 36px;">
-        <button class="honeypot-button-save" onclick="cfAddSolar()" style="width: auto; height: 28px; padding: 0 10px; font-size: 12px;">추가</button>
+      <style>.cf-hol-input::placeholder { font-size: 13px; }</style>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <input class="form-input cf-hol-input" id="cfSolarMd" inputmode="numeric" placeholder="예) 07-17" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; font-size: 15px; height: 35px; padding-left: 6px; padding-right: 6px;">
+        <input class="form-input cf-hol-input" id="cfSolarName" placeholder="예) 제헌절" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; font-size: 15px; height: 35px; padding-left: 6px; padding-right: 6px;">
+      </div>
+      <div style="display: flex; justify-content: center; margin-top: 6px;">
+        <button class="honeypot-button-save" onclick="cfAddSolar()">추가</button>
       </div>
       </div>
         </div>
@@ -5315,10 +5318,12 @@ textarea.add-product-input[data-filled="true"] {
       <div style="font-size: 12px; font-weight: 500; color: #000000; margin: 8px 0;">📢 설·추석·부처님오신날·대체공휴일처럼 매년 바뀌는 날은 한 줄에 하나씩 'YYYY-MM-DD' '이름' 형식으로 입력하세요.<br>예) 2027-09-14 추석연휴, 2027-09-15 추석, 2027-09-16 추석연휴, 등으로 추가입력</div>
       <div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:2px 5px 10px 5px; margin-top:0;">
       <div id="cfHolidayList" style="height: 40vh; overflow-y: auto; border: none; background-color: transparent; padding: 0; box-sizing: border-box;"><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-02-16 설날 연휴</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-02-16&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-02-17 설날</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-02-17&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-02-18 설날 연휴</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-02-18&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-03-02 삼일절 대체공휴일</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-03-02&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-05-24 부처님오신날</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-05-24&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-05-25 부처님오신날 대체공휴일</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-05-25&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-08-17 광복절 대체공휴일</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-08-17&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-09-24 추석 연휴</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-09-24&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-09-25 추석</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-09-25&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-09-26 추석 연휴</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-09-26&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div><div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:1px 0;"><span style="color:#E60012; font-size:14px; font-weight:400; line-height:1.6;">2026-10-05 개천절 대체공휴일</span><button type="button" class="badge" onclick="cfDelHoliday(&#39;2026-10-05&#39;)" style="width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button></div></div>
-      <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
-        <div style="flex: 1 1 0; min-width: 0;"><input class="form-input" type="date" id="cfHolDate" style="width: 100%; box-sizing: border-box; font-size: 15px; height: 36px;"></div>
-        <div style="flex: 1 1 0; min-width: 0;"><input class="form-input" id="cfHolName" placeholder="예) 임시공휴일" style="width: 100%; box-sizing: border-box; font-size: 15px; height: 36px;"></div>
-        <button class="honeypot-button-save" onclick="cfAddHolidayLine()" style="width: auto; height: 28px; padding: 0 10px; font-size: 12px;">추가</button>
+      <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <input class="form-input cf-hol-input" id="cfHolDate" placeholder="예) YYYY-MM-DD" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; font-size: 15px; height: 35px; padding-left: 6px; padding-right: 6px;">
+          <input class="form-input cf-hol-input" id="cfHolName" placeholder="예) 임시공휴일" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; font-size: 15px; height: 35px; padding-left: 6px; padding-right: 6px;">
+        </div>
+        <button class="honeypot-button-save" onclick="cfAddHolidayLine()" style="align-self: center;">추가</button>
       </div>
       </div>
         </div>
@@ -7849,7 +7854,7 @@ function cfShowRedToast(msg) {
 function cfAddHolidayLine() {
   const date = document.getElementById('cfHolDate').value;
   const name = document.getElementById('cfHolName').value.trim();
-  if (!date) return cfWarn('날짜를 선택하세요.');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return cfWarn('날짜를 YYYY-MM-DD 형식으로 입력하세요.\n예) 2027-03-07');
   if (!name) return cfWarn('명칭을 입력하세요. 예) 임시공휴일');
   const d = cfLoad();
   d.holidays = d.holidays.filter(h => String(h).slice(0, 10) !== date);
@@ -9205,6 +9210,13 @@ function showNotification(message, duration = 2000, type = 'default', buttonElem
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   `;
+  // 줄바꿈(\n)이 들어간 안내창만 두 줄로 표시하고 폭을 줄임
+  if (String(message).includes('\n')) {
+    toast.style.whiteSpace = 'pre';
+    toast.style.width = 'max-content';
+    toast.style.maxWidth = 'calc(100vw - 32px)';
+    toast.style.padding = '12px 12px';
+  }
 
   document.body.appendChild(toast);
 
@@ -24117,6 +24129,18 @@ function loadMenuData() {
           localStorage.setItem('cashflowMainMenuV1', '1');
         }
       } catch (e) { console.warn('유동자금관리 메뉴 분리 실패:', e); }
+      // 유동자금관리를 메뉴 맨 위로 (1회): 저장된 순서가 달라도 맨 위에 오도록 한 번만 옮긴다
+      try {
+        if (localStorage.getItem('cashflowTopV1') !== '1' && Array.isArray(menuStructure)) {
+          const cfIdx = menuStructure.findIndex(m => m.id === 'cashflow-management');
+          if (cfIdx > 0) {
+            const cfItem = menuStructure.splice(cfIdx, 1)[0];
+            menuStructure.unshift(cfItem);
+            localStorage.setItem('menuStructure', JSON.stringify(menuStructure));
+          }
+          localStorage.setItem('cashflowTopV1', '1');
+        }
+      } catch (e) { console.warn('유동자금관리 맨 위 이동 실패:', e); }
       // 항목관리 서브메뉴 1회 추가: 유동자금관리 > 유동자금일정 아래
       try {
         if (localStorage.getItem('cashflowItemsMenuV1') !== '1' && Array.isArray(menuStructure)) {
