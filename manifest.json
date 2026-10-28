@@ -1,6 +1,6 @@
 {
-  "name": "꿀단지 자산관리",
-  "short_name": "꿀단지",
+  "name": "kkul_app_inventory",
+  "short_name": "kkul_app_inventory",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
