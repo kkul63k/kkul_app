@@ -3307,7 +3307,7 @@ textarea.add-product-input[data-filled="true"] {
                 const mKey = Object.keys(row).find(function (k) { return k.trim() === 'merchant'; });
                 const merchant = mKey ? String(row[mKey] || '') : '';
                 const body = String(row.body || '');
-                const dm = body.match(/(\d{1,2})\/(\d{1,2})\s+(\d{1,2}:\d{2})/);
+                const dm = body.match(/(\d{1,2})\/(\d{1,2})(?:\s+(\d{1,2}:\d{2}))?/);
                 // 본문에 "취소"가 있으면 취소 건: 금액 부호와 관계없이 음수로 저장해 합계에서 빠지게 한다
                 const amt = /취소/.test(body) ? -Math.abs(Number(row.amount) || 0) : (Number(row.amount) || 0);
                 const hit = matchCardBySms(body, loadCardRegistry().filter(function (c) { return !c.deleted; }));
@@ -3319,7 +3319,7 @@ textarea.add-product-input[data-filled="true"] {
                   saveCardUsageRaw(usage);
                 } else {
                   // 카드를 찾지 못한 건만 미분류에 둔다
-                  list.push({ key: key, date: dm ? dm[1] + '/' + dm[2] + ' ' + dm[3] : '', amount: amt, merchant: merchant, cardMask: body });
+                  list.push({ key: key, date: dm ? dm[1] + '/' + dm[2] + (dm[3] ? ' ' + dm[3] : '') : '', amount: amt, merchant: merchant, cardMask: body });
                 }
                 seen.push(key);
                 added++;
@@ -3490,10 +3490,12 @@ textarea.add-product-input[data-filled="true"] {
           const groups = {};
           list.forEach(function (r) {
             const d = String(r.date || '');
-            const key = d.slice(0, 7);
+            // 날짜가 없는 내역은 저장된 시각(createdAt)의 월에 넣고, 날짜 칸에는 '날짜없음'으로 표시한다
+            const monthSrc = /^\d{4}-\d{2}/.test(d) ? d : String(r.createdAt || '');
+            const key = monthSrc.slice(0, 7);
             if (!/^\d{4}-\d{2}$/.test(key)) return;
             (groups[key] = groups[key] || []).push({
-              date: d.slice(5, 10),
+              date: /^\d{4}-\d{2}-\d{2}$/.test(d) ? d.slice(5, 10) : '날짜없음',
               amount: Math.round(Number(r.amount) || 0),
               merchant: String(r.merchant || ''),
               id: r.id,
