@@ -5163,14 +5163,15 @@ textarea.add-product-input[data-filled="true"] {
         #cfTable td.sat { color: #E60012; }
         #cfTable thead th { color: #000000; font-weight: 700; }
         #cfTable thead th:nth-child(3) { color: #007BFF; }
-        #cfTable thead th:nth-child(4) { color: #E60012; }
+        #cfTable thead th:nth-child(5) { color: #E60012; }
         #cfTable tbody td.nm { color: #000000; }
-        #cfTable tr.cf-out td { background-color: #EEF6EC; }
-        #cfTable tr.cf-in td { background-color: #FDF3EC; }
+        #cfTable tr.cf-out td { background-color: transparent; }
+        #cfTable tr.cf-in td { background-color: transparent; }
         #cfTable tr.cf-today td { font-weight: 700; }
         #cfTable tr.cf-past td { opacity: 0.4; }
-        #cfTable tr.cf-past.cf-out td { background-color: #F6FBF5; }
-        #cfTable tr.cf-past.cf-in td { background-color: #FEF9F5; }
+        #cfTable tr.cf-past.cf-out td { background-color: transparent; }
+        #cfTable tr.cf-past.cf-in td { background-color: transparent; }
+        #cfTable tr.cf-today td { background-color: #FFFF00; }
         #cfTable thead th { border-top-color: #00A8A8; }
         #cfTable thead th:first-child, #cfTable tbody td:first-child { border-left-color: #00A8A8; }
         #cfTable thead th:last-child, #cfTable tbody td:last-child { border-right-color: #00A8A8; }
@@ -5264,7 +5265,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 표 -->
         <div class="summary-card" style="padding: 10px 10px 20px 10px !important; margin: 0 !important; overflow: hidden; background-color: #FFFFFF;">
-          <div id="cfTableWrap" style="overflow: auto; max-height: 426px;"><table id="cfTable"><thead><tr><th style="width:88px;">년월일</th><th style="width:93px;">잔액</th><th style="width:93px;">지출</th><th style="width:93px;">수입</th><th style="width:138px;">항목</th></tr></thead><tbody></tbody></table></div>
+          <div id="cfTableWrap" style="overflow: auto; max-height: 426px;"><table id="cfTable"><thead><tr><th style="width:88px;">년월일</th><th style="width:90px;">잔액</th><th style="width:83px;">지출</th><th style="width:114px;">항목</th><th style="width:83px;">수입</th></tr></thead><tbody></tbody></table></div>
         </div>
         <div id="cfSpacer" aria-hidden="true" style="height: 40px; flex-shrink: 0;"></div>
         <div id="cfFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
@@ -7633,14 +7634,49 @@ function cfBalAtEnd(L, iso) {
 // 금액 칸: 억 단위(9자리 이하)는 14px 고정, 10억부터 자릿수에 따라 자동으로 작게
 function cfMoneyTd(v, cls) {
   if (v === null || v === undefined || v === '') return '<td class="' + cls + '"></td>';
-  const digits = String(Math.abs(Math.round(Number(v)))).length;
-  const size = digits <= 9 ? 14 : digits === 10 ? 12 : digits === 11 ? 11 : 10;
-  return '<td class="' + cls + '" style="font-size:' + size + 'px;">' + cfMoney(v) + '</td>';
+  const txt = cfMoney(v);
+  const size = 14;
+  return '<td class="' + cls + '" style="font-size:' + size + 'px;">' + txt + '</td>';
 }
-// 항목명: 10자까지 14px, 11자부터는 글자 수에 맞춰 자동으로 작게
+// 항목명: 한글 9자까지 14px, 10자부터는 글자 수에 맞춰 자동으로 작게
 function cfNameSize(text) {
   const len = Array.from(String(text)).length;
-  return len <= 10 ? 14 : Math.max(8, Math.floor(14 * 10 / len * 10) / 10);
+  return len <= 9 ? 14 : Math.max(8, Math.floor(14 * 9 / len * 10) / 10);
+}
+// 금액 칸 폭: 이 기기의 실제 글꼴로 14px에서 들어갈 최대 금액이 딱 맞는 폭으로 맞춤
+// 잔액 = 10억 단위(1,000,000,000), 지출·수입 = 천만 단위(99,999,999)
+function cfFitBalanceColumn(wrap) {
+  const specs = [[2, '1,000,000,000'], [3, '99,999,999'], [5, '99,999,999']];
+  specs.forEach(([n, sample]) => {
+    const th = wrap.querySelector('#cfTable thead th:nth-child(' + n + ')');
+    if (!th) return;
+    const probe = document.createElement('span');
+    probe.textContent = sample;
+    probe.style.cssText = 'position:absolute; left:0; top:0; visibility:hidden; white-space:nowrap; font-size:14px; font-weight:400; font-variant-numeric:tabular-nums; font-family:' + getComputedStyle(wrap).fontFamily + ';';
+    document.body.appendChild(probe);
+    const w = probe.getBoundingClientRect().width;
+    probe.remove();
+    th.style.width = Math.ceil(w) + (n === 2 ? -3 : 0) + 'px';
+  });
+}
+// 금액 칸(잔액·지출·수입): 칸 너비를 넘치면 한 줄에 들어갈 때까지 글자 크기를 자동으로 줄임
+function cfFitMoneyCells(wrap) {
+  const ths = wrap.querySelectorAll('#cfTable thead th');
+  wrap.querySelectorAll('#cfTable tbody tr').forEach(tr => {
+    tr.querySelectorAll('td.r').forEach(td => {
+      const idx = Array.from(td.parentNode.children).indexOf(td);
+      const th = ths[idx];
+      const avail = parseFloat(th && th.style.width) || 0;
+      let s = 14;
+      td.style.fontSize = s + 'px';
+      const range = document.createRange();
+      range.selectNodeContents(td);
+      while (range.getBoundingClientRect().width > avail && s > 8) {
+        s = Math.max(8, s - 0.5);
+        td.style.fontSize = s + 'px';
+      }
+    });
+  });
 }
 function renderCashflowPage() {
   const wrap = document.getElementById('cfTableWrap');
@@ -7707,7 +7743,7 @@ function renderCashflowPage() {
     if (r.dir === 'out') cfDayDir[r.date] = 'out';
     else if (r.dir === 'in' && cfDayDir[r.date] !== 'out') cfDayDir[r.date] = 'in';
   });
-  let h = '<table id="cfTable"><thead><tr><th style="width:88px;">년월일</th><th style="width:93px;">잔액</th><th style="width:93px;">지출</th><th style="width:93px;">수입</th><th style="width:138px;">항목</th></tr></thead><tbody>';
+  let h = '<table id="cfTable"><thead><tr><th style="width:88px;">년월일</th><th style="width:90px;">잔액</th><th style="width:83px;">지출</th><th style="width:114px;">항목</th><th style="width:83px;">수입</th></tr></thead><tbody>';
   L.rows.filter(r => r.date <= viewEnd).forEach(r => {
     const i = cfViewRows.length;
     cfViewRows.push(r);
@@ -7717,14 +7753,16 @@ function renderCashflowPage() {
     const rowCls = (cfBoldDate !== null && r.date === cfBoldDate ? 'cf-today ' : '') + (r.date < today ? 'cf-past ' : '') + (r.dir === 'out' ? 'cf-out' : 'cf-in');
     h += '<tr class="' + rowCls + '" onclick="cfOpenRowIdx(' + i + ')">'
       + '<td class="' + dateCls + '">' + cfShortDate(r.date) + '</td>'
-      + cfMoneyTd(r.bal, 'r' + (r.bal < 0 ? ' neg' : '') + (cfDayDir[r.date] === 'out' ? ' bal-out' : (cfDayDir[r.date] === 'in' ? ' bal-in' : '')))
+      + cfMoneyTd(r.bal, 'r' + (r.bal < 0 ? ' neg' : '') + (!r.deleted && r.dir === 'out' ? ' bal-out' : (!r.deleted && r.dir === 'in' ? ' bal-in' : '')))
       + cfMoneyTd(!r.deleted && r.dir === 'out' ? r.amount : null, 'r out')
-      + cfMoneyTd(!r.deleted && r.dir === 'in' ? r.amount : null, 'r in')
       + '<td class="nm" style="font-size:' + cfNameSize(grp + r.name) + 'px;' + (r.dir === 'out' ? 'color:#007BFF;' : 'color:#E60012;') + '">' + grp + cfEsc(r.name) + '</td>'
+      + cfMoneyTd(!r.deleted && r.dir === 'in' ? r.amount : null, 'r in')
       + '</tr>';
   });
   h += '</tbody></table>';
   wrap.innerHTML = h;
+  cfFitBalanceColumn(wrap);
+  cfFitMoneyCells(wrap);
   cfFitTable();
 
   const rl = document.getElementById('cfRuleList');
