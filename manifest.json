@@ -1,6 +1,6 @@
 {
-  "name": "kkul_app_inventory",
-  "short_name": "kkul_app_inventory",
+  "name": "꿀단지",
+  "short_name": "꿀단지",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
