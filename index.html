@@ -2686,7 +2686,7 @@ textarea.add-product-input[data-filled="true"] {
           const subStyle = 'background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:4px 12px 8px; margin-top:20px;';
           const subs = list.map(function (s, i) {
             const rows = [
-              { l: '사용일시', v: s.date || '-' },
+              { l: '사용일시', v: s.date || (String(s.cardMask || '').match(/(\d{1,2})\/(\d{1,2})/) || ['', '', ''])[0].replace(/^(\d{1,2})\/(\d{1,2})$/, '$1/$2') || '-' },
               { l: '사용금액', v: s.amount ? Number(s.amount).toLocaleString('ko-KR') + '원' : '-' },
               { l: '가맹점명', v: s.merchant || '-' },
               { l: '카드표시', v: '<span style="font-weight:450;">' + (s.cardMask || '-') + '</span>' }
