@@ -7650,7 +7650,7 @@ function cfFitNameCells(wrap) {
     let s = 14;
     el.style.fontSize = s + 'px';
     while (el.scrollWidth > el.clientWidth && s > 8) {
-      s = Math.max(8, s - 0.5);
+      s = Math.max(8, s - 0.3);
       el.style.fontSize = s + 'px';
     }
   });
@@ -7684,7 +7684,7 @@ function cfFitMoneyCells(wrap) {
       const range = document.createRange();
       range.selectNodeContents(td);
       while (range.getBoundingClientRect().width > avail && s > 8) {
-        s = Math.max(8, s - 0.5);
+        s = Math.max(8, s - 0.3);
         td.style.fontSize = s + 'px';
       }
     });
@@ -7983,7 +7983,7 @@ function cfCalFitOneItems(root) {
     let s = 12;
     apply(s);
     while (cell.scrollHeight > cell.clientHeight && s > 8) {
-      s = Math.max(8, s - 0.5);
+      s = Math.max(8, s - 0.3);
       apply(s);
     }
   });
@@ -8074,7 +8074,7 @@ function cfCalDay(iso) {
     const range = document.createRange();
     range.selectNodeContents(el);
     while (range.getBoundingClientRect().width > el.getBoundingClientRect().width && s > 8) {
-      s = Math.max(8, s - 0.5);
+      s = Math.max(8, s - 0.3);
       el.style.fontSize = s + 'px';
     }
   });
@@ -8087,7 +8087,7 @@ function cfCalDay(iso) {
     const range = document.createRange();
     range.selectNodeContents(el);
     while (range.getBoundingClientRect().width > el.getBoundingClientRect().width && s > 8) {
-      s = Math.max(8, s - 0.5);
+      s = Math.max(8, s - 0.3);
       el.style.fontSize = s + 'px';
     }
   });
@@ -21336,7 +21336,7 @@ function fitPrepayTableColumns(table) {
     let fs = 13;
     td.style.setProperty('font-size', fs + 'px', 'important');
     while (textOverflows(td) && fs > 7) {
-      fs -= 0.5;
+      fs -= 0.3;
       td.style.setProperty('font-size', fs + 'px', 'important');
     }
   });
