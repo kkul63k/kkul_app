@@ -2243,7 +2243,7 @@ textarea.add-product-input[data-filled="true"] {
     </div></div>
 
     <!-- 서브 메뉴 컨테이너 -->
-    <div class="sub-menu-container active" id="subMenuContainer"><div class="sub-menu" data-menu="savings-management"><div class="sub-menu-item">적금목록</div><div class="sub-menu-item">적금일정</div><div class="sub-menu-item">적금등록</div><div class="sub-menu-item">적금등록필드설정</div></div><div class="sub-menu" data-menu="stock-management"><div class="sub-menu-item">주식목록</div><div class="sub-menu-item">주식등록</div><div class="sub-menu-item">주식등록필드설정</div></div><div class="sub-menu" data-menu="card-management"><div class="sub-menu-item">카드사용실적</div><div class="sub-menu-item">카드등록</div><div class="sub-menu-item">카드등록필드설정</div></div><div class="sub-menu" data-menu="cashflow-management"><div class="sub-menu-item">유동자금일정</div></div><div class="sub-menu" data-menu="calculator"><div class="sub-menu-item">선납이연계산기</div><div class="sub-menu-item">적금계산기</div><div class="sub-menu-item">예금계산기</div><div class="sub-menu-item">금리환산기</div><div class="sub-menu-item">일반계산기</div></div><div class="sub-menu" data-menu="settings"><div class="sub-menu-item">기본설정</div><div class="sub-menu-item">메뉴설정</div></div></div>
+    <div class="sub-menu-container active" id="subMenuContainer"><div class="sub-menu" data-menu="savings-management"><div class="sub-menu-item">적금목록</div><div class="sub-menu-item">적금일정</div><div class="sub-menu-item">적금등록</div><div class="sub-menu-item">적금등록필드설정</div></div><div class="sub-menu" data-menu="stock-management"><div class="sub-menu-item">주식목록</div><div class="sub-menu-item">주식등록</div><div class="sub-menu-item">주식등록필드설정</div></div><div class="sub-menu" data-menu="card-management"><div class="sub-menu-item">카드사용실적</div><div class="sub-menu-item">카드등록</div><div class="sub-menu-item">카드등록필드설정</div></div><div class="sub-menu" data-menu="cashflow-management"><div class="sub-menu-item">유동자금일정</div></div><div class="sub-menu" data-menu="calculator"><div class="sub-menu-item">선납이연계산기</div><div class="sub-menu-item">선납수익비교</div><div class="sub-menu-item">적금계산기</div><div class="sub-menu-item">예금계산기</div><div class="sub-menu-item">금리환산기</div><div class="sub-menu-item">일반계산기</div></div><div class="sub-menu" data-menu="settings"><div class="sub-menu-item">기본설정</div><div class="sub-menu-item">메뉴설정</div></div></div>
   </div>
 
   <!-- 페이지 컨테이너 -->
@@ -24649,7 +24649,7 @@ function saveMenuData() {
 
 function loadMenuData() {
   // 1회성 정리: 예전 버전이 저장해 둔 메뉴(채권관리, 적금 이자 필드 설정, 대출 계산기 등)를 제거하고 현재 기본 메뉴를 사용
-  const MENU_CLEAN_VERSION = 'v104-clean';
+  const MENU_CLEAN_VERSION = 'v104-clean-2';
   try {
     if (localStorage.getItem('menuStructureVersion') !== MENU_CLEAN_VERSION) {
       localStorage.removeItem('menuStructure');
