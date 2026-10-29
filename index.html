@@ -5251,7 +5251,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 표 위 헤더 (배지 + 제목) -->
         <div id="cfTableHead" style="margin-top: 16px; margin-bottom: -7px;"><div style="display: flex; align-items: center; gap: 10px; margin-top: -8px;">
-          <span class="badge group-badge" style="background-color: #FF00FF; color: #FFFFFF;">일정</span>
+          <span class="badge group-badge" style="background-color: #FF00FF; color: #FFFFFF; width: 30px; height: 30px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">일정</span>
           <span style="font-size: 17px; font-weight: 700; color: #FF00FF; white-space: nowrap;">세부일정표</span>
           <select class="form-input cf-period-select" id="cfPeriod" onchange="cfSetPeriod(this.value)" style="margin-left: auto;">
                 <option value="12">1년</option>
@@ -5260,6 +5260,7 @@ textarea.add-product-input[data-filled="true"] {
                 <option value="60">5년</option>
                 <option value="120">10년</option>
               </select>
+          <button type="button" class="honeypot-button-save" onclick="cfOpenCalViewer()" style="width:95px; height:33px; box-sizing:border-box; padding:0; font-size:13px; line-height:1; white-space:normal; word-break:keep-all; background:#00A8A8; border-color:#00A8A8; color:#FFFFFF; box-shadow:0px 2px 6px rgba(0,0,0,0.25);">달력으로 보기</button>
         </div></div>
         <div style="font-size: 12px; font-weight: 500; color: #FF0000; margin: 0 0 -2px 0;">📢 각 행을 누르면 일정을 수정할 수 있습니다.</div>
 
@@ -7678,6 +7679,22 @@ function cfFitMoneyCells(wrap) {
     });
   });
 }
+// 고정항목 목록 정렬: 수입 → 지출, 각각 년 단위 → 월 단위, 같은 단위 안에서는 날짜(월·일) 빠른 순
+function cfSortedRules(rules) {
+  const key = r => [
+    r.dir === 'in' ? 0 : 1,
+    r.cycle === 'year' ? 0 : 1,
+    r.cycle === 'year' ? (Number(r.month) || 0) : 0,
+    Number(r.day) || 0
+  ];
+  return rules.slice().sort((a, b) => {
+    const ka = key(a), kb = key(b);
+    for (let i = 0; i < ka.length; i++) {
+      if (ka[i] !== kb[i]) return ka[i] - kb[i];
+    }
+    return 0;
+  });
+}
 function renderCashflowPage() {
   const wrap = document.getElementById('cfTableWrap');
   if (!wrap) return;
@@ -7768,7 +7785,7 @@ function renderCashflowPage() {
   const rl = document.getElementById('cfRuleList');
   if (rl) {
     const today2 = cfTodayISO();
-    rl.innerHTML = d.rules.length ? d.rules.map((r, i) => {
+    rl.innerHTML = d.rules.length ? cfSortedRules(d.rules).map((r, i) => {
       const when = (r.cycle === 'year' ? r.month + '월 ' : '') + r.day + '일';
       const dirC = r.dir === 'in' ? '#FF00FF' : '#007BFF';
       const periodTxt = r.start + '~' + (r.end || '계속');
@@ -7789,6 +7806,263 @@ function renderCashflowPage() {
   }
 }
 
+// ---------- 일정 달력 (보기 전용) ----------
+let cfCalViewerYM = null;
+function cfOpenCalViewer() {
+  if (!cfCalViewerYM) cfCalViewerYM = cfTodayISO().slice(0, 7);
+  if (!document.getElementById('cfCalViewer')) {
+    const ov = document.createElement('div');
+    ov.id = 'cfCalViewer';
+    ov.style.cssText = 'position:fixed; inset:0; z-index:3000; background:#FFFFFF; display:flex; flex-direction:column;';
+    document.body.appendChild(ov);
+    // 스와이프: 좌우 = 이전/다음 달 (화면 너비 40% 이상 밀면 전환), 상하 = 이전/다음 연도 (화면 높이 30% 이상 밀면 전환)
+    // 옆 페이지는 현재 페이지 옆에 붙어 있다가 손가락을 따라 함께 움직임
+    let tx = null, ty = null, mode = null, busy = false, W = 0, H = 0;
+    const stage = () => ov.querySelector('.cfc-stage');
+    const movePanes = (x, y, transition) => ov.querySelectorAll('.cfc-pane').forEach(p => {
+      const ox = Number(p.dataset.off) || 0;
+      const oy = Number(p.dataset.offy) || 0;
+      p.style.transition = transition;
+      p.style.transform = 'translate(' + (ox * W + x) + 'px,' + (oy * H + y) + 'px)';
+    });
+    const addSidePane = (ox, oy, y, m) => {
+      const p = document.createElement('div');
+      p.className = 'cfc-pane';
+      p.dataset.side = '1';
+      p.dataset.off = ox;
+      p.dataset.offy = oy;
+      p.innerHTML = cfCalPaneHtml(y, m);
+      stage().appendChild(p);
+      cfCalFitOneItems(p);
+    };
+    const curYM = () => cfCalViewerYM.split('-').map(Number);
+    const startSides = axis => {
+      W = stage().clientWidth;
+      H = stage().clientHeight;
+      ov.querySelectorAll('.cfc-pane[data-side]').forEach(p => p.remove());
+      const [y, m] = curYM();
+      if (axis === 'x') {
+        let pm = m - 1, py = y; if (pm < 1) { pm = 12; py--; }
+        let nm = m + 1, ny = y; if (nm > 12) { nm = 1; ny++; }
+        addSidePane(-1, 0, py, pm);
+        addSidePane(1, 0, ny, nm);
+      } else {
+        addSidePane(0, -1, y - 1, m);
+        addSidePane(0, 1, y + 1, m);
+      }
+    };
+    ov.addEventListener('touchstart', e => {
+      if (busy) return;
+      tx = e.touches[0].clientX; ty = e.touches[0].clientY; mode = null;
+    }, { passive: true });
+    ov.addEventListener('touchmove', e => {
+      if (tx === null || busy) return;
+      const dx = e.touches[0].clientX - tx;
+      const dy = e.touches[0].clientY - ty;
+      if (!mode && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+        if (Math.abs(dx) > Math.abs(dy) * 1.2) { mode = 'x'; startSides('x'); }
+        else if (Math.abs(dy) > Math.abs(dx) * 1.2) { mode = 'y'; startSides('y'); }
+      }
+      if (mode === 'x') movePanes(dx, 0, 'none');
+      if (mode === 'y') movePanes(0, dy, 'none');
+    }, { passive: true });
+    ov.addEventListener('touchend', e => {
+      if (tx === null) return;
+      const dx = e.changedTouches[0].clientX - tx;
+      const dy = e.changedTouches[0].clientY - ty;
+      tx = null;
+      const md = mode;
+      mode = null;
+      if (md === 'x') {
+        if (Math.abs(dx) >= W * 0.4) {
+          const dir = dx < 0 ? 1 : -1;
+          busy = true;
+          movePanes(-dir * W, 0, 'transform 0.2s ease');
+          setTimeout(() => { cfCalShift(dir); busy = false; }, 200);
+        } else {
+          movePanes(0, 0, 'transform 0.2s ease');
+        }
+      } else if (md === 'y') {
+        if (Math.abs(dy) >= H * 0.3) {
+          const dir = dy < 0 ? 1 : -1;
+          busy = true;
+          movePanes(0, -dir * H, 'transform 0.2s ease');
+          setTimeout(() => { cfCalShiftYear(dir); busy = false; }, 200);
+        } else {
+          movePanes(0, 0, 'transform 0.2s ease');
+        }
+      }
+    }, { passive: true });
+  }
+  cfRenderCalViewer();
+}
+function cfCloseCalViewer() {
+  const ov = document.getElementById('cfCalViewer');
+  if (ov) ov.remove();
+}
+function cfCalShiftYear(n) {
+  const [y, m] = cfCalViewerYM.split('-').map(Number);
+  cfCalViewerYM = (y + n) + '-' + String(m).padStart(2, '0');
+  cfRenderCalViewer();
+}
+function cfCalShift(n) {
+  let [y, m] = cfCalViewerYM.split('-').map(Number);
+  m += n;
+  while (m < 1) { m += 12; y--; }
+  while (m > 12) { m -= 12; y++; }
+  cfCalViewerYM = y + '-' + String(m).padStart(2, '0');
+  cfRenderCalViewer();
+}
+// 한 달치 요일 줄 + 날짜 칸 HTML (현재 달과 옆 달 페이지에 공통 사용)
+function cfCalPaneHtml(y, m) {
+  const L = cfCurrentLedger();
+  const byDate = {};
+  L.rows.forEach(r => { if (!r.deleted) (byDate[r.date] = byDate[r.date] || []).push(r); });
+  const today = cfTodayISO();
+  const first = new Date(y, m - 1, 1).getDay();
+  const days = new Date(y, m, 0).getDate();
+  let cells = '';
+  for (let i = 0; i < first; i++) cells += '<div class="cfc-cell cfc-empty"></div>';
+  for (let d = 1; d <= days; d++) {
+    const iso = y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    const dw = new Date(y, m - 1, d).getDay();
+    const numColor = (cfIsHoliday(iso) || dw === 0) ? '#E60012' : (dw === 6 ? '#007BFF' : '#000000');
+    const list = byDate[iso] || [];
+    // 일정 1개: 전체 이름을 줄 바꿔서 표시 / 2개 이상: 한 줄씩 표시하고 뒤는 잘림
+    const one = list.length === 1;
+    let items = list.slice(0, 3).map(r => {
+      const c = r.dir === 'in' ? '#E60012' : '#007BFF';
+      return '<div class="cfc-item' + (one ? ' cfc-one' : '') + '"><span class="cfc-dot" style="background:' + c + ';"></span><span class="cfc-name' + (one ? ' cfc-wrap' : '') + '" style="color:' + c + ';">' + cfEsc(String(r.name)) + '</span></div>';
+    }).join('');
+    if (list.length > 3) items += '<div class="cfc-more">+' + (list.length - 3) + '</div>';
+    const cls = 'cfc-cell' + (iso === today ? ' cfc-today' : '');
+    cells += '<div class="' + cls + '" onclick="cfCalDay(\'' + iso + '\')"><div class="cfc-num" style="color:' + numColor + ';">' + d + '</div>' + items + '</div>';
+  }
+  const dow = ['일', '월', '화', '수', '목', '금', '토'];
+  return '<div class="cfc-week">' + dow.map(w => '<div>' + w + '</div>').join('') + '</div><div class="cfc-grid">' + cells + '</div>';
+}
+// 일정 1개인 칸: 칸 안에 다 들어가면 그대로, 넘치면 글자를 0.5px씩 자동으로 줄임 (칸 높이는 고정)
+function cfCalFitOneItems(root) {
+  root.querySelectorAll('.cfc-cell .cfc-name.cfc-wrap').forEach(el => {
+    const cell = el.closest('.cfc-cell');
+    // 줄 상자(부모)의 기본 줄 높이가 글자보다 커서 줄 간격이 벌어짐 → 부모도 같은 크기로 맞추고 줄 높이를 글자의 약 1.17배(기존 간격의 절반)로
+    const item = el.parentElement;
+    const apply = v => {
+      el.style.fontSize = v + 'px';
+      item.style.fontSize = v + 'px';
+      item.style.lineHeight = (v * 14 / 12) + 'px';
+    };
+    let s = 12;
+    apply(s);
+    while (cell.scrollHeight > cell.clientHeight && s > 8) {
+      s = Math.max(8, s - 0.5);
+      apply(s);
+    }
+  });
+}
+function cfRenderCalViewer() {
+  const ov = document.getElementById('cfCalViewer');
+  if (!ov) return;
+  const [y, m] = cfCalViewerYM.split('-').map(Number);
+  ov.innerHTML = `
+  <style>
+    #cfCalViewer .cfc-head { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #E0E0E0; }
+    #cfCalViewer .cfc-title { font-size:17px; font-weight:700; color:#00A8A8; }
+    #cfCalViewer .cfc-nav { width:36px; height:30px; border:1px solid #00A8A8; background:#FFFFFF; color:#00A8A8; border-radius:6px; font-size:14px; font-weight:700; cursor:pointer; }
+    #cfCalViewer .cfc-week, #cfCalViewer .cfc-grid { display:grid; grid-template-columns:repeat(7, 1fr); }
+    #cfCalViewer .cfc-week div { text-align:center; font-size:12px; font-weight:700; color:#333; padding:6px 0; background:#F5F5F5; border-bottom:1px solid #E0E0E0; }
+    #cfCalViewer .cfc-stage { position:relative; flex:1; min-height:0; overflow:hidden; touch-action:none; }
+    #cfCalViewer .cfc-pane { position:absolute; left:0; top:0; right:0; bottom:0; display:flex; flex-direction:column; background:#FFFFFF; }
+    #cfCalViewer .cfc-grid { flex:1; min-height:0; overflow-y:auto; }
+    #cfCalViewer .cfc-cell { height:78px; box-sizing:border-box; border-right:1px solid #E6E6E6; border-bottom:1px solid #E6E6E6; padding:3px 3px; overflow:hidden; cursor:pointer; }
+    #cfCalViewer .cfc-cell:nth-child(7n) { border-right:none; }
+    #cfCalViewer .cfc-empty { cursor:default; background:#FAFAFA; }
+    #cfCalViewer .cfc-today { background:#FFFF00; }
+    #cfCalViewer .cfc-num { font-size:12px; font-weight:700; margin-bottom:2px; }
+    #cfCalViewer .cfc-item { display:flex; align-items:center; gap:3px; min-width:0; }
+    #cfCalViewer .cfc-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+    #cfCalViewer .cfc-name { flex:1 1 0; min-width:0; font-size:12px; white-space:nowrap; overflow:hidden; }
+    #cfCalViewer .cfc-item.cfc-one { display:block; line-height:1; }
+    #cfCalViewer .cfc-item.cfc-one .cfc-dot { display:inline-block; vertical-align:-1px; margin-right:3px; }
+    #cfCalViewer .cfc-name.cfc-wrap { display:inline; flex:none; white-space:normal; word-break:break-all; line-height:1; }
+    #cfCalViewer .cfc-more { font-size:11px; color:#666; }
+    #cfCalDay { position:fixed; inset:0; z-index:3100; background:rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center; }
+    #cfCalDay .cfc-box { background:#FFFFFF; border-radius:12px; width:calc(100% - 28px); max-width:424px; max-height:70vh; overflow-y:auto; padding:14px; }
+  </style>
+  <div class="cfc-head">
+    <button type="button" class="cfc-nav" onclick="cfCalShift(-1)">◀</button>
+    <div class="cfc-title">${y}년 ${m}월</div>
+    <div style="display:flex; gap:6px;">
+      <button type="button" class="cfc-nav" onclick="cfCalShift(1)">▶</button>
+      <button type="button" class="honeypot-button-cancel" onclick="cfCloseCalViewer()" style="width:80px; font-size:16px; font-weight:700;">닫기</button>
+    </div>
+  </div>
+  <div class="cfc-stage"><div class="cfc-pane" data-off="0">${cfCalPaneHtml(y, m)}</div></div>`;
+  cfCalFitOneItems(ov);
+}
+function cfCalDay(iso) {
+  const L = cfCurrentLedger();
+  const list = L.rows.filter(r => !r.deleted && r.date === iso);
+  const old = document.getElementById('cfCalDay');
+  if (old) old.remove();
+  const ov = document.createElement('div');
+  ov.id = 'cfCalDay';
+  ov.onclick = e => { if (e.target === ov) ov.remove(); };
+  // 금액 칸 폭: 이 기기의 실제 글꼴로 '999,999,999'(9억 9,999만 9,999원까지)이 14px에 딱 들어가는 폭
+  // 10억(10자리)부터는 칸보다 넓어지므로 자동으로 글자 크기를 줄임
+  const amtProbe = document.createElement('span');
+  amtProbe.textContent = '999,999,999';
+  amtProbe.style.cssText = 'position:absolute; left:0; top:0; visibility:hidden; white-space:nowrap; font-size:14px; font-family:' + getComputedStyle(document.body).fontFamily + ';';
+  document.body.appendChild(amtProbe);
+  const amtW = Math.ceil(amtProbe.getBoundingClientRect().width) + 2;
+  amtProbe.remove();
+  const rows = list.length ? list.map(r => {
+    const c = r.dir === 'in' ? '#E60012' : '#007BFF';
+    const grp = r.group ? (r.group === '본인' ? '● ' : '■ ') : '';
+    // 항목명: 14px로 시작하고, 항목명 칸을 넘칠 때만 자동으로 줄임
+    const nSize = 14;
+    // 금액: 10억(1,000,000,000, 13자)까지 14px, 넘으면 자동으로 작게
+    const amt = cfMoney(r.amount);
+    const aLen = Array.from(amt).length;
+    const aSize = aLen > 0 ? 14 : 14; // 금액은 고정 칸 안에 들어갈 때만 14px, 넘칠 때만 자동으로 줄임
+    return '<div style="display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #EEEEEE;">'
+      + '<span style="font-size:14px; font-weight:700; color:' + c + '; flex-shrink:0; margin-right:-4px;">' + (r.dir === 'in' ? '수입' : '지출') + '</span>'
+      + '<span style="min-width:0; margin-right:-10px; display:flex; align-items:center; gap:0; overflow:hidden; color:' + c + ';">'
+      + (grp ? '<span style="flex-shrink:0; font-size:14px;">' + grp + '</span>' : '')
+      + '<span class="cfc-nm" style="flex:1 1 0; min-width:0; overflow:hidden; text-align:left; font-size:14px; color:' + c + '; white-space:nowrap;">' + cfEsc(r.name) + '</span></span>'
+      + '<span class="cfc-fit" style="flex:0 0 ' + amtW + 'px; width:' + amtW + 'px; text-align:right; overflow:hidden; white-space:nowrap; font-size:' + aSize + 'px; color:' + c + '; white-space:nowrap;">' + amt + '</span></div>';
+  }).join('') : '<div style="font-size:14px; color:#888; padding:10px 0;">일정이 없습니다.</div>';
+  ov.innerHTML = '<div class="cfc-box">'
+    + '<div style="font-size:16px; font-weight:700; color:#00A8A8; margin-bottom:8px;">' + iso + '</div>'
+    + rows
+    + '<div style="display:flex; justify-content:center; margin-top:12px;"><button type="button" class="honeypot-button-cancel" onclick="document.getElementById(\'cfCalDay\').remove()">닫기</button></div>'
+    + '</div>';
+  document.body.appendChild(ov);
+  // 항목명·금액 칸 경계 안에 들어가도록, 넘치는 칸만 0.5px씩 자동으로 줄임
+  ov.querySelectorAll('.cfc-fit').forEach(el => {
+    let s = parseFloat(el.style.fontSize) || 14;
+    el.style.fontSize = s + 'px';
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    while (range.getBoundingClientRect().width > el.getBoundingClientRect().width && s > 8) {
+      s = Math.max(8, s - 0.5);
+      el.style.fontSize = s + 'px';
+    }
+  });
+  // 항목명: 9글자까지 14px 그대로, 10글자 이상이면 넘치는 동안 0.5px씩 줄여서 전부 보이게
+  ov.querySelectorAll('.cfc-nm').forEach((el, i) => {
+    const name = list[i] ? list[i].name : '';
+    if (Array.from(name).length < 10) return;
+    let s = 14;
+    el.style.fontSize = s + 'px';
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    while (range.getBoundingClientRect().width > el.getBoundingClientRect().width && s > 8) {
+      s = Math.max(8, s - 0.5);
+      el.style.fontSize = s + 'px';
+    }
+  });
+}
 function cfSetPeriod(v) {
   cfCalcPeriod = Number(v) || 36;
   renderCashflowPage();
@@ -25064,6 +25338,88 @@ function checkAndShowDdayAlert() {
   }
 }
 
+// ---------- 유동자금관리 일정 알림 (오늘 ~ 3일 후 일정, 하루 한 번) ----------
+function showCfAlertModal(r, idx) {
+  const parts = String(r.date).split('-').map(Number);
+  const dateStr = parts[1] + '월 ' + parts[2] + '일';
+  const amountStr = new Intl.NumberFormat('ko-KR').format(Number(r.amount) || 0) + '원';
+  const isIn = r.dir === 'in';
+  const title = isIn ? '수입일 알림' : '지출일 알림';
+  const suffix = isIn ? '수입일입니다' : '지출일입니다';
+  const hl = isIn ? '#FF0000' : '#007BFF';
+  const modalId = 'cfAlertModal_' + idx;
+  const modalHTML = `
+    <div id="${modalId}" style="
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10001;
+    ">
+      <div style="
+        background-color: #FFFFFF;
+        border-radius: 16px;
+        padding: 24px;
+        max-width: 90%;
+        width: 320px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        position: relative;
+      ">
+        <button onclick="document.getElementById('${modalId}').remove();" style="
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          width: 32px;
+          height: 32px;
+          border: none;
+          background: none;
+          color: #FF0000;
+          font-size: 28px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          line-height: 1;
+        ">✕</button>
+        <div style="font-size: 48px; margin-bottom: 16px;">🔔</div>
+        <h2 style="
+          margin: 0 0 12px 0;
+          font-size: 18px;
+          font-weight: 700;
+          color: #00A8A8;
+          font-family: 'Noto Sans CJK KR', 'Pretendard', sans-serif;
+        ">${title}</h2>
+        <div style="margin-bottom: 24px; line-height: 1.8;">
+          <p style="
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333333;
+            text-align: center;
+            font-family: 'Noto Sans CJK KR', 'Pretendard', sans-serif;
+          "><strong style="color: ${hl};">${dateStr}</strong>은<br>${cfEsc(String(r.name))}<br><strong style="color: ${hl};">${amountStr}</strong> ${suffix}</p>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function checkCfAlert() {
+  const today = cfTodayISO();
+  const alertedKey = 'cfAlerted_' + today;
+  try { if (localStorage.getItem(alertedKey)) return; } catch (e) {}
+  const limit = cfAddDays(today, 3);
+  const rows = cfCurrentLedger().rows.filter(r => !r.deleted && r.date >= today && r.date <= limit);
+  if (rows.length === 0) return;
+  rows.forEach((r, i) => showCfAlertModal(r, i));
+  try { localStorage.setItem(alertedKey, 'true'); } catch (e) {}
+}
+
 // 아래는 더 이상 필요 없음 - DOMContentLoaded에서 handleFileImport가 이미 등록됨
 
 // ============================================
@@ -25163,6 +25519,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // D-day 알림 확인 및 표시
   setTimeout(() => {
     checkAndShowDdayAlert();
+    try { checkCfAlert(); } catch (e) { console.warn('유동자금 알림 오류', e); }
   }, 500);
 
   console.log('꿀단지 예적금관리 - v9 로드 완료 (메뉴 시스템 완전 재작성)');
