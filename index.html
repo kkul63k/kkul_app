@@ -3238,7 +3238,7 @@ textarea.add-product-input[data-filled="true"] {
           const groups = [];
           all.forEach(c => { if (c.group && groups.indexOf(c.group) === -1) groups.push(c.group); });
           // 고정 순서: 본인 → 배우자 → 그 외(추가 등록 순서 유지)
-          const cardGroupRank = g => (g === '본인' ? 0 : g === '배우자' ? 1 : 2);
+          const cardGroupRank = groupOrderRank(cardFieldsConfig && cardFieldsConfig.fields && cardFieldsConfig.fields.groupName && cardFieldsConfig.fields.groupName.items);
           groups.sort((a, b) => cardGroupRank(a) - cardGroupRank(b));
           groups.forEach(g => {
             const gc = all.filter(c => c.group === g);
@@ -3762,7 +3762,7 @@ textarea.add-product-input[data-filled="true"] {
           var groups = {};
           shown.forEach(function (p) { (groups[p.group] = groups[p.group] || []).push(p); });
           // 고정 순서: 본인 → 배우자 → 그 외(추가 등록 순서 유지)
-          var stockRank = function (g) { return g === '본인' ? 0 : g === '배우자' ? 1 : 2; };
+          var stockRank = groupOrderRank(stockFieldsConfig && stockFieldsConfig.fields && stockFieldsConfig.fields.groupName && stockFieldsConfig.fields.groupName.items);
           Object.keys(groups).sort(function (a, b) { return stockRank(a) - stockRank(b); }).forEach(function (g) {
             var list = groups[g].sort(function (a, b) { return a.stockName.localeCompare(b.stockName); });
             html += '<div class="summary-card" style="margin-top:20px !important; margin-bottom:0 !important;">' +
@@ -21988,7 +21988,7 @@ function renderProductsList() {
 
     // 카드 2+: 그룹별 카드 동적 생성 (본인 먼저, 배우자 나중)
     // 고정 순서: 본인 → 배우자 → 그 외(추가 등록 순서 유지)
-    const groupRankOf = g => (g === '본인' ? 0 : g === '배우자' ? 1 : 2);
+    const groupRankOf = groupOrderRank(selectFieldsConfig.groupName.items);
     Object.keys(groupedProducts).sort((a, b) => groupRankOf(a) - groupRankOf(b)).forEach(group => {
       const data = groupedProducts[group];
       const badgeColor = group === '본인' ? '#3E34F7' : group === '배우자' ? '#E94B3C' : '#008E56';
@@ -22753,11 +22753,9 @@ function renderSchedulePageWithLocalStorage() {
   `;
 
   // 2. 그룹별 요약 카드
-  Object.keys(groupedProducts).sort((a, b) => {
-    if (a === '본인' && b !== '본인') return -1;
-    if (a !== '본인' && b === '본인') return 1;
-    return a.localeCompare(b, 'ko-KR');
-  }).forEach(group => {
+  // 요약 카드 고정 순서: 본인 → 배우자 → 그 외(추가 등록 순서 유지)
+  const schedSummaryRank = groupOrderRank(selectFieldsConfig.groupName.items);
+  Object.keys(groupedProducts).sort((a, b) => schedSummaryRank(a) - schedSummaryRank(b)).forEach(group => {
     const data = groupedProducts[group];
     allHTML += `
       <div class="summary-card" style="background-color: #FFFFFF; border: none; padding: 16px; box-shadow: var(--shadow-card); margin-left: 0px; margin-right: 0px; margin-bottom: -1px; margin-top: 0px;">
@@ -25336,6 +25334,12 @@ function checkAndShowDdayAlert() {
   } else {
     console.log('📭 D-day 알림 대상 상품 없음');
   }
+}
+
+// 요약 카드 그룹 순서: 본인은 무조건 맨 위, 나머지는 그룹명 목록에서 설정한 순서대로 (목록에 없으면 등록 순)
+function groupOrderRank(list) {
+  const items = Array.isArray(list) ? list : [];
+  return g => (g === '본인' ? -1 : (items.indexOf(g) === -1 ? 999 : items.indexOf(g)));
 }
 
 // ---------- 유동자금관리 일정 알림 (오늘 ~ 3일 후 일정, 하루 한 번) ----------
