@@ -4595,6 +4595,131 @@ textarea.add-product-input[data-filled="true"] {
 </div>
 
 
+    <!-- 선납수익비교 페이지 (금융계산 > 선납수익비교) -->
+    <div id="prepay-profit-compare-page" class="page-content">
+      <style>
+        #prepay-profit-compare-page * { font-size: 14px; color: #000000; }
+        #prepay-profit-compare-page > .summary-card:first-of-type { margin-top: 0 !important; }
+        #prepay-profit-compare-page .summary-card { padding: 12px; margin-top: 0 !important; margin-bottom: 20px !important; }
+        #prepay-profit-compare-page .ppc-inner { background-color: #EEEEEE; border: 1px solid #E0E0E0; box-shadow: none; border-radius: 8px; padding: 12px 14px; margin: 0 !important; }
+        #prepay-profit-compare-page .ppc-sec { font-size: 15px; font-weight: 700; color: #00A8A8; margin: 0 0 8px; }
+        #prepay-profit-compare-page .ppc-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        #prepay-profit-compare-page .form-group { margin-bottom: 10px; }
+        #prepay-profit-compare-page .form-group:last-child { margin-bottom: 0; }
+        #prepay-profit-compare-page .form-label { font-size: 14px; color: #000000; }
+        #prepay-profit-compare-page .form-input { font-size: 14px; color: #000000; height: 40px; background-color: #FFFFFF; }
+        #prepay-profit-compare-page .ppc-label { font-size: 14px; font-weight: 700; color: #00A8A8; margin-bottom: 8px; }
+        #prepay-profit-compare-page .ppc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-top: 1px solid #DADADA; }
+        #prepay-profit-compare-page .ppc-row:first-of-type { border-top: none; }
+        #prepay-profit-compare-page .ppc-row .v { font-weight: 700; color: #000000; }
+        #prepay-profit-compare-page .ppc-row .v.hl { color: #00A8A8; }
+        #prepay-profit-compare-page .ppc-divider { height: 1px; background: #00A8A8; margin: 8px 0; }
+        #prepay-profit-compare-page .ppc-sub { font-weight: 700; color: #000000; margin: 2px 0 2px; }
+        #prepay-profit-compare-page table.ppc-tbl { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        #prepay-profit-compare-page table.ppc-tbl th { padding: 6px 2px; font-weight: 700; white-space: nowrap; text-align: right; }
+        #prepay-profit-compare-page table.ppc-tbl th:first-child { text-align: left; }
+        #prepay-profit-compare-page table.ppc-tbl td { padding: 0 2px; height: 33px; vertical-align: middle; border-top: 1px solid #DADADA; white-space: nowrap; overflow: hidden; text-align: right; }
+        #prepay-profit-compare-page table.ppc-tbl td:first-child { text-align: left; }
+        #prepay-profit-compare-page input.ppc-tin { height: 26px; padding: 0 8px; text-align: right; background-color: #FFFFFF; }
+        #prepay-profit-compare-page .ppc-calc-btn { display: block; width: 100%; height: 40px; margin-top: 4px; border: none; border-radius: 8px; background-color: #00A8A8; color: #FFFFFF; font-size: 14px; font-weight: 700; }
+        #prepay-profit-compare-page .ppc-pct { font-size: 12px; margin-left: 1px; color: inherit; }
+        #prepay-profit-compare-page.page-content { padding-bottom: 30px !important; }
+        #prepay-profit-compare-page .ppc-close { color: #FFFFFF; }
+        #prepay-profit-compare-page .ppc-note { font-size: 12px; color: #666666; margin-top: 8px; line-height: 1.5; }
+      </style>
+
+      <div class="summary-card">
+        <div class="ppc-sec">기본입력</div>
+        <div class="ppc-inner">
+          <div class="ppc-grid2">
+            <div class="form-group">
+              <label class="form-label">적용금리(%)</label>
+              <input class="form-input" id="ppcRate" type="text" inputmode="decimal" placeholder="예) 5.5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">개월수</label>
+              <input class="form-input" id="ppcMonths" type="text" inputmode="numeric" placeholder="예) 12">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">월납입액</label>
+            <input class="form-input" id="ppcAmount" type="text" inputmode="numeric" placeholder="예) 500000">
+          </div>
+          <button type="button" id="ppcCalcBtn" class="honeypot-button-save" style="display:block; margin:6px auto 0; width:95px; height:33px; box-sizing:border-box; padding:0; font-size:16px; line-height:1; background:#00A8A8; border-color:#00A8A8; color:#FFFFFF; box-shadow:0px 2px 6px rgba(0,0,0,0.25);">계산하기</button>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="ppc-label">정기납입</div>
+        <div class="ppc-inner">
+          <div class="ppc-row"><span>실제납입월수</span><span class="v" id="ppcC1Months">-</span></div>
+          <div class="ppc-row"><span>총납입액</span><span class="v" id="ppcC1Total">-</span></div>
+          <div class="ppc-row"><span>세전이자</span><span class="v" id="ppcC1Gross">-</span></div>
+          <div class="ppc-row"><span>예금비교금리</span><span class="v hl" id="ppcC1Dep">-</span></div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="ppc-label">선납방식(6-1-5)</div>
+        <div class="ppc-inner">
+          <div class="ppc-sub">A적금 + B적금</div>
+          <div class="ppc-row"><span>실제납입월수</span><span class="v" id="ppcC2Months">-</span></div>
+          <div class="ppc-row"><span>실제납입액</span><span class="v" id="ppcC2Total">-</span></div>
+          <div class="ppc-row"><span>세전이자</span><span class="v" id="ppcC2Gross">-</span></div>
+          <div class="ppc-row"><span>예금비교금리</span><span class="v hl" id="ppcC2Dep">-</span></div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="ppc-label">선납방식(6-1-5)</div>
+        <div class="ppc-inner">
+          <div class="ppc-sub">A적금</div>
+          <div class="ppc-row"><span>실제납입월수</span><span class="v" id="ppcC3AMonths">-</span></div>
+          <div class="ppc-row"><span>실제납입액</span><span class="v" id="ppcC3ATotal">-</span></div>
+          <div class="ppc-row"><span>세전이자</span><span class="v" id="ppcC3AGross">-</span></div>
+          <div class="ppc-divider"></div>
+          <div class="ppc-sub">B적금</div>
+          <div class="ppc-row"><span>실제납입월수</span><span class="v" id="ppcC3BMonths">-</span></div>
+          <div class="ppc-row"><span>실제납입액</span><span class="v" id="ppcC3BTotal">-</span></div>
+          <div class="ppc-row"><span>세전이자</span><span class="v" id="ppcC3BGross">-</span></div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="ppc-label">세율별이자수익</div>
+        <div class="ppc-inner">
+          <table class="ppc-tbl">
+            <colgroup>
+              <col style="width:30%">
+              <col style="width:38%">
+              <col style="width:32%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>적용세율(%)</th>
+                <th>이자수익</th>
+                <th>비교금리(%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>비과세(0)</td><td id="ppcT0">-</td><td id="ppcK0">-</td></tr>
+              <tr><td><input class="form-input ppc-tin" id="ppcTx1" type="text" inputmode="decimal" placeholder="예) 1.4"></td><td id="ppcT1"></td><td id="ppcK1"></td></tr>
+              <tr><td><input class="form-input ppc-tin" id="ppcTx2" type="text" inputmode="decimal" placeholder="예) 9.9"></td><td id="ppcT2"></td><td id="ppcK2"></td></tr>
+            </tbody>
+          </table>
+          <div class="ppc-divider"></div>
+          <button type="button" id="ppcTaxCalcBtn" class="honeypot-button-save" style="display:block; margin:6px auto 0; width:95px; height:33px; box-sizing:border-box; padding:0; font-size:16px; line-height:1; background:#00A8A8; border-color:#00A8A8; color:#FFFFFF; box-shadow:0px 2px 6px rgba(0,0,0,0.25);">계산하기</button>
+          <div class="ppc-note">세율 칸에 숫자를 넣으면 이자수익과 비교금리가 자동 계산됩니다.<br>비어 있으면 그 줄은 비워 둡니다.</div>
+        </div>
+      </div>
+      <div id="prepayCompareSpacer" aria-hidden="true" style="height: 27px; flex-shrink: 0;"></div>
+
+      <!-- 하단 고정 바: 닫기 -->
+      <div id="prepayCompareFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1101; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel ppc-close" onclick="goBack()">닫기</button>
+      </div>
+    </div>
+
     <!-- 이자총괄 페이지 -->
     <div id="interest-total-page" class="page-content">
       <!-- 전체이자 통계 카드 -->
@@ -7437,6 +7562,7 @@ let menuStructure = [
     icon: '🧮',
     submenu: [
       { id: 'calc-prepay', label: '선납이연계산기', icon: '💳' },
+      { id: 'prepay-profit-compare', label: '선납수익비교', icon: '⚖️' },
       { id: 'calc-savings', label: '적금계산기', icon: '📊' },
       { id: 'calc-deposit', label: '예금계산기', icon: '🏦' },
       { id: 'calc-rate', label: '금리환산기', icon: '💯' },
@@ -8871,6 +8997,13 @@ const pageConfig = {
     renderFunctions: [],
     initFunctions: ['initializeRatePage']
   },
+  'prepay-profit-compare-page': {
+    title: '선납수익비교',
+    showBackButton: true,
+    headerClass: '',
+    renderFunctions: [],
+    initFunctions: ['initPrepayProfitComparePage']
+  },
   'calc-cashflow-page': {
     title: '유동자금일정',
     showBackButton: true,
@@ -9146,6 +9279,7 @@ const FIXED_BAR_PAGES = [
   { page: 'stock-detail-page', footer: 'stockDetailFooter', spacer: 'sdSpacer', gap: 20 },
   { page: 'card-detail-page', footer: 'cardDetailFooter', spacer: 'crdSpacer', gap: 40 },
   { page: 'cashflow-items-page', footer: 'cfItemsFooter', spacer: 'cfItemsSpacer' },
+  { page: 'prepay-profit-compare-page', footer: 'prepayCompareFooter', spacer: 'prepayCompareSpacer' },
   { page: 'card-usage-page', footer: 'cuFooter', spacer: 'cuSpacer' }
 ];
 const FIXED_BAR_GAP = 18;
@@ -11701,6 +11835,115 @@ function navigateToMenuPage(menuId) {
 }
 
 // 이자현황 서브메뉴를 페이지로 네비게이트
+// 선납수익비교 페이지: 정기납입 / 선납방식(6-1-5) A·B 적금 / 세율별 이자수익 (계산 전용, 다른 기능과 연동 없음)
+function initPrepayProfitComparePage() {
+  const page = document.getElementById('prepay-profit-compare-page');
+  if (!page) return;
+  if (!page.dataset.bound) {
+    page.dataset.bound = '1';
+    page.addEventListener('click', function (e) {
+      if (e.target && e.target.id === 'ppcCalcBtn') ppcRender('all');
+      if (e.target && e.target.id === 'ppcTaxCalcBtn') ppcRender('tax');
+    });
+  }
+  ppcClear();
+}
+
+function ppcNum(v) {
+  const str = String(v || '').replace(/,/g, '').replace(/\s/g, '');
+  if (str.indexOf('만') !== -1) return (parseFloat(str) || 0) * 10000;
+  return parseFloat(str) || 0;
+}
+function ppcFmt(v) {
+  return Math.round(v).toLocaleString('ko-KR');
+}
+function ppcFmt2(v) {
+  return v.toFixed(2);
+}
+// 단리 적립식 세전 이자: 월납입 × 금리 × (n(n+1)/2) / 12
+function ppcGross(monthly, rate, term) {
+  return monthly * (rate / 100) * (term * (term + 1) / 2) / 12;
+}
+
+function ppcPct(v) {
+  return ppcFmt2(v) + '<span class="ppc-pct">%</span>';
+}
+
+function ppcClear() {
+  const el = id => document.getElementById(id);
+  if (!el('ppcRate')) return;
+  ['ppcC1Months','ppcC1Total','ppcC1Gross','ppcC1Dep','ppcC2Months','ppcC2Total','ppcC2Gross','ppcC2Dep',
+   'ppcC3AMonths','ppcC3ATotal','ppcC3AGross','ppcC3BMonths','ppcC3BTotal','ppcC3BGross','ppcT0','ppcK0'].forEach(function (id) { el(id).textContent = '-'; });
+  ['ppcT1','ppcK1','ppcT2','ppcK2'].forEach(function (id) { el(id).textContent = ''; });
+}
+
+function ppcRender(mode) {
+  const el = id => document.getElementById(id);
+  if (!el('ppcRate')) return;
+  const emptyInput = !el('ppcRate').value.trim() || !el('ppcMonths').value.trim() || !el('ppcAmount').value.trim();
+  if (emptyInput) {
+    ppcClear();
+    return;
+  }
+  const rate = ppcNum(el('ppcRate').value);
+  const term = Math.max(1, Math.round(ppcNum(el('ppcMonths').value)) || 12);
+  const monthly = ppcNum(el('ppcAmount').value);
+  const CNT = Math.floor(term / 2) + 1; // 실제 납입월수: 개월수의 절반보다 큰 가장 작은 정수 (12→7, 13→7, 15→8)
+
+  // 정기납입
+  const c1Total = monthly * term;
+  const c1Gross = Math.round(ppcGross(monthly, rate, term));
+  const c1Dep = rate * (term + 1) / (2 * term); // 금리환산기 공식: 예금금리 = 적금금리 × (개월수+1)/(2×개월수)
+
+  // 선납방식 A적금
+  const aTotal = monthly * CNT;
+  const aGross = Math.round(ppcGross(monthly, rate, term));
+
+  // 선납방식 B적금 (자동: 기준 총액 − A 납입, 7회 균등)
+  const bTotal = Math.max(c1Total - aTotal, 0);
+  const bMonthly = Math.round(bTotal / CNT);
+  const bGross = Math.round(ppcGross(bMonthly, rate, term));
+
+  // 선납방식 합계
+  const c2Total = aTotal + bTotal;
+  const c2Gross = aGross + bGross;
+  const c2Dep = rate * 0.928567; // 엑셀 G4: =B4*92.8567%
+
+  el('ppcC1Months').textContent = term + '개월';
+  el('ppcC1Total').textContent = ppcFmt(c1Total);
+  el('ppcC1Gross').textContent = ppcFmt(c1Gross);
+  el('ppcC1Dep').innerHTML = ppcPct(c1Dep);
+
+  el('ppcC2Months').textContent = CNT + '개월';
+  el('ppcC2Total').textContent = ppcFmt(c2Total);
+  el('ppcC2Gross').textContent = ppcFmt(c2Gross);
+  el('ppcC2Dep').innerHTML = ppcPct(c2Dep);
+
+  el('ppcC3AMonths').textContent = CNT + '개월';
+  el('ppcC3ATotal').textContent = ppcFmt(aTotal);
+  el('ppcC3AGross').textContent = ppcFmt(aGross);
+  el('ppcC3BMonths').textContent = CNT + '개월';
+  el('ppcC3BTotal').textContent = ppcFmt(bTotal);
+  el('ppcC3BGross').textContent = ppcFmt(bGross);
+
+  // 세율별 이자수익 (비과세 0 고정, 나머지는 입력칸. 빈칸이면 그 줄은 비움)
+  const taxInputs = [el('ppcTx1').value.trim(), el('ppcTx2').value.trim()];
+  el('ppcT0').textContent = ppcFmt(Math.round(aGross) + Math.round(bGross));
+  el('ppcK0').innerHTML = ppcPct(rate);
+  if (mode === 'tax') [1, 2].forEach(function (i) {
+    const raw = taxInputs[i - 1];
+    if (raw === '') {
+      el('ppcT' + i).textContent = '';
+      el('ppcK' + i).textContent = '';
+      return;
+    }
+    const t = ppcNum(raw);
+    const interest = Math.round(aGross * (1 - t / 100)) + Math.round(bGross * (1 - t / 100));
+    el('ppcT' + i).textContent = ppcFmt(interest);
+    el('ppcK' + i).innerHTML = ppcPct(rate / (1 - t / 100));
+  });
+}
+
 function navigateToSubmenu(submenuId) {
   const pageId = submenuId === 'savings-list' ? 'products-list-page' :
                  submenuId === 'savings-schedule' ? 'schedule-page' :
@@ -11724,6 +11967,7 @@ function navigateToSubmenu(submenuId) {
                  submenuId === 'calc-rate' ? 'calc-rate-page' :
                  submenuId === 'calc-loan' ? 'calc-loan-page' :
                  submenuId === 'calc-general' ? 'calc-general-page' :
+                 submenuId === 'prepay-profit-compare' ? 'prepay-profit-compare-page' :
                  submenuId === 'calc-cashflow' ? 'calc-cashflow-page' :
                  submenuId === 'cashflow-items' ? 'cashflow-items-page' :
                  submenuId;
@@ -24035,6 +24279,7 @@ function resetMenuStructure() {
             icon: '🧮',
             submenu: [
               { id: 'calc-prepay', label: '선납이연계산기', icon: '💳' },
+              { id: 'prepay-profit-compare', label: '선납수익비교', icon: '⚖️' },
               { id: 'calc-savings', label: '적금계산기', icon: '📊' },
               { id: 'calc-deposit', label: '예금계산기', icon: '🏦' },
               { id: 'calc-rate', label: '금리환산기', icon: '💯' },
