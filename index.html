@@ -7913,6 +7913,22 @@ function cfCalShift(n) {
   cfCalViewerYM = y + '-' + String(m).padStart(2, '0');
   cfRenderCalViewer();
 }
+// 음력 표시 (예: 9.21 = 음력 9월 21일). 브라우저 내장 한국 음력 달력 사용
+function cfLunarLabel(y, m, d) {
+  try {
+    const f = new Intl.DateTimeFormat('ko-KR-u-ca-dangi', { month: 'numeric', day: 'numeric' });
+    const parts = f.formatToParts(new Date(y, m - 1, d, 12));
+    const mo = parts.find(p => p.type === 'month').value;
+    const da = parts.find(p => p.type === 'day').value;
+    const lunarDay = parseInt(da, 10);
+    // 음력 1일과 15일만 표시
+    if (lunarDay !== 1 && lunarDay !== 15) return '';
+    const leap = /bis/.test(mo) ? '윤' : '';
+    return leap + parseInt(mo, 10) + '.' + lunarDay;
+  } catch (e) {
+    return '';
+  }
+}
 // 한 달치 요일 줄 + 날짜 칸 HTML (현재 달과 옆 달 페이지에 공통 사용)
 function cfCalPaneHtml(y, m) {
   const L = cfCurrentLedger();
@@ -7936,10 +7952,10 @@ function cfCalPaneHtml(y, m) {
     }).join('');
     if (list.length > 3) items += '<div class="cfc-more">+' + (list.length - 3) + '</div>';
     const cls = 'cfc-cell' + (iso === today ? ' cfc-today' : '');
-    cells += '<div class="' + cls + '" onclick="cfCalDay(\'' + iso + '\')"><div class="cfc-num" style="color:' + numColor + ';">' + d + '</div>' + items + '</div>';
+    cells += '<div class="' + cls + '" onclick="cfCalDay(\'' + iso + '\')"><div class="cfc-num" style="color:' + numColor + ';">' + d + '<span class="cfc-lunar">' + cfLunarLabel(y, m, d) + '</span></div>' + items + '</div>';
   }
   const dow = ['일', '월', '화', '수', '목', '금', '토'];
-  return '<div class="cfc-week">' + dow.map(w => '<div>' + w + '</div>').join('') + '</div><div class="cfc-grid">' + cells + '</div>';
+  return '<div class="cfc-week">' + dow.map((w, i) => '<div style="color:' + (i === 0 ? '#E60012' : i === 6 ? '#007BFF' : '#333333') + ';">' + w + '</div>').join('') + '</div><div class="cfc-grid">' + cells + '</div>';
 }
 // 일정 1개인 칸: 칸 안에 다 들어가면 그대로, 넘치면 글자를 0.5px씩 자동으로 줄임 (칸 높이는 고정)
 function cfCalFitOneItems(root) {
@@ -7979,6 +7995,7 @@ function cfRenderCalViewer() {
     #cfCalViewer .cfc-empty { cursor:default; background:#FAFAFA; }
     #cfCalViewer .cfc-today { background:#FFFF00; }
     #cfCalViewer .cfc-num { font-size:12px; font-weight:700; margin-bottom:2px; }
+    #cfCalViewer .cfc-lunar { font-size:9px; font-weight:400; color:#888888; margin-left:1.5px; }
     #cfCalViewer .cfc-item { display:flex; align-items:center; gap:3px; min-width:0; }
     #cfCalViewer .cfc-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
     #cfCalViewer .cfc-name { flex:1 1 0; min-width:0; font-size:12px; white-space:nowrap; overflow:hidden; }
