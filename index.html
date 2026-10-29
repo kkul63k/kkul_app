@@ -7641,8 +7641,19 @@ function cfMoneyTd(v, cls) {
 }
 // 항목명: 한글 9자까지 14px, 10자부터는 글자 수에 맞춰 자동으로 작게
 function cfNameSize(text) {
-  const len = Array.from(String(text)).length;
-  return len <= 9 ? 14 : Math.max(8, Math.floor(14 * 9 / len * 10) / 10);
+  // 항목명은 14px로 시작 (넘칠 때만 cfFitNameCells에서 0.5px씩 줄임)
+  return 14;
+}
+// 항목 칸에서 글자가 넘칠 때만 0.5px씩 줄여서 칸 안에 다 보이게 함 (칸 폭은 그대로)
+function cfFitNameCells(wrap) {
+  wrap.querySelectorAll('td.nm').forEach(el => {
+    let s = 14;
+    el.style.fontSize = s + 'px';
+    while (el.scrollWidth > el.clientWidth && s > 8) {
+      s = Math.max(8, s - 0.5);
+      el.style.fontSize = s + 'px';
+    }
+  });
 }
 // 금액 칸 폭: 이 기기의 실제 글꼴로 14px에서 들어갈 최대 금액이 딱 맞는 폭으로 맞춤
 // 잔액 = 10억 단위(1,000,000,000), 지출·수입 = 천만 단위(99,999,999)
@@ -7780,6 +7791,7 @@ function renderCashflowPage() {
   wrap.innerHTML = h;
   cfFitBalanceColumn(wrap);
   cfFitMoneyCells(wrap);
+  cfFitNameCells(wrap);
   cfFitTable();
 
   const rl = document.getElementById('cfRuleList');
