@@ -4664,7 +4664,7 @@ textarea.add-product-input[data-filled="true"] {
         <div class="ppc-inner">
           <div class="ppc-sub">A적금 + B적금</div>
           <div class="ppc-row"><span>실제납입월수</span><span class="v" id="ppcC2Months">-</span></div>
-          <div class="ppc-row"><span>실제납입액</span><span class="v" id="ppcC2Total">-</span></div>
+          <div class="ppc-row"><span>실제총납입액</span><span class="v" id="ppcC2Total">-</span></div>
           <div class="ppc-row"><span>세전이자</span><span class="v" id="ppcC2Gross">-</span></div>
           <div class="ppc-row"><span>예금비교금리</span><span class="v hl" id="ppcC2Dep">-</span></div>
         </div>
@@ -4675,12 +4675,14 @@ textarea.add-product-input[data-filled="true"] {
         <div class="ppc-inner">
           <div class="ppc-sub">A적금</div>
           <div class="ppc-row"><span>실제납입월수</span><span class="v" id="ppcC3AMonths">-</span></div>
-          <div class="ppc-row"><span>실제납입액</span><span class="v" id="ppcC3ATotal">-</span></div>
+          <div class="ppc-row"><span>실제월납입액</span><span class="v" id="ppcC3AMonthly">-</span></div>
+          <div class="ppc-row"><span>실제총납입액</span><span class="v" id="ppcC3ATotal">-</span></div>
           <div class="ppc-row"><span>세전이자</span><span class="v" id="ppcC3AGross">-</span></div>
           <div class="ppc-divider"></div>
           <div class="ppc-sub">B적금</div>
           <div class="ppc-row"><span>실제납입월수</span><span class="v" id="ppcC3BMonths">-</span></div>
-          <div class="ppc-row"><span>실제납입액</span><span class="v" id="ppcC3BTotal">-</span></div>
+          <div class="ppc-row"><span>실제월납입액</span><span class="v" id="ppcC3BMonthly">-</span></div>
+          <div class="ppc-row"><span>실제총납입액</span><span class="v" id="ppcC3BTotal">-</span></div>
           <div class="ppc-row"><span>세전이자</span><span class="v" id="ppcC3BGross">-</span></div>
         </div>
       </div>
@@ -11873,7 +11875,7 @@ function ppcClear() {
   const el = id => document.getElementById(id);
   if (!el('ppcRate')) return;
   ['ppcC1Months','ppcC1Total','ppcC1Gross','ppcC1Dep','ppcC2Months','ppcC2Total','ppcC2Gross','ppcC2Dep',
-   'ppcC3AMonths','ppcC3ATotal','ppcC3AGross','ppcC3BMonths','ppcC3BTotal','ppcC3BGross','ppcT0','ppcK0'].forEach(function (id) { el(id).textContent = '-'; });
+   'ppcC3AMonths','ppcC3AMonthly','ppcC3ATotal','ppcC3AGross','ppcC3BMonths','ppcC3BMonthly','ppcC3BTotal','ppcC3BGross','ppcT0','ppcK0'].forEach(function (id) { el(id).textContent = '-'; });
   ['ppcT1','ppcK1','ppcT2','ppcK2'].forEach(function (id) { el(id).textContent = ''; });
 }
 
@@ -11920,9 +11922,11 @@ function ppcRender(mode) {
   el('ppcC2Dep').innerHTML = ppcPct(c2Dep);
 
   el('ppcC3AMonths').textContent = CNT + '개월';
+  el('ppcC3AMonthly').textContent = ppcFmt(aTotal / CNT);
   el('ppcC3ATotal').textContent = ppcFmt(aTotal);
   el('ppcC3AGross').textContent = ppcFmt(aGross);
   el('ppcC3BMonths').textContent = CNT + '개월';
+  el('ppcC3BMonthly').textContent = ppcFmt(bTotal / CNT);
   el('ppcC3BTotal').textContent = ppcFmt(bTotal);
   el('ppcC3BGross').textContent = ppcFmt(bGross);
 
