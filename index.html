@@ -5435,8 +5435,7 @@ textarea.add-product-input[data-filled="true"] {
       <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 0;">
 
         <!-- 카드 1: 파킹금리 (중첩카드 없이 버튼과 표, 금리조견표와 같은 형식) -->
-        <div class="summary-card" style="margin: 0 !important; padding: 10px 10px 10px 10px !important; overflow: hidden; background-color: #FFFFFF; box-shadow: var(--shadow-card);">
-          <div style="margin-top: 0; margin-bottom: 10px;"><span style="font-size: 15px; font-weight: 800; color: #00A8A8; white-space: nowrap;">경영평가등급</span></div>
+        <div class="summary-card" style="margin: 0 !important; padding: 15px 10px 15px 10px !important; overflow: hidden; background-color: #FFFFFF; box-shadow: var(--shadow-card);">
           <div style="margin-bottom: 0;"><div class="summary-card" style="margin: 0 !important; padding: 0 14px !important; box-sizing: border-box; height: 40px; border: 1px solid #00A8A8 !important; background-color: #FFFFFF !important; box-shadow: none !important; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #000000; cursor: pointer;" onclick="kyungOpenAdd()">경영평가등급추가</div></div>
           <div style="margin: 20px 0 0 0;">
       <!-- 4. 그룹 필터 + 이율 필터 (2열 배치) -->
@@ -9075,7 +9074,7 @@ function kyungFormBody() {
   const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
   const inp = (ph, mode) => '<input class="form-input"' + (mode ? ' inputmode="' + mode + '"' : '') + ' placeholder="' + ph + '">';
   const row = (first, body) => '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px 10px; ' + (first ? 'padding-top:5px;' : 'margin-top:16.67px;') + '">' + body + '</div>';
-  return row(true,
+  return '<style>.kyung-form-fields .form-input{height:36px !important;}</style><div class="kyung-form-fields">' + row(true,
       f('기관분류', '<select class="form-input" id="rtBank" style="appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; padding-right: 44px;"><option value="신협">신협</option><option value="농축협" selected>농축협</option><option value="회원수협">회원수협</option><option value="새마을금고">새마을금고</option><option value="산림조합">산림조합</option><option value="저축은행">저축은행</option></select>')
     + f('은행명', '<input class="form-input" id="rtName" value="" placeholder="예) 화성원예농협">'))
     + row(false,
@@ -9090,6 +9089,7 @@ function kyungFormBody() {
     + row(false,
       f('유동성비율' + PCT, inp('예) 120.14', 'decimal'))
     + f('지역명 ' + OPT, inp('예) 화성, 서울 광진구, ...')))
+    + '</div>'
     + '<div style="margin-top:16.67px;"><div class="form-label">메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="rtCond" rows="1" oninput="rtAutoH(this)" placeholder="예) 신규고객" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:40px;"></textarea></div>';
 }
 
