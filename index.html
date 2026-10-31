@@ -2253,7 +2253,7 @@ textarea.add-product-input[data-filled="true"] {
   <!-- 페이지 컨테이너 -->
   <main class="page-container" id="pageContainer">
     <!-- 메인 페이지 -->
-    <div id="main-page" class="page-content" style="padding-bottom: 11px;">
+    <div id="main-page" class="page-content" style="padding-bottom: 0;">
       <!-- 요약 카드 컨테이너 (상하 여백 15px) -->
       <div id="mainPageSummaryCards" style="display: flex; flex-direction: column; gap: 25px; padding: 0px; margin-bottom: 25px;">
     <!-- 적금요약 카드 -->
@@ -2420,6 +2420,10 @@ textarea.add-product-input[data-filled="true"] {
     </div></div>
       </div>
 
+      <div id="mainSpacer" aria-hidden="true" style="height: 48px; flex-shrink: 0;"></div>
+      <div id="mainFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1101; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="appCloseApp()">닫기</button>
+      </div>
     </div>
 
     <!-- 주식관리 페이지 -->
@@ -10230,8 +10234,12 @@ const FIXED_BAR_PAGES = [
   { page: 'kyung-eval-page', footer: 'kyungEvalFooter', spacer: 'kyungEvalSpacer' },
   { page: 'databackup-page', footer: 'databackupFooter', spacer: 'databackupSpacer' },
   { page: 'prepay-profit-compare-page', footer: 'prepayCompareFooter', spacer: 'prepayCompareSpacer' },
-  { page: 'card-usage-page', footer: 'cuFooter', spacer: 'cuSpacer' }
+  { page: 'card-usage-page', footer: 'cuFooter', spacer: 'cuSpacer' },
+  { page: 'main-page', footer: 'mainFooter', spacer: 'mainSpacer', gap: 30 }
 ];
+function appCloseApp() {
+  kkulConfirmExit();
+}
 const FIXED_BAR_GAP = 18;
 function fitFixedBarGap(t) {
   const page = document.getElementById(t.page);
@@ -10351,10 +10359,10 @@ function navigateTo(pageId) {
     }
 
     // History API에 상태 저장 (브라우저 뒤로가기 버튼 처리용)
-    try {
-      window.history.pushState({ pageId: pageId }, '', '#' + pageId);
-    } catch (e) {
-      // History API 오류 무시 (sandboxed 환경에서는 작동 불가)
+    if (pageId === 'main-page') {
+      kkulCollapseHistory();
+    } else {
+      kkulPushHist(pageId);
     }
 
     // 헤더 업데이트
@@ -10481,10 +10489,11 @@ function goBack() {
       }
 
       // History API 업데이트
-      try {
-        window.history.pushState({ pageId: prevPageId }, '', '#' + prevPageId);
-      } catch (e) {
-        // History API 오류 무시
+      // 뒤로가기(앱 안): 홈이면 기록을 정리하고, 그 밖의 페이지면 현재 기록을 바꿔 쌓이지 않게 함
+      if (prevPageId === 'main-page') {
+        kkulCollapseHistory();
+      } else {
+        kkulReplaceHist(prevPageId);
       }
 
       // 페이지 최상단으로 스크롤 (window와 pageContainer 모두)
@@ -19560,7 +19569,87 @@ function rebuildSelectElements() {
 // ============================================
 // 브라우저 뒤로가기 버튼 처리
 // ============================================
+// 홈(메인)으로 올 때 쌓인 뒤로가기 기록을 한꺼번에 정리해서, 메인에서 뒤로가기를 누르면 앱이 바로 빠져나가게 함
+let kkulHistDepth = 0;
+let kkulHistCollapsing = false;
+function kkulPushHist(pageId) {
+  try {
+    window.history.pushState({ pageId: pageId }, '', '#' + pageId);
+    kkulHistDepth++;
+  } catch (e) {
+    // History API 오류 무시 (sandboxed 환경에서는 작동 불가)
+  }
+}
+function kkulReplaceHist(pageId) {
+  if (kkulHistDepth <= 0) { kkulPushHist(pageId); return; }
+  try {
+    window.history.replaceState({ pageId: pageId }, '', '#' + pageId);
+  } catch (e) {
+    // History API 오류 무시
+  }
+}
+function kkulCollapseHistory() {
+  if (kkulHistCollapsing) return;
+  if (kkulHistDepth <= 0) { kkulPushHist('main-page'); return; }
+  const n = kkulHistDepth - 1; // 홈 기록 한 칸은 남겨 둠
+  if (n <= 0) return;
+  kkulHistDepth = 1;
+  kkulHistCollapsing = true;
+  window.addEventListener('popstate', function kkulCollapseDone() {
+    kkulHistCollapsing = false;
+  }, { once: true });
+  try {
+    window.history.go(-n);
+  } catch (e) {
+    kkulHistCollapsing = false;
+  }
+}
+// 메인에서 뒤로가기/닫기를 누르면 확인창: 예 = 종료, 아니요 = 메인 유지
+let kkulExiting = false;
+function kkulConfirmExit() {
+  const old = document.getElementById('kkulExitOverlay');
+  if (old) old.remove();
+  const ov = document.createElement('div');
+  ov.id = 'kkulExitOverlay';
+  ov.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background-color:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;z-index:10000;';
+  ov.innerHTML = '<div style="background-color:#E6F7F7;border:1px solid #00A8A8;border-radius:12px;padding:24px;width:240px;box-sizing:border-box;box-shadow:0 4px 20px rgba(0,0,0,0.3);text-align:center;">'
+    + '<p style="margin:0 0 20px 0;font-size:14px;color:#333;line-height:1.5;">앱을 종료하시겠습니까?</p>'
+    + '<div style="display:flex;gap:12px;justify-content:center;">'
+    + '<button type="button" id="kkulExitNo" style="flex:1;height:38px;padding:0;box-sizing:border-box;border:1px solid #9E9E9E;background-color:#9E9E9E;color:#FFFFFF;border-radius:6px;font-weight:700;cursor:pointer;">아니요</button>'
+    + '<button type="button" id="kkulExitYes" style="flex:1;height:38px;padding:0;box-sizing:border-box;border:1px solid #FF8C00;background-color:#FF8C00;color:#FFFFFF;border-radius:6px;font-weight:700;cursor:pointer;">예</button>'
+    + '</div></div>';
+  document.body.appendChild(ov);
+  document.getElementById('kkulExitNo').onclick = function () { ov.remove(); };
+  document.getElementById('kkulExitYes').onclick = function () { ov.remove(); kkulExitApp(); };
+}
+function kkulExitApp() {
+  kkulExiting = true;
+  try { window.close(); } catch (e) { /* 무시 */ }
+  // 사용자가 직접 연 탭은 자바스크립트로 닫히지 않으므로, 잠시 후 빈 화면으로 바꿔 앱을 끝낸 상태로 만듦
+  setTimeout(function () {
+    try { window.location.replace('about:blank'); } catch (e) { /* 무시 */ }
+  }, 300);
+}
 window.addEventListener('popstate', (event) => {
+  if (kkulHistCollapsing || kkulExiting) return;
+  if (!event.state || !event.state.pageId) {
+    kkulHistDepth = 0; // 처음(메인) 기록으로 돌아옴
+  } else {
+    kkulHistDepth = Math.max(0, kkulHistDepth - 1);
+  }
+  if (!event.state || !event.state.pageId) {
+    const baseEl = document.getElementById(currentPage);
+    if (baseEl) baseEl.classList.remove('active');
+    const mainEl = document.getElementById('main-page');
+    if (mainEl) mainEl.classList.add('active');
+    currentPage = 'main-page';
+    updateHeader('main-page');
+    closeMenu();
+    window.scrollTo(0, 0);
+    kkulPushHist('main-page');
+    kkulConfirmExit();
+    return;
+  }
   if (event.state && event.state.pageId) {
     const pageId = event.state.pageId;
     console.log('popstate: navigating to', pageId);
