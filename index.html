@@ -494,6 +494,10 @@ body {
 /* ============================================
    카드
    ============================================ */
+.main-menu-item[data-menu="databackup"] span {
+  color: #FF0000 !important;
+}
+
 .summary-card {
   width: 100%;
   padding: 15px var(--card-padding);
@@ -4077,7 +4081,7 @@ textarea.add-product-input[data-filled="true"] {
                 body += row('정산금액', fmt(t.settlement));
               }
               body += row('증권사', t.broker || '-');
-              if (t.memo) body += row('메모', t.memo).replace('padding:6.75px 0;', 'padding:4px 0;');
+              if (t.memo) body += '<div style="display:flex; align-items:flex-start; gap:12px; padding:4px 0;"><span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">메모</span><span style="flex:1; min-width:0; font-size:14px; font-weight:700; color:#000; text-align:left; white-space:pre-wrap; word-break:break-all;">' + cfEsc(t.memo) + '</span></div>';
               return '<div class="summary-card" style="margin-top:20px !important; margin-bottom:0 !important;">' + '<div class="stock-trade-card" data-index="' + r.i + '" onclick="selectStockTrade(this)" style="cursor:pointer; background-color:' + (isSel ? '#FFF4E5' : '#F5F5F5') + '; border:' + (isSel ? '3px solid #FF8C00' : '1px solid #E0E0E0') + '; border-radius:12px; box-shadow:none; padding:4px 12px 8px; margin-top:0;">' +
                 '<div style="font-size:16px; font-weight:700; padding-top:0; padding-bottom:9.6875px; color:#FF0000;">체결 ' + (n + 1) + ' · ' + t.tradeType + ' · ' + t.tradeDate + '</div>' + tradeBodyHTML(body, n) + '</div></div>';
             }).join('');
@@ -5393,6 +5397,83 @@ textarea.add-product-input[data-filled="true"] {
       <div id="rateTableSpacer" aria-hidden="true" style="height: 62px; flex-shrink: 0;"></div>
       <!-- 하단 고정 바: 닫기 -->
       <div id="rateTableFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1101; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
+    </div>
+    <!-- 경영평가등급 페이지: 파킹/금리조견표 페이지와 같은 형식 -->
+    <div id="kyung-eval-page" class="page-content">
+      <style>
+        #keTable { width: 464px; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 14px; font-weight: 400; line-height: 1.2; }
+        #keTable th { background: #E5E5E5; color: #000000; font-weight: 700; font-size: 14px; border: 1px solid #D9D9D9; padding: 5px 3px; text-align: center; position: sticky; top: 0; z-index: 1; white-space: nowrap; }
+        #keTable td { border: 1px solid #E6E6E6; padding: 5px 4px; font-size: 14px; font-weight: 400; white-space: nowrap; overflow: hidden; }
+        #keTable td.c { text-align: center; }
+        #keTable td.r { text-align: right; font-variant-numeric: tabular-nums; }
+        #keTable td.nm { text-align: left; }
+        #keTable td.memo { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #keTable td.lim { text-align: right; padding-left: 3px; padding-right: 3px; }
+        #keTable tbody td.pre { color: #00A8A8; font-weight: 700; }
+        #keTable tbody td.nm:nth-child(2) { padding-left: 3px; padding-right: 3px; }
+        #keTable th:nth-child(1), #keTable th:nth-child(2), #keTable td:nth-child(1), #keTable td:nth-child(2) { padding-left: 1px; padding-right: 1px; }
+        #keTable tbody td:nth-child(1), #keTable tbody td:nth-child(2) { text-align: left; padding-left: 1px; padding-right: 1px; }
+        #keTable thead th:nth-child(1), #keTable thead th:nth-child(2) { padding-left: 0; padding-right: 0; }
+        #keTable tbody td:nth-child(1) { padding-right: 3px; }
+        #keTable th, #keTable td { border-top: none; border-left: none; border-right: 1px solid #CCCCCC; border-bottom: 1px solid #CCCCCC; }
+        #keTable th:first-child, #keTable td:first-child { border-left: 1px solid #CCCCCC; }
+        #keTable thead th { border-top: 1px solid #00A8A8; border-bottom: 1px solid #00A8A8; border-right-color: #CCCCCC; }
+        #keTable thead th:first-child, #keTable tbody td:first-child { border-left-color: #00A8A8; }
+        #keTable thead th:last-child, #keTable tbody td:last-child { border-right-color: #00A8A8; }
+        #keTable tbody tr:last-child td { border-bottom-color: #00A8A8; }
+        #keTable thead tr { height: 31px; }
+        #keTable tbody tr { height: 30px; }
+        #keTbody2 tr, #keTbody3 tr { height: 30px; }
+        #keTable2 tbody td:nth-child(n+2):nth-child(-n+6) { font-size: 14px; }
+      </style>
+      <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 0;">
+
+        <!-- 카드 1: 파킹금리 (중첩카드 없이 버튼과 표, 금리조견표와 같은 형식) -->
+        <div class="summary-card" style="margin: 0 !important; padding: 10px 10px 10px 10px !important; overflow: hidden; background-color: #FFFFFF; box-shadow: var(--shadow-card);">
+          <div style="margin-top: 0; margin-bottom: 10px;"><span style="font-size: 15px; font-weight: 800; color: #00A8A8; white-space: nowrap;">경영평가등급</span></div>
+          <div style="margin-bottom: 0;"><div class="summary-card" style="margin: 0 !important; padding: 0 14px !important; box-sizing: border-box; height: 40px; border: 1px solid #00A8A8 !important; background-color: #FFFFFF !important; box-shadow: none !important; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #000000; cursor: pointer;" onclick="kyungOpenAdd()">경영평가등급추가</div></div>
+          <div style="margin: 20px 0 0 0;">
+      <!-- 4. 그룹 필터 + 이율 필터 (2열 배치) -->
+      <!-- 🔧 [FIX] min-width: 0; max-width: 100%; 추가로 필터 필드 너비 고정 (체크박스 클릭 시 확장 방지) -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 6px; min-width: 0; max-width: 100%;">
+        <select id="productGroupFilterEval" onchange="kyungRenderList()" style="width: 100%; height: 40px; padding: 10px 12px; padding-right: 44px; border: 1px solid #00A8A8 !important; border-radius: 4px; font-size: 13px; font-weight: 400; color: var(--color-gray-dark); background-color: #E8F4F4; cursor: pointer; appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; min-width: 0; outline: none; box-shadow: none;">
+          <option value="all" selected="">기관 분류</option>
+          <option value="농축협">농축협</option>
+          <option value="신협">신협</option>
+          <option value="새마을금고">새마을금고</option>
+          <option value="회원수협">회원수협</option>
+          <option value="산림조합">산림조합</option>
+          <option value="저축은행">저축은행</option>
+        </select>
+        <select id="productInterestRateFilterEval" onchange="kyungRenderList()" style="width: 100%; height: 40px; padding: 10px 12px; padding-right: 44px; border: 1px solid #00A8A8 !important; border-radius: 4px; font-size: 13px; font-weight: 400; color: var(--color-gray-dark); background-color: #E8F4F4; cursor: pointer; appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; min-width: 0; outline: none; box-shadow: none;">
+          <option value="all" selected="">평가 등급</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+
+      <!-- 키워드 검색: 만기지난상품 보기 아래, 한 줄 전체 -->
+      <div style="margin-top: 6px;">
+        <div style="position: relative; display: flex; align-items: center;">
+          <input type="text" id="productKeywordSearchEval" placeholder="키워드 검색" style="width: 100%; padding: 10px 12px; padding-right: 50px; border: 1px solid #FF9800; border-radius: 4px; font-size: 13px; font-weight: 400; color: var(--color-gray-dark); background-color: #FFFFFF; cursor: text; box-sizing: border-box;">
+          <button type="button" onclick="kyungRenderList()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background-color: #FF8C00; color: white; border: none; border-radius: 3px; padding: 0; width: 51px; height: 29px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; z-index: 2;">확인</button>
+        </div>
+      </div>
+
+          </div>
+        </div>
+
+        
+        <div id="kyungList"></div>
+      </div>
+      <div id="kyungEvalSpacer" aria-hidden="true" style="height: 62px; flex-shrink: 0;"></div>
+      <!-- 하단 고정 바: 닫기 -->
+      <div id="kyungEvalFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1101; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
         <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
       </div>
     </div>
@@ -7446,6 +7527,36 @@ textarea.add-product-input[data-filled="true"] {
     </div>
 
     <!-- 기타설정 페이지 -->
+    <div id="databackup-page" class="page-content" style="padding-bottom: 0;">
+      <!-- 데이터 관리 -->
+      <div style="margin-bottom: 16px;">
+        <div class="summary-card" style="display: flex; flex-direction: column; gap: 10px; margin-top: 0 !important;">
+          <!-- 새로운: 자동 다운로드/복구 방식 (주력) -->
+          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center;" onclick="exportMenuDataAsFile()">💾 데이터 파일 저장</button>
+          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="document.getElementById(&#39;fileInputAutoRestore&#39;).click()">📂 데이터 파일 가져오기</button>
+
+          <div style="border-top: 1px solid #FF9800; margin: 6px 0; padding: 0;"></div>
+
+          <!-- 두 번째: 10개 백업 저장 / 복구 -->
+          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center;" onclick="saveBackupToStorageManual()">💾 백업 저장(최근 10개)</button>
+          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="showBackupList()">🕘 백업 목록 복구(최근 10개)</button>
+          <div style="border-top: 1px solid #FF9800; margin: 6px 0; padding: 0;"></div>
+
+          <!-- 세 번째: 클립보드 복사 / 붙여넣기 복구 -->
+          <button class="form-input" style="background-color: var(--color-gray-light); color: var(--color-gray-dark); cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="exportMenuDataLegacy()">📋 클립보드 자동 복사</button>
+          <button class="form-input" style="background-color: var(--color-gray-light); color: var(--color-gray-dark); cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="importMenuData()">📥 붙여넣기 복구</button>
+
+
+          <input type="file" id="fileInput" style="display: none;" accept=".json">
+          <input type="file" id="fileInputAutoRestore" style="display: none;" accept=".json" onchange="importMenuDataFromFile(event)">
+        </div>
+      </div>
+
+      <div id="databackupSpacer" aria-hidden="true" style="height: 51px; flex-shrink: 0;"></div>
+      <div id="databackupFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1101; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
+    </div>
     <div id="other-settings-page" class="page-content" style="padding-bottom: 0;">
       <!-- 모드변경 -->
       <div style="margin-bottom: 32px; margin-top: 0px; padding-top: 0px;">
@@ -7562,26 +7673,6 @@ textarea.add-product-input[data-filled="true"] {
         </div>
       </div>
 
-      <!-- 데이터 관리 -->
-      <div style="margin-bottom: 32px;">
-        <div class="group-header">데이터관리</div>
-        <div class="summary-card" style="display: flex; flex-direction: column; gap: 15px;">
-          <!-- 새로운: 자동 다운로드/복구 방식 (주력) -->
-          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center;" onclick="exportMenuDataAsFile()">💾 데이터 파일 저장</button>
-          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: -10px;" onclick="document.getElementById(&#39;fileInputAutoRestore&#39;).click()">📂 데이터 파일 가져오기</button>
-
-          <div style="border-top: 1px solid #E0E0E0; margin: 6px 0; padding: 0;"></div>
-
-          <!-- 기존: 복사/붙여넣기 방식 (유사시 비상용) -->
-          <button class="form-input" onclick="exportMenuData()" style="background-color: var(--color-gray-light); color: var(--color-gray-dark); cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center;">📤 데이터 내보내기(외부저장)</button>
-          <button class="form-input" style="background-color: var(--color-gray-light); color: var(--color-gray-dark); cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: -10px;" onclick="importMenuData()">📥 데이터 가져오기(데이터 복구)</button>
-
-
-          <input type="file" id="fileInput" style="display: none;" accept=".json">
-          <input type="file" id="fileInputAutoRestore" style="display: none;" accept=".json" onchange="importMenuDataFromFile(event)">
-        </div>
-      </div>
-
       <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
       <!-- 하단 고정 바와 본문 사이 여백 (마지막 카드 끝에서 바 윗선까지 18px) -->
       <div aria-hidden="true" style="height: 13px; flex-shrink: 0;"></div>
@@ -7694,6 +7785,7 @@ let menuStructure = [
       { id: 'savings-schedule', label: '적금일정' },
       { id: 'savings-registration', label: '적금등록' },
       { id: 'rate-table', label: '파킹/금리조견표' },
+      { id: 'kyung-eval', label: '경영평가등급' },
       { id: 'product-field-settings', label: '적금등록필드설정' }
     ]
   },
@@ -7744,6 +7836,11 @@ let menuStructure = [
         label: '메뉴설정'
       }
     ]
+  },
+  {
+    id: 'databackup',
+    label: '데이터백업',
+    icon: '💾'
   }
 ];
 
@@ -8869,6 +8966,363 @@ function rtFmtLimit(v) {
 function rtOpenAdd() {
   rtOpenForm(null);
 }
+// 경영평가등급추가: 파킹통장추가와 같은 입력 형식 (항목·저장 연결은 아직 없음)
+// 경영평가등급추가 모달 폼: 2칸 줄 구성 (항목명·저장 연결은 아직 없음)
+// 평가년월 선택창: 왼쪽 연도 · 오른쪽 월 (둘 다 세로 스크롤, 현재 연도·월이 가운데)
+(function () {
+  var css = ''
+    + '.kym-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20000;display:flex;align-items:center;justify-content:center;}'
+    + '.kym-box{width:min(88vw,340px);background:#FFFFFF;color:#222222;border-radius:16px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.25);}'
+    + '.kym-band{background:#3B8579;color:#FFFFFF;height:84px;box-sizing:border-box;padding:0 16px;display:flex;flex-direction:column;justify-content:center;}'
+    + '.kym-big{font-size:20px;font-weight:700;line-height:1.2;}'
+    + '.kym-cols{display:flex;gap:8px;padding:8px 12px 0;}'
+    + '.kym-col{flex:1;position:relative;height:220px;overflow-y:auto;scroll-snap-type:y mandatory;}'
+    + '.kym-col button{display:block;width:100%;height:44px;border:none;background:none;color:#999999;font-size:18px;cursor:pointer;scroll-snap-align:center;}'
+    + '.kym-col button.kym-cur{color:#3B8579;font-weight:700;font-size:22px;}'
+    + '.kym-foot{display:flex;justify-content:flex-end;gap:4px;padding:6px 10px 12px;}'
+    + '.kym-foot button{border:none;background:none;color:#3B8579;font-size:15px;font-weight:700;padding:10px 14px;cursor:pointer;border-radius:8px;}';
+  var st = document.createElement('style');
+  st.textContent = css;
+  document.head.appendChild(st);
+  var YEAR_MIN = 1950, YEAR_MAX = 2500, ITEM = 44, PAD = 88;
+  var sel = { y: 0, m: 0 };
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function listHTML(items, cls, curVal) {
+    var h = '<div style="height:' + PAD + 'px"></div>';
+    items.forEach(function (it) {
+      h += '<button type="button" data-v="' + it.v + '" class="' + (it.v === curVal ? 'kym-cur' : '') + '">' + it.t + '</button>';
+    });
+    return h + '<div style="height:' + PAD + 'px"></div>';
+  }
+  function setHeader() {
+    var o = document.getElementById('kymOverlay');
+    if (!o) return;
+    o.querySelector('.kym-big').textContent = sel.y + '년 ' + pad2(sel.m) + '월';
+    o.querySelectorAll('#kymYears button').forEach(function (b) { b.classList.toggle('kym-cur', +b.getAttribute('data-v') === sel.y); });
+    o.querySelectorAll('#kymMonths button').forEach(function (b) { b.classList.toggle('kym-cur', +b.getAttribute('data-v') === sel.m); });
+  }
+  function centerOn(colId, idx) {
+    var col = document.getElementById(colId);
+    if (col) col.scrollTop = idx * ITEM;
+  }
+  function onScroll(colId, key, first, count) {
+    var col = document.getElementById(colId);
+    if (!col) return;
+    var idx = Math.round(col.scrollTop / ITEM);
+    if (idx < 0) idx = 0;
+    if (idx > count - 1) idx = count - 1;
+    sel[key] = first + idx;
+    setHeader();
+  }
+  function closeYM() {
+    var o = document.getElementById('kymOverlay');
+    if (o) o.remove();
+  }
+  window.kyungOpenYM = function () {
+    closeYM();
+    var input = document.getElementById('kyungEvalYM');
+    var m = /^(\d{4})년 (\d{2})월$/.exec(input && input.value || '');
+    var now = new Date();
+    sel.y = m ? +m[1] : now.getFullYear();
+    sel.m = m ? +m[2] : now.getMonth() + 1;
+    var years = [], months = [], i;
+    for (i = YEAR_MIN; i <= YEAR_MAX; i++) years.push({ v: i, t: i + '년' });
+    for (i = 1; i <= 12; i++) months.push({ v: i, t: pad2(i) + '월' });
+    var o = document.createElement('div');
+    o.id = 'kymOverlay';
+    o.className = 'kym-overlay';
+    o.innerHTML = '<div class="kym-box">'
+      + '<div class="kym-band"><div class="kym-big"></div></div>'
+      + '<div class="kym-cols">'
+      + '<div class="kym-col" id="kymYears">' + listHTML(years, 'y', sel.y) + '</div>'
+      + '<div class="kym-col" id="kymMonths">' + listHTML(months, 'm', sel.m) + '</div>'
+      + '</div>'
+      + '<div class="kym-foot"><button type="button" data-act="cancel">취소</button><button type="button" data-act="apply">적용</button></div>'
+      + '</div>';
+    document.body.appendChild(o);
+    centerOn('kymYears', sel.y - YEAR_MIN);
+    centerOn('kymMonths', sel.m - 1);
+    setHeader();
+    document.getElementById('kymYears').addEventListener('scroll', function () { onScroll('kymYears', 'y', YEAR_MIN, years.length); });
+    document.getElementById('kymMonths').addEventListener('scroll', function () { onScroll('kymMonths', 'm', 1, 12); });
+    o.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) { if (e.target === o) closeYM(); return; }
+      if (b.hasAttribute('data-v')) {
+        var col = b.parentElement.id;
+        if (col === 'kymYears') { sel.y = +b.getAttribute('data-v'); centerOn('kymYears', sel.y - YEAR_MIN); }
+        else { sel.m = +b.getAttribute('data-v'); centerOn('kymMonths', sel.m - 1); }
+        setHeader();
+        return;
+      }
+      if (b.getAttribute('data-act') === 'cancel') { closeYM(); return; }
+      if (b.getAttribute('data-act') === 'apply') {
+        var inp = document.getElementById('kyungEvalYM');
+        if (inp) inp.value = sel.y + '년 ' + pad2(sel.m) + '월';
+        closeYM();
+      }
+    });
+  };
+})();
+function kyungFormBody() {
+  const PCT = '<span style="font-size:12px;">(%)</span>';
+  const WON = '<span style="font-size:12px;">(억원)</span>';
+  const OPT = '<span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span>';
+  const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
+  const inp = (ph, mode) => '<input class="form-input"' + (mode ? ' inputmode="' + mode + '"' : '') + ' placeholder="' + ph + '">';
+  const row = (first, body) => '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px 10px; ' + (first ? 'padding-top:5px;' : 'margin-top:16.67px;') + '">' + body + '</div>';
+  return row(true,
+      f('기관분류', '<select class="form-input" id="rtBank" style="appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; padding-right: 44px;"><option value="신협">신협</option><option value="농축협" selected>농축협</option><option value="회원수협">회원수협</option><option value="새마을금고">새마을금고</option><option value="산림조합">산림조합</option><option value="저축은행">저축은행</option></select>')
+    + f('은행명', '<input class="form-input" id="rtName" value="" placeholder="예) 화성원예농협">'))
+    + row(false,
+      f('평가년월', '<input class="form-input cf-month-field" id="kyungEvalYM" readonly placeholder="예) 2027년 12월" onclick="kyungOpenYM()" style="cursor:pointer;">')
+    + f('평가등급', '<select class="form-input" id="kyungGrade" style="appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; padding-right: 44px;"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>'))
+    + row(false,
+      f('자산총계' + WON, inp('예) 2345', 'decimal'))
+    + f('순자본비율' + PCT, inp('예) 11.05', 'decimal')))
+    + row(false,
+      f('<span style="font-size:12px; letter-spacing:-1px;">순고정이하여신비율</span><span style="font-size:11px; letter-spacing:-1px;">(%)</span>', inp('예) 1.23', 'decimal'))
+    + f('총자산순이익율' + PCT, inp('예) 0.57', 'decimal')))
+    + row(false,
+      f('유동성비율' + PCT, inp('예) 120.14', 'decimal'))
+    + f('지역명 ' + OPT, inp('예) 화성, 서울 광진구, ...')))
+    + '<div style="margin-top:16.67px;"><div class="form-label">메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="rtCond" rows="1" oninput="rtAutoH(this)" placeholder="예) 신규고객" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:40px;"></textarea></div>';
+}
+
+function kyungOpenAdd() {
+  const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
+    + '<button class="honeypot-button-save" onclick="kyungSave()">저장</button>';
+  cfOpenModal('경영평가등급추가', kyungFormBody(), footer, '#00A8A8');
+  document.querySelectorAll('#cfModal input, #cfModal select, #cfModal textarea').forEach(function (el) { el.style.color = '#000000'; });
+  const addM = document.getElementById('cfModal');
+  if (addM) addM.scrollTop = 0;
+  const memo = document.getElementById('rtCond');
+  if (memo) rtAutoH(memo);
+}
+// 경영평가등급 저장 목록: 모달 입력값을 저장하고, 같은 형식의 카드를 목록에 쌓음
+const KYUNG_LIST_KEY = 'kyungEvalItems';
+function kyungLoad() {
+  try { return JSON.parse(localStorage.getItem(KYUNG_LIST_KEY)) || []; } catch (e) { return []; }
+}
+function kyungStore(arr) {
+  try { localStorage.setItem(KYUNG_LIST_KEY, JSON.stringify(arr)); } catch (e) {}
+}
+function kyungReadForm() {
+  const m = document.getElementById('cfModal');
+  const v = {};
+  if (!m) return v;
+  m.querySelectorAll('.form-label').forEach(function (lab) {
+    const el = lab.parentElement && lab.parentElement.querySelector('input, select, textarea');
+    if (!el) return;
+    const key = lab.textContent.replace(/\(%\)|\(억원\)|\(필수아님\)/g, '').replace(/\s+/g, ' ').trim();
+    v[key] = el.value;
+  });
+  return v;
+}
+function kyEsc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+// 목록 카드 값 표시: 평가등급 뒤 " 등급", 자산총계 천단위 쉼표 + " 억원", 비율 뒤 " %"(12px)
+function kyungFmt(key, raw) {
+  const t = String(raw == null ? '' : raw).trim();
+  if (t === '') return '';
+  if (key === '평가등급') return kyEsc(t) + ' 등급';
+  if (key === '자산총계') {
+    const m = t.match(/^(-?)(\d[\d,]*)(\.\d*)?$/);
+    const num = m ? m[1] + m[2].replace(/,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (m[3] || '') : t;
+    return kyEsc(num) + ' 억원';
+  }
+  if (['순자본비율', '순고정이하여신비율', '총자산순이익율', '유동성비율'].indexOf(key) >= 0) {
+    return kyEsc(t) + ' <span style="font-size:12px;">%</span>';
+  }
+  return kyEsc(t);
+}
+function kyungCardHTML(d, i, extra) {
+  const L14 ='font-size:14px; font-weight:400; color:#000000;';
+  const rows = [
+    ['평가년월', '', 'font-size:14px; font-weight:700; color:#FF0000;', '4.875px'],
+    ['평가등급', '', 'font-size:15px; font-weight:700; color:#FF0000;', '4.875px'],
+    ['자산총계', '', L14, '4.875px'],
+    ['순자본비율<br><span style="font-size:12px;">(BIS비율)</span>', '순자본비율', L14, '2.875px'],
+    ['순고정이하여신비율<br><span style="font-size:12px;">(NPL비율)</span>', '순고정이하여신비율', L14, '2.875px'],
+    ['총자산순이익율<br><span style="font-size:12px;">(ROA)</span>', '총자산순이익율', L14, '2.875px'],
+    ['유동성비율', '', L14, '4.875px'],
+    ['지역명', '지역명', L14, '4.875px']
+  ];
+  const labelStyle = 'font-size:13px; font-weight:400; color:#000000; line-height:13px;';
+  let html = rows.map(function (r) {
+    const key = r[1] || r[0];
+    const labelCss = r[0].indexOf('<br>') >= 0 ? labelStyle : L14;
+    const label = r[0].indexOf('<br>') >= 0 ? r[0] : r[0];
+    return '<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:' + r[3] + ' 0;border-bottom:1px solid #E0E0E0;"><span style="' + labelCss + '">' + label + '</span><span style="' + r[2] + '">' + kyungFmt(key, d[key]) + '</span></div>';
+  }).join('');
+  html += '<div style="display:flex; justify-content:flex-start; align-items:flex-start; gap:12px; padding:3.875px 0;"><span style="' + L14 + '">메모</span><span style="' + L14 + ' text-align:left; white-space:pre-wrap; word-break:break-all;">' + kyEsc(d['메모']) + '</span></div>';
+  return '<div class="summary-card kyung-item" onclick="kyungOpenDetail(' + i + ')" style="cursor:pointer; margin-top:' + (i ? '20px' : '0px') + ' !important; margin-bottom:0 !important; padding-top:10px !important;">'
+    + '<div style="display:flex; justify-content:space-between; align-items:center; gap:8px;"><div style="font-size:15px; font-weight:600; color:#00A8A8; text-align:left;">' + kyEsc(d['기관분류']) + '</div><div style="font-size:15px; font-weight:600; color:#00A8A8; text-align:right;">' + kyEsc(d['은행명']) + '</div></div>'
+    + '<div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:4px 12px 8px; margin-top:10px;">' + html + '</div>' + (extra || '') + '</div>';
+}
+// 평가년월 → 정렬용 숫자 (예: 2027년 12월 → 202712)
+function kyungYmKey(d) {
+  const m = String((d && d['평가년월']) || '').match(/(\d{4})\D+(\d{1,2})/);
+  return m ? (+m[1]) * 100 + (+m[2]) : -1;
+}
+function kyungRenderList() {
+  const box = document.getElementById('kyungList');
+  if (!box) return;
+  const notice = '<div style="font-size:14px; font-weight:400; color:#FF0000; text-align:left; line-height:17px; margin:-5px 0 0 0; padding:0 0 15px 0; text-indent:-21px; padding-left:21px;">📢 아래의 카드를 선택하면,<br>수정/삭제 할 수 있습니다</div>';
+  // 키워드 검색: 입력한 글자가 카드의 어떤 항목에라도 들어 있으면 표시
+  const kwEl = document.getElementById('productKeywordSearchEval');
+  const k = ((kwEl && kwEl.value) || '').trim().toLowerCase();
+  const gEl = document.getElementById('productGroupFilterEval');
+  const g = gEl ? gEl.value : 'all';
+  const rEl = document.getElementById('productInterestRateFilterEval');
+  const rt = rEl ? rEl.value : 'all';
+  const visible = kyungLoad().map(function (d, i) { return { d: d, i: i }; }).filter(function (x) {
+    if (g !== 'all' && x.d['기관분류'] !== g) return false;
+    if (rt !== 'all' && String(x.d['평가등급'] == null ? '' : x.d['평가등급']) !== rt) return false;
+    if (!k) return true;
+    return Object.keys(x.d).some(function (key) {
+      return String(x.d[key] == null ? '' : x.d[key]).toLowerCase().indexOf(k) >= 0;
+    });
+  });
+  // 기본 정렬: 평가년월이 최근인 순서 (위에서 아래로 과거), 평가년월이 없으면 맨 아래
+  // 정렬 순서: 1) 평가년월 최신순 2) 기관분류 가나다순 3) 은행명 가나다순 (항상 적용)
+  visible.sort(function (a, b) {
+    const ym = kyungYmKey(b.d) - kyungYmKey(a.d);
+    if (ym !== 0) return ym;
+    const bank = String(a.d['기관분류'] || '').localeCompare(String(b.d['기관분류'] || ''), 'ko');
+    if (bank !== 0) return bank;
+    const nm = String(a.d['은행명'] || '').localeCompare(String(b.d['은행명'] || ''), 'ko');
+    if (nm !== 0) return nm;
+    return (parseInt(a.d['평가등급'], 10) || 0) - (parseInt(b.d['평가등급'], 10) || 0);
+  });
+  box.innerHTML = notice + visible.map(function (x) { return kyungCardHTML(x.d, x.i); }).join('');
+  // 화면에 보이는 첫 카드는 위 여백 0, 나머지는 20px
+  box.querySelectorAll('.kyung-item').forEach(function (el, n) { el.style.setProperty('margin-top', n ? '20px' : '0px', 'important'); });
+}
+// 필수 입력 순서 (지역명·메모는 필수아님)
+const KYUNG_REQUIRED = ['기관분류', '은행명', '평가년월', '평가등급', '자산총계', '순자본비율', '순고정이하여신비율', '총자산순이익율', '유동성비율'];
+function kyJosa(w) {
+  const c = w.charCodeAt(w.length - 1);
+  return (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 !== 0) ? '을' : '를';
+}
+function kyungSave() {
+  const v = kyungReadForm();
+  for (let i = 0; i < KYUNG_REQUIRED.length; i++) {
+    const k = KYUNG_REQUIRED[i];
+    if (!String(v[k] || '').trim()) {
+      showConfirmModal(k + kyJosa(k) + ' 입력하세요.', function () {}, null, '확인', '#00A8A8');
+      return;
+    }
+  }
+  const arr = kyungLoad();
+  arr.push(v);
+  kyungStore(arr);
+  cfCloseModal();
+  kyungRenderList();
+  showNotification('저장되었습니다', 1500, 'default');
+  const cards = document.querySelectorAll('#kyungList .kyung-item');
+  const last = cards[cards.length - 1];
+  if (last) setTimeout(function () { last.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kyungRenderList);
+else kyungRenderList();
+// 목록 카드 클릭: 상세(수정·삭제·닫기) 모달
+function kyungOpenDetail(idx) {
+  const item = kyungLoad()[idx];
+  if (!item) return;
+  // 상세 모달: 페이지 제목 → 20px → 메인 카드(중첩 카드 + 삭제·수정 버튼) → 하단 닫기
+  const btns = '<div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">'
+    + '<button class="honeypot-button-delete" onclick="kyungConfirmDelete(' + idx + ')">삭제</button>'
+    + '<button class="honeypot-button-save" onclick="kyungOpenEdit(' + idx + ')">수정</button></div>';
+  cfOpenModal('경영평가등급', '', '', '#00A8A8');
+  const m = document.getElementById('cfModal');
+  if (!m) return;
+  m.innerHTML = '<div style="margin-bottom:0;"><div style="display:flex;align-items:center;gap:8px;margin-top:-8px;">'
+    + '<span style="font-size:17px;font-weight:700;color:#00A8A8;white-space:nowrap;">경영평가등급</span></div></div>'
+    + '<div style="margin-top:20px;">' + kyungCardHTML(item, 0, btns) + '</div>'
+    + '<div style="position:fixed;bottom:0;left:0;right:0;z-index:1901;display:flex;gap:12px;justify-content:center;align-items:center;padding:10px 14px;background-color:var(--color-bg-primary);border-top:1px solid #E0E0E0;">'
+    + '<button class="honeypot-button-cancel" onclick="kyungCloseDetail()">닫기</button></div>';
+  // 상세 카드 자체는 클릭 이벤트 제외 (버튼 클릭이 상세를 다시 여는 것 방지)
+  const mc = m.querySelector('.kyung-item');
+  if (mc) { mc.removeAttribute('onclick'); mc.style.cursor = 'default'; }
+  m.scrollTop = 0;
+}
+function kyungCloseDetail() {
+  cfCloseModal();
+  const list = document.getElementById('kyungList');
+  if (list) list.scrollIntoView({ behavior: 'auto', block: 'start' });
+}
+// 수정 취소: 누른 카드 위치로 돌아감
+function kyungCancelEdit(idx) {
+  cfCloseModal();
+  showNotification('취소되었습니다', 1500, 'default');
+  const card = document.querySelector('#kyungList .kyung-item[onclick="kyungOpenDetail(' + idx + ')"]');
+  if (card) card.scrollIntoView({ behavior: 'auto', block: 'start' });
+}
+// 수정: 입력 화면을 저장된 값으로 채워서 열기
+function kyungFillForm(v) {
+  const m = document.getElementById('cfModal');
+  if (!m) return;
+  m.querySelectorAll('.form-label').forEach(function (lab) {
+    const el = lab.parentElement && lab.parentElement.querySelector('input, select, textarea');
+    if (!el) return;
+    const key = lab.textContent.replace(/\(%\)|\(억원\)|\(필수아님\)/g, '').replace(/\s+/g, ' ').trim();
+    if (v[key] !== undefined) el.value = v[key];
+  });
+}
+function kyungOpenEdit(idx) {
+  const item = kyungLoad()[idx];
+  if (!item) return;
+  const footer = '<button class="honeypot-button-cancel" onclick="kyungCancelEdit(' + idx + ')">취소</button>'
+    + '<button class="honeypot-button-save" onclick="kyungUpdate(' + idx + ')">저장</button>';
+  cfOpenModal('경영평가등급수정', kyungFormBody(), footer, '#00A8A8');
+  const mm = document.getElementById('cfModal');
+  if (mm) mm.scrollTop = 0;
+  document.querySelectorAll('#cfModal input, #cfModal select, #cfModal textarea').forEach(function (el) { el.style.color = '#000000'; });
+  kyungFillForm(item);
+  const memo = document.getElementById('rtCond');
+  if (memo) rtAutoH(memo);
+}
+function kyungUpdate(idx) {
+  const v = kyungReadForm();
+  for (let i = 0; i < KYUNG_REQUIRED.length; i++) {
+    const k = KYUNG_REQUIRED[i];
+    if (!String(v[k] || '').trim()) {
+      showConfirmModal(k + kyJosa(k) + ' 입력하세요.', function () {}, null, '확인', '#00A8A8');
+      return;
+    }
+  }
+  const arr = kyungLoad();
+  arr[idx] = v;
+  kyungStore(arr);
+  cfCloseModal();
+  kyungRenderList();
+  showNotification('수정되었습니다', 1500, 'default');
+  const updated = document.querySelector('#kyungList .kyung-item[onclick="kyungOpenDetail(' + idx + ')"]');
+  if (updated) setTimeout(function () { updated.scrollIntoView({ behavior: 'auto', block: 'start' }); }, 80);
+}
+// 삭제: 확인 후 삭제, 아니오(취소)면 그대로
+function kyungConfirmDelete(idx) {
+  showConfirmModal('정말 삭제하겠습니까?', function () {
+    const arr = kyungLoad();
+    arr.splice(idx, 1);
+    kyungStore(arr);
+    cfCloseModal();
+    kyungRenderList();
+    showNotification('삭제되었습니다', 1500, 'default');
+  }, null, '삭제', '#FF0000');
+}
+// 앱 전체 입력칸: 숫자로 입력하는 칸은 숫자 키패드, 글자 칸은 기본(한글) 키보드 (이미 지정된 칸은 그대로 둠)
+document.addEventListener('focusin', function (e) {
+  var el = e.target;
+  if (!el || el.tagName !== 'INPUT' || el.hasAttribute('inputmode')) return;
+  if (el.type && el.type !== 'text') return;
+  var ph = (el.getAttribute('placeholder') || '').replace(/^예\)\s*/, '');
+  var numPh = /^[0-9][0-9.,\-]*$/.test(ph);
+  var numV = el.value !== '' && /^[0-9.,\-]+$/.test(el.value);
+  if (numPh || numV) el.setAttribute('inputmode', 'decimal');
+});
 // 금리조견추가: 파킹통장추가와 같은 입력 형식 (저장 연결은 아직 없음)
 const RT2_KEY = 'rateBaseItems';
 function rtLoad2() {
@@ -9490,6 +9944,20 @@ const pageConfig = {
     renderFunctions: [],
     initFunctions: ['initRateTablePage']
   },
+  'kyung-eval-page': {
+    title: '경영평가등급',
+    showBackButton: true,
+    headerClass: '',
+    renderFunctions: [],
+    initFunctions: []
+  },
+  'databackup-page': {
+    title: '데이터백업',
+    showBackButton: true,
+    headerClass: '',
+    renderFunctions: [],
+    initFunctions: []
+  },
   'cashflow-items-page': {
     title: '항목관리',
     showBackButton: true,
@@ -9759,6 +10227,8 @@ const FIXED_BAR_PAGES = [
   { page: 'card-detail-page', footer: 'cardDetailFooter', spacer: 'crdSpacer', gap: 40 },
   { page: 'cashflow-items-page', footer: 'cfItemsFooter', spacer: 'cfItemsSpacer' },
   { page: 'rate-table-page', footer: 'rateTableFooter', spacer: 'rateTableSpacer' },
+  { page: 'kyung-eval-page', footer: 'kyungEvalFooter', spacer: 'kyungEvalSpacer' },
+  { page: 'databackup-page', footer: 'databackupFooter', spacer: 'databackupSpacer' },
   { page: 'prepay-profit-compare-page', footer: 'prepayCompareFooter', spacer: 'prepayCompareSpacer' },
   { page: 'card-usage-page', footer: 'cuFooter', spacer: 'cuSpacer' }
 ];
@@ -12311,6 +12781,7 @@ function navigateToMenuPage(menuId) {
                  menuId === 'schedule' ? 'schedule-page' :
                  menuId === 'add-product' ? 'add-product-page' :
                  menuId === 'settings' ? 'settings-page' :
+                 menuId === 'databackup' ? 'databackup-page' :
                  menuId;
   navigateTo(pageId);
 }
@@ -12476,6 +12947,7 @@ function navigateToSubmenu(submenuId) {
                  submenuId === 'prepay-profit-compare' ? 'prepay-profit-compare-page' :
                  submenuId === 'calc-cashflow' ? 'calc-cashflow-page' :
                  submenuId === 'rate-table' ? 'rate-table-page' :
+                 submenuId === 'kyung-eval' ? 'kyung-eval-page' :
                  submenuId === 'cashflow-items' ? 'cashflow-items-page' :
                  submenuId;
   console.log('navigateToSubmenu:', submenuId, '-> pageId:', pageId);
@@ -24771,6 +25243,7 @@ function resetMenuStructure() {
               { id: 'savings-schedule', label: '적금일정' },
               { id: 'savings-registration', label: '적금등록' },
               { id: 'rate-table', label: '파킹/금리조견표' },
+              { id: 'kyung-eval', label: '경영평가등급' },
               { id: 'product-field-settings', label: '적금등록필드설정' }
             ]
           },
@@ -24821,6 +25294,11 @@ function resetMenuStructure() {
                 label: '메뉴설정'
               }
             ]
+          },
+          {
+            id: 'databackup',
+            label: '데이터백업',
+            icon: '💾'
           }
         ];
 
@@ -25199,6 +25677,15 @@ function loadMenuData() {
           localStorage.setItem('menuStructure', JSON.stringify(menuStructure));
         }
       } catch (e) {}
+      // 경영평가등급 서브메뉴 1회 추가: 파킹/금리조견표 아래 (이미 있으면 건너뜀)
+      try {
+        const kvM = menuStructure.find(m => m.id === 'savings-management');
+        if (kvM && Array.isArray(kvM.submenu) && !kvM.submenu.some(x => x.id === 'kyung-eval')) {
+          const kIdx = kvM.submenu.findIndex(x => x.id === 'rate-table');
+          kvM.submenu.splice(kIdx >= 0 ? kIdx + 1 : kvM.submenu.length, 0, { id: 'kyung-eval', label: '경영평가등급' });
+          localStorage.setItem('menuStructure', JSON.stringify(menuStructure));
+        }
+      } catch (e) {}
       // 카드관리 서브메뉴 1회 추가: 카드사용실적, 카드등록 (빈 서브메뉴일 때만)
       try {
         if (localStorage.getItem('cardSubmenuV1') !== '1' && Array.isArray(menuStructure)) {
@@ -25304,6 +25791,10 @@ function loadMenuData() {
           if (tgt && Array.isArray(tgt.submenu) && !tgt.submenu.some(x => x.id === mv.fid)) tgt.submenu.push(mv.item);
         });
         try { localStorage.setItem('fieldSettingsMoveV1', '1'); } catch (e) {}
+      }
+      if (!localStorage.getItem('databackupMenuV1')) {
+        if (!menuStructure.some(m => m.id === 'databackup')) menuStructure.push({ id: 'databackup', label: '데이터백업', icon: '💾' });
+        try { localStorage.setItem('databackupMenuV1', '1'); } catch (e) {}
       }
       menuStructureBackup = JSON.parse(JSON.stringify(menuStructure));
       console.log('✓ loadMenuData() - localStorage에서 로드됨:', menuStructure);
@@ -26620,7 +27111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (view === 'year') {
         // 삼성 브라우저처럼 세로 스크롤 목록: 선택된 연도가 가운데에 오도록 맞춘다
         html += '<div class="dp-years" id="dpYears"><div style="height:88px"></div>';
-        for (var y = 1950; y <= 2100; y++) {
+        for (var y = 1950; y <= 2500; y++) {
           html += '<button data-y="' + y + '" class="' + (y === cur.getFullYear() ? 'dp-cur' : '') + '">' + y + '년</button>';
         }
         html += '<div style="height:88px"></div></div>';
