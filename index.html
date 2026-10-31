@@ -9211,7 +9211,7 @@ function kyungSave() {
   for (let i = 0; i < KYUNG_REQUIRED.length; i++) {
     const k = KYUNG_REQUIRED[i];
     if (!String(v[k] || '').trim()) {
-      showConfirmModal(k + kyJosa(k) + ' 입력하세요.', function () {}, null, '확인', '#00A8A8');
+      cfWarn(k + kyJosa(k) + ' 입력하세요.');
       return;
     }
   }
@@ -9289,7 +9289,7 @@ function kyungUpdate(idx) {
   for (let i = 0; i < KYUNG_REQUIRED.length; i++) {
     const k = KYUNG_REQUIRED[i];
     if (!String(v[k] || '').trim()) {
-      showConfirmModal(k + kyJosa(k) + ' 입력하세요.', function () {}, null, '확인', '#00A8A8');
+      cfWarn(k + kyJosa(k) + ' 입력하세요.');
       return;
     }
   }
