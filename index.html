@@ -19588,6 +19588,7 @@ function kkulReplaceHist(pageId) {
     // History API 오류 무시
   }
 }
+let kkulCollapseTimer = null;
 function kkulCollapseHistory() {
   if (kkulHistCollapsing) return;
   if (kkulHistDepth <= 0) { kkulPushHist('main-page'); return; }
@@ -19595,9 +19596,9 @@ function kkulCollapseHistory() {
   if (n <= 0) return;
   kkulHistDepth = 1;
   kkulHistCollapsing = true;
-  window.addEventListener('popstate', function kkulCollapseDone() {
-    kkulHistCollapsing = false;
-  }, { once: true });
+  // 이동 이벤트가 오지 않아도 플래그가 굳어 뒤로가기가 막히지 않도록 안전 해제
+  clearTimeout(kkulCollapseTimer);
+  kkulCollapseTimer = setTimeout(function () { kkulHistCollapsing = false; }, 800);
   try {
     window.history.go(-n);
   } catch (e) {
@@ -19623,15 +19624,24 @@ function kkulConfirmExit() {
   document.getElementById('kkulExitYes').onclick = function () { ov.remove(); kkulExitApp(); };
 }
 function kkulExitApp() {
-  kkulExiting = true;
+  // 웹 페이지는 직접 실행한 앱 창을 스스로 닫을 수 없으므로, 빈 화면으로 바꾸지 않고 안내만 표시
   try { window.close(); } catch (e) { /* 무시 */ }
-  // 사용자가 직접 연 탭은 자바스크립트로 닫히지 않으므로, 잠시 후 빈 화면으로 바꿔 앱을 끝낸 상태로 만듦
-  setTimeout(function () {
-    try { window.location.replace('about:blank'); } catch (e) { /* 무시 */ }
-  }, 300);
+  const old = document.getElementById('kkulExitNotice');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.id = 'kkulExitNotice';
+  t.style.cssText = 'position:fixed;left:16px;right:16px;bottom:90px;z-index:10001;background-color:#333;color:#FFFFFF;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.5;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.3);';
+  t.textContent = '앱을 닫으려면 최근 앱 목록에서 꿀단지를 종료해 주세요.';
+  document.body.appendChild(t);
+  setTimeout(function () { if (t.parentNode) t.remove(); }, 3000);
 }
 window.addEventListener('popstate', (event) => {
-  if (kkulHistCollapsing || kkulExiting) return;
+  if (kkulHistCollapsing) {
+    kkulHistCollapsing = false;
+    clearTimeout(kkulCollapseTimer);
+    if (!event.state || !event.state.pageId) { kkulHistDepth = 0; kkulPushHist('main-page'); }
+    return;
+  }
   if (!event.state || !event.state.pageId) {
     kkulHistDepth = 0; // 처음(메인) 기록으로 돌아옴
   } else {
