@@ -2783,7 +2783,7 @@ textarea.add-product-input[data-filled="true"] {
             const pad = function (n) { return String(n).padStart(2, '0'); };
             const date = m ? new Date().getFullYear() + '-' + pad(m[1]) + '-' + pad(m[2]) : '';
             const usage = loadCardUsageRaw();
-            usage.push({ id: 'u' + Date.now(), cardId: card.id, date: date, amount: Number(s.amount) || 0, merchant: String(s.merchant || ''), deduct: autoDeductOf({ merchant: s.merchant }), confirmed: false, createdAt: new Date().toISOString() });
+            usage.push({ id: 'u' + Date.now(), cardId: card.id, date: date, time: ((String(s.date || '').match(/\d{1,2}:\d{2}/) || [])[0] || ''), amount: Number(s.amount) || 0, merchant: String(s.merchant || ''), deduct: autoDeductOf({ merchant: s.merchant }), confirmed: false, createdAt: new Date().toISOString() });
             saveCardUsageRaw(usage);
             list.splice(idx, 1);
             saveUnclassifiedSms(list);
@@ -3325,7 +3325,7 @@ textarea.add-product-input[data-filled="true"] {
                   // 카드가 자동으로 찾아지면 바로 그 카드의 사용 내역으로 저장 (자동분류 상태)
                   const d0 = dm ? new Date().getFullYear() + '-' + String(dm[1]).padStart(2, '0') + '-' + String(dm[2]).padStart(2, '0') : '';
                   const usage = loadCardUsageRaw();
-                  usage.push({ id: 'u' + Date.now() + '_' + added, cardId: hit.card.id, date: d0, amount: amt, merchant: merchant, deduct: autoDeductOf({ merchant: merchant }), confirmed: false, createdAt: new Date().toISOString() });
+                  usage.push({ id: 'u' + Date.now() + '_' + added, cardId: hit.card.id, date: d0, time: (dm && dm[3]) ? dm[3] : '', amount: amt, merchant: merchant, deduct: autoDeductOf({ merchant: merchant }), confirmed: false, createdAt: new Date().toISOString() });
                   saveCardUsageRaw(usage);
                 } else {
                   // 카드를 찾지 못한 건만 미분류에 둔다
@@ -3505,7 +3505,7 @@ textarea.add-product-input[data-filled="true"] {
             const key = monthSrc.slice(0, 7);
             if (!/^\d{4}-\d{2}$/.test(key)) return;
             (groups[key] = groups[key] || []).push({
-              date: /^\d{4}-\d{2}-\d{2}$/.test(d) ? d.slice(5, 10) : '날짜없음',
+              date: (/^\d{4}-\d{2}-\d{2}$/.test(d) ? d.slice(5, 10) : '날짜없음') + (r.time ? ' ' + r.time : ''),
               amount: Math.round(Number(r.amount) || 0),
               merchant: String(r.merchant || ''),
               id: r.id,
@@ -3554,10 +3554,10 @@ textarea.add-product-input[data-filled="true"] {
                 ? '<span' + (it.id ? ' onclick="window.confirmUsageAction(\'confirm\', \'' + it.id + '\', this)"' : '') + ' style="display:inline-flex; align-items:center; justify-content:center; width:33.6px; height:19.2px; padding:0; box-sizing:border-box; border:1px solid #00A8A8; border-radius:30px; background-color:#00FF00; color:#000000; font-size:10px; font-weight:700; box-shadow:none;' + (it.id ? ' cursor:pointer;' : '') + '">미확인</span>'
                 : '';
               return '<div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:4px 12px 8px; margin-top:0;"><div style="padding:5px 0;">' +
-                '<div style="display:grid; grid-template-columns:64px 52px 1fr; align-items:center; font-size:14px; font-weight:700; color:#000000; line-height:1.2;"><span style="color:#00A8A8;">사용 ' + (m.items.length - i) + '</span><span style="text-align:right;">' + it.date + '</span><span style="text-align:right;">' + fmt(it.amount) + '</span></div>' +
+                '<div style="display:grid; grid-template-columns:56px 1fr; align-items:center; font-size:14px; font-weight:700; color:#000000; line-height:1.2;"><span style="color:#00A8A8; white-space:nowrap;">사용 ' + (m.items.length - i) + '</span><span style="text-align:right;">' + fmt(it.amount) + '</span></div>' +
                 '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px; line-height:1.2;"><span style="font-size:14px; color:#666666; white-space:nowrap;">' + name + '</span>' +
                 '<span style="display:flex; align-items:center; gap:5px;">' + (it.id ? '<span onclick="window.confirmUsageAction(\'deduct\', \'' + it.id + '\', this)" style="cursor:pointer;">' + badge(it.deduct, d[0], d[1], d[2]) + '</span>' : badge(it.deduct, d[0], d[1], d[2])) + (it.cls === '자동분류' ? autoBadge + confirmBtn : '<span style="display:inline-flex; align-items:center; justify-content:center; width:33.6px; height:19.2px; padding:0; box-sizing:border-box; border:1px solid #FF0000; border-radius:30px; background-color:#E0F9F9; color:#FF0000; font-size:10px; font-weight:700; box-shadow:none;">확인됨</span>') + '</span></div>' +
-                (hasDiscount || it.id ? '<div style="margin-top:4px; display:flex; justify-content:space-between; align-items:center; line-height:0;">' + (hasDiscount ? DISC(!!it.ex, it.id) : '<span></span>') + (it.id ? '<span style="display:flex; align-items:center; gap:5px;">' + '<button type="button" class="badge" onclick="window.deleteUsageRecord(\'' + it.id + '\')" style="flex:none; min-width:33.6px; max-width:33.6px; width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button>' + '<button type="button" onclick="window.openUsageCardChange(\'' + it.id + '\')" style="width:33.6px; height:19.2px; padding:0; font-size:9px; font-weight:700; background-color:#FFE0B2; color:#000000; border:1px solid #000000; border-radius:30px; box-sizing:border-box; box-shadow:none; cursor:pointer; white-space:nowrap;">카드변경</button>' + '</span>' : '<span></span>') + '</div>' : '') +
+                (hasDiscount || it.id ? '<div style="margin-top:4px; display:flex; justify-content:space-between; align-items:center; line-height:0;"><span style="display:flex; align-items:center; gap:5px; line-height:1.2;">' + (hasDiscount ? DISC(!!it.ex, it.id) : '') + '<span style="font-size:14px; font-weight:700; color:#000000; white-space:nowrap;">' + it.date + '</span></span>' + (it.id ? '<span style="display:flex; align-items:center; gap:5px;">' + '<button type="button" class="badge" onclick="window.deleteUsageRecord(\'' + it.id + '\')" style="flex:none; min-width:33.6px; max-width:33.6px; width:33.6px; height:19.2px; font-size:11px; font-weight:700; background-color:#FFFFFF; color:#FF0000; box-shadow:none; border:1px solid #FF0000; box-sizing:border-box; cursor:pointer;">삭제</button>' + '<button type="button" onclick="window.openUsageCardChange(\'' + it.id + '\')" style="width:33.6px; height:19.2px; padding:0; font-size:9px; font-weight:700; background-color:#FFE0B2; color:#000000; border:1px solid #000000; border-radius:30px; box-sizing:border-box; box-shadow:none; cursor:pointer; white-space:nowrap;">카드변경</button>' + '</span>' : '<span></span>') + '</div>' : '') +
                 '</div></div>';
             }).join('');
             html += '<div class="summary-card" style="margin-top:' + '20px' + ' !important; margin-bottom:0 !important; padding-top:10px !important;">' +
