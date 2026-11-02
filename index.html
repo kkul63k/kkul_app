@@ -5579,7 +5579,7 @@ textarea.add-product-input[data-filled="true"] {
           <div style="margin-bottom: 8px;"><div style="display: flex; align-items: center; gap: 8px; margin-top: -8px;">
             <span class="badge group-badge" style="background-color: #E94B3C; color: #FFFFFF;">파킹</span>
             <span style="font-size: 17px; font-weight: 700; color: #00A8A8; white-space: nowrap;">파킹금액</span>
-            <button class="honeypot-button-save" onclick="cfOpenParking(null)" style="width: auto; margin: 0 0 0 auto; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; line-height: 1;">+파킹통장</button>
+            <button class="honeypot-button-save" onclick="cfOpenParking(null)" style="width: auto; margin: 0 0 0 auto; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; line-height: 1;">+파킹예치</button>
           </div></div>
           <div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:2px 6px 0; margin-top:12px;">
             <div id="cfParkingList" class="cf-parking-list" style="margin:0 0 0 0;"><div style="font-size:12px;color:#888;padding:6px 0;">등록된 파킹 통장이 없습니다.</div></div>
@@ -9674,11 +9674,14 @@ function cfOpenParking(id, titleOverride) {
   const body = pfField('은행/통장명', '<input class="form-input" id="cfP_name" value="' + cfEsc(p ? p.name : '') + '" placeholder="예) 한국저축은행/한국파킹통장">')
     + pfField('파킹금액', '<input type="number" class="form-input" id="cfP_amount" value="' + (p ? p.amount : '') + '" placeholder="예) 2000000">')
     + pfField('금리(%)', '<input type="text" inputmode="decimal" class="form-input" id="cfP_rate" value="' + cfEsc(p ? cfRateNumText(p.rate) : '') + '" placeholder="예) 5.5">')
-    + pfField('한도', '<input type="text" inputmode="numeric" class="form-input" id="cfP_limit" value="' + (p && p.limit ? p.limit : '') + '" placeholder="예) 2000000">');
+    + pfField('한도', '<input type="text" inputmode="numeric" class="form-input" id="cfP_limit" value="' + (p && p.limit ? p.limit : '') + '" placeholder="예) 2000000">')
+    + pfField('메모', '<textarea class="form-input" id="cfP_memo" rows="1" oninput="rtAutoH(this)" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:40px;">' + cfEsc(p && p.memo ? p.memo : '') + '</textarea>');
   const footer = (p ? '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>' : '')
     + '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveParking(' + (id ? id : 'null') + ')">저장</button>';
-  cfOpenModal(titleOverride || (p ? '파킹통장 수정' : '파킹통장 추가'), body, footer, '#00A8A8');
+  cfOpenModal(titleOverride || (p ? '파킹예치 수정' : '파킹예치 추가'), body, footer, '#00A8A8');
+  const memoEl = document.getElementById('cfP_memo');
+  if (memoEl) rtAutoH(memoEl);
 }
 
 // 금리 입력값 표시용: 숫자만 있으면 그대로, 예전 입력("5.5%/2백만원")은 금리 숫자만 뽑아서 표시
@@ -9724,7 +9727,8 @@ function cfSaveParking(id) {
   if (rateRaw === '') return cfWarn('금리를 입력하세요.');
   if (isNaN(Number(rateRaw))) return cfWarn('금리는 숫자로 입력하세요. 예) 5.5');
   if (amtRaw === '' || isNaN(Number(amtRaw))) return cfWarn('금액을 입력하세요.');
-  const item = { name, rate: rateRaw, limit: limitRaw ? Number(limitRaw) : 0, amount: Number(amtRaw) };
+  const memoEl = document.getElementById('cfP_memo');
+  const item = { name, rate: rateRaw, limit: limitRaw ? Number(limitRaw) : 0, amount: Number(amtRaw), memo: memoEl ? memoEl.value.trim() : '' };
   if (id) {
     const p = d.parking.find(x => x.id === id);
     if (p) Object.assign(p, item);
