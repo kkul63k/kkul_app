@@ -2247,7 +2247,7 @@ textarea.add-product-input[data-filled="true"] {
     </div></div>
 
     <!-- 서브 메뉴 컨테이너 -->
-    <div class="sub-menu-container active" id="subMenuContainer"><div class="sub-menu" data-menu="savings-management"><div class="sub-menu-item">적금목록</div><div class="sub-menu-item">적금일정</div><div class="sub-menu-item">적금등록</div><div class="sub-menu-item">파킹/금리조견표</div><div class="sub-menu-item">적금등록필드설정</div></div><div class="sub-menu" data-menu="stock-management"><div class="sub-menu-item">주식목록</div><div class="sub-menu-item">주식등록</div><div class="sub-menu-item">주식등록필드설정</div></div><div class="sub-menu" data-menu="card-management"><div class="sub-menu-item">카드사용실적</div><div class="sub-menu-item">카드등록</div><div class="sub-menu-item">카드등록필드설정</div></div><div class="sub-menu" data-menu="cashflow-management"><div class="sub-menu-item">유동자금일정</div></div><div class="sub-menu" data-menu="calculator"><div class="sub-menu-item">선납이연계산기</div><div class="sub-menu-item">선납수익비교</div><div class="sub-menu-item">적금계산기</div><div class="sub-menu-item">예금계산기</div><div class="sub-menu-item">금리환산기</div><div class="sub-menu-item">일반계산기</div></div><div class="sub-menu" data-menu="settings"><div class="sub-menu-item">기본설정</div><div class="sub-menu-item">메뉴설정</div></div></div>
+    <div class="sub-menu-container active" id="subMenuContainer"><div class="sub-menu" data-menu="savings-management"><div class="sub-menu-item">적금목록</div><div class="sub-menu-item">적금일정</div><div class="sub-menu-item">적금등록</div><div class="sub-menu-item">금리조견표</div><div class="sub-menu-item">적금등록필드설정</div></div><div class="sub-menu" data-menu="stock-management"><div class="sub-menu-item">주식목록</div><div class="sub-menu-item">주식등록</div><div class="sub-menu-item">주식등록필드설정</div></div><div class="sub-menu" data-menu="card-management"><div class="sub-menu-item">카드사용실적</div><div class="sub-menu-item">카드등록</div><div class="sub-menu-item">카드등록필드설정</div></div><div class="sub-menu" data-menu="cashflow-management"><div class="sub-menu-item">유동자금일정</div></div><div class="sub-menu" data-menu="calculator"><div class="sub-menu-item">선납이연계산기</div><div class="sub-menu-item">선납수익비교</div><div class="sub-menu-item">적금계산기</div><div class="sub-menu-item">예금계산기</div><div class="sub-menu-item">금리환산기</div><div class="sub-menu-item">일반계산기</div></div><div class="sub-menu" data-menu="settings"><div class="sub-menu-item">기본설정</div><div class="sub-menu-item">메뉴설정</div></div></div>
   </div>
 
   <!-- 페이지 컨테이너 -->
@@ -5349,24 +5349,9 @@ textarea.add-product-input[data-filled="true"] {
       </style>
       <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 0;">
 
-        <!-- 카드 1: 파킹금리 (중첩카드 없이 버튼과 표, 금리조견표와 같은 형식) -->
-        <div class="summary-card" style="margin: 0 !important; padding: 10px 10px 20px 10px !important; overflow: hidden; background-color: #FFFFFF; box-shadow: var(--shadow-card);">
-          <div style="margin-top: 0; margin-bottom: 10px;"><span style="font-size: 15px; font-weight: 800; color: #00A8A8; white-space: nowrap;">파킹금리</span></div>
-          <div style="margin-bottom: 0;"><div class="summary-card" style="margin: 0 !important; padding: 0 14px !important; box-sizing: border-box; height: 40px; border: 1px solid #00A8A8 !important; background-color: #FFFFFF !important; box-shadow: none !important; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #000000; cursor: pointer;" onclick="rtOpenAdd()">파킹통장추가</div></div>
-          <div style="margin-top: 20px; max-height: 360px; overflow: auto;">
-            <table id="rtTable">
-              <colgroup>
-                <col style="width: 97px;"><col style="width: 125px;"><col style="width: 47px;"><col style="width: 45px;"><col style="width: 88px;"><col style="width: 140px;">
-              </colgroup>
-              <thead><tr><th>은행명</th><th>상품명</th><th>세전</th><th>세후</th><th>한도</th><th>조건</th></tr></thead>
-              <tbody id="rtTbody"></tbody>
-            </table>
-          </div>
-        </div>
-
         <!-- 카드 3: 금리조견표 (중첩카드 없이 파킹통장추가 버튼만) -->
-        <div class="summary-card" style="margin: 10px 0 0 0 !important; padding: 10px 10px 20px 10px !important; overflow: hidden; background-color: #FFFFFF; box-shadow: var(--shadow-card);">
-          <div style="margin-top: 0; margin-bottom: 10px;"><span style="font-size: 15px; font-weight: 800; color: #00A8A8; white-space: nowrap;">금리조견표</span></div>
+        <div class="summary-card" style="margin: 0 !important; padding: 10px 10px 20px 10px !important; overflow: hidden; background-color: #FFFFFF; box-shadow: var(--shadow-card);">
+          
           <div style="margin-bottom: 0;"><div class="summary-card" style="margin: 0 !important; padding: 0 14px !important; box-sizing: border-box; height: 40px; border: 1px solid #FF8C00 !important; background-color: #FFFFFF !important; box-shadow: none !important; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #000000; cursor: pointer;" onclick="rtOpenAdd2()">금리조견추가</div></div>
           <style>
         #rtTable2 { width: 464px; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 14px; font-weight: 400; line-height: 1.2; }
@@ -7792,7 +7777,7 @@ let menuStructure = [
       { id: 'savings-list', label: '적금목록' },
       { id: 'savings-schedule', label: '적금일정' },
       { id: 'savings-registration', label: '적금등록' },
-      { id: 'rate-table', label: '파킹/금리조견표' },
+      { id: 'rate-table', label: '금리조견표' },
       { id: 'kyung-eval', label: '경영평가등급' },
       { id: 'product-field-settings', label: '적금등록필드설정' }
     ]
@@ -8143,10 +8128,10 @@ function renderCashflowPage() {
   setTxt('cfSumSP', '₩ ' + cfMoney(prod.savings + prod.deposit + parkTotal));
 
   const parkHtml = d.parking.length ? cfParkingSorted(d.parking).map((p, i) =>'<div style="' + (i === 0 ? '' : 'border-top:1px solid #E0E0E0;') + 'padding:6px 0;font-size:14px;font-weight:400;color:#000000;">'
-      + '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:14px;"><span style="font-size:13px;font-weight:400;color:#000000;">' + cfEsc(p.name) + '</span></div>'
+      + '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:14px;"><span style="font-size:13px;font-weight:400;color:#000000;">' + cfEsc(p.bank ? p.bank + '/' + p.name : p.name) + '</span></div>'
       + '<div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:3px;line-height:14px;">' + cfRateHtml(p)
       + '<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:14px;font-weight:700;color:#000000;">' + cfMoney(p.amount) + '</span>'
-      + '<button onclick="cfOpenParking(' + p.id + ')" style="display:inline-flex; align-items:center; justify-content:center; width:33.6px; height:19.2px; padding:0; align-self:flex-start; border-radius:30px; font-size:9px; font-weight:700; box-sizing:border-box; cursor:pointer; white-space:nowrap; box-shadow:none; background-color:#FFF30F; border:1px solid #000000; color:#000000;">수정</button></div></div></div>').join('')
+      + '<button onclick="cfOpenParkingDetail(' + p.id + ')" style="display:inline-flex; align-items:center; justify-content:center; width:33.6px; height:19.2px; padding:0; align-self:flex-start; border-radius:30px; font-size:9px; font-weight:700; box-sizing:border-box; cursor:pointer; white-space:nowrap; box-shadow:none; background-color:#FFF30F; border:1px solid #000000; color:#000000;">수정</button></div></div></div>').join('')
       : '<div style="font-size:12px;color:#888;padding:6px 0;">등록된 파킹 통장이 없습니다.</div>';
   document.querySelectorAll('.cf-parking-list').forEach(function (pl) { pl.innerHTML = parkHtml; });
   // 보유잔금 카드: 파킹 통장과 무관한 별도 데이터(d.holding)를 한 줄로 표시
@@ -8644,6 +8629,7 @@ function cfOpenModal(title, body, footer, titleColor) {
     + '<div style="position:fixed;bottom:0;left:0;right:0;z-index:1901;display:flex;gap:12px;justify-content:center;align-items:center;padding:10px 14px;background-color:var(--color-bg-primary);border-top:1px solid #E0E0E0;">'
     + '<button class="honeypot-button-cancel" onclick="cfCloseModal()">닫기</button></div>';
   m.style.display = 'block';
+  m.scrollTop = 0;
 }
 // 세부일정표 높이: 카드 시작~닫기 버튼 위 30px 지점까지, 남는 높이만큼 표 안에서 스크롤
 function cfFitTable() {
@@ -8952,12 +8938,6 @@ function cfResetOccurrence(ruleId, ym) {
 // ---------- 금리조견표 (파킹금리 등록 · 표) ----------
 const RT_KEY = 'rateTableItems';
 const RT_TAX = 0.154;
-function rtLoad() {
-  try { return JSON.parse(localStorage.getItem(RT_KEY) || '[]'); } catch (e) { return []; }
-}
-function rtSaveAll(d) {
-  try { localStorage.setItem(RT_KEY, JSON.stringify(d)); } catch (e) {}
-}
 // 세후 = 세전 × (1 - 15.4%), 소수 둘째 자리 반올림 (정수 계산으로 0.005 경계 오차 방지)
 function rtPostText(pre, tax) {
   const n = Number(pre), t = Number(tax);
@@ -8970,9 +8950,6 @@ function rtFmtLimit(v) {
   const t = String(v == null ? '' : v).trim();
   const digits = t.replace(/,/g, '');
   return /^\d+$/.test(digits) ? Number(digits).toLocaleString('ko-KR') : t;
-}
-function rtOpenAdd() {
-  rtOpenForm(null);
 }
 // 경영평가등급추가: 파킹통장추가와 같은 입력 형식 (항목·저장 연결은 아직 없음)
 // 경영평가등급추가 모달 폼: 2칸 줄 구성 (항목명·저장 연결은 아직 없음)
@@ -9451,8 +9428,8 @@ function rtOpenAdd2() {
   const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="rtSaveAdd2()">저장</button>';
   // 상품명 자리를 적용세율(%)로 바꿈 (예) 6.0)
-  const body = rtFormBody(null).replace(/<div><div class="form-label">상품명<\/div><input class="form-input" id="rtName"[^>]*><\/div>/, '<div><div class="form-label">적용세율<span style="font-size:12px;">(%)</span></div><input type="text" inputmode="decimal" class="form-input" id="rtTaxB" placeholder="예) 15.4"></div>').replace(/<div><div class="form-label">적용세율<span style="font-size:12px;">\(%\)<\/span><\/div><input type="text" inputmode="decimal" class="form-input" id="rtTax"[^>]*><\/div>/, '').replace('display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px 8px; margin-top:25px;', 'display:grid; grid-template-columns:1fr 1fr; gap:10px 10px; margin-top:25px;').replace('<div class="form-label">파킹금리<span style="font-size:12px;">(%)</span></div>', '<div class="form-label">세전금리<span style="font-size:12px;">(%)</span></div>').replace('id="rtPre" value="" placeholder="예) 7.00"', 'id="rtPre" value="" placeholder="예) 6.0"').replace('<div class="form-label">한도</div>', '<div class="form-label">가입한도</div>').replace('placeholder="예) 500000"', 'placeholder="예) 5000000"').replace('<div class="form-label">적용세율<span style="font-size:12px;">(%)</span></div>', '<div class="form-label">적용세율<span style="font-size:12px;">(%)</span> <span style="font-size:11px; color:#FF0000;">(필수)</span></div>').replace('<div class="form-label">세전금리<span style="font-size:12px;">(%)</span></div>', '<div class="form-label">세전금리<span style="font-size:12px;">(%)</span> <span style="font-size:11px; color:#FF0000;">(필수)</span></div>');
-  cfOpenModal('금리조견추가', body, footer, '#00A8A8');
+  const body = rtFormBody(null).replace(/<div><div class="form-label">상품명<\/div><input class="form-input" id="rtName"[^>]*><\/div>/, '<div><div class="form-label">적용세율<span style="font-size:12px;">(%)</span></div><input type="text" inputmode="decimal" class="form-input" id="rtTaxB" placeholder="예) 15.4"></div>').replace(/<div><div class="form-label">적용세율<span style="font-size:12px;">\(%\)<\/span><\/div><input type="text" inputmode="decimal" class="form-input" id="rtTax"[^>]*><\/div>/, '').replace('display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px 8px; margin-top:25px;', 'display:grid; grid-template-columns:1fr 1fr; gap:10px 10px; margin-top:20px;').replace('<div class="form-label">파킹금리<span style="font-size:12px;">(%)</span></div>', '<div class="form-label">세전금리<span style="font-size:12px;">(%)</span></div>').replace('id="rtPre" value="" placeholder="예) 7.00"', 'id="rtPre" value="" placeholder="예) 6.0"').replace('<div class="form-label">한도</div>', '<div class="form-label">가입한도 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div>').replace('placeholder="예) 500000"', 'placeholder="예) 5000000"').replace('<div style="margin-top:25px;"><div class="form-label">조건</div>', '<div style="margin-top:20px;"><div class="form-label">조건/메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div>');
+  cfOpenModal('금리조견 추가', body, footer, '#00A8A8');
   const memo = document.getElementById('rtCond');
   if (memo) rtAutoH(memo);
 }
@@ -9479,141 +9456,8 @@ function rtAutoH(el) {
   el.style.height = 'auto';
   el.style.height = el.scrollHeight + 'px';
 }
-function rtOpenForm(id) {
-  const o = id != null ? rtLoad().find(x => x.id === id) : null;
-  const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
-    + '<button class="honeypot-button-save" onclick="rtSaveItem(' + (o ? o.id : 'null') + ')">저장</button>';
-  let body = rtFormBody(o);
-  if (!o) body = body.replace('<div class="form-label">조건</div>', '<div class="form-label">조건 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div>');
-  cfOpenModal(o ? '파킹통장수정' : '파킹통장추가', body, footer, '#00A8A8');
-  const memo = document.getElementById('rtCond');
-  if (memo) rtAutoH(memo);
-}
-function rtSaveItem(id) {
-  const g = elId => document.getElementById(elId).value.trim();
-  const bank = g('rtBank');
-  const name = g('rtName');
-  const pre = g('rtPre');
-  const tax = g('rtTax');
-  if (!bank) return cfWarn('은행명을 입력하세요.');
-  if (!name) return cfWarn('상품명을 입력하세요.');
-  if (pre === '' || isNaN(Number(pre))) return cfWarn('파킹금리를 입력하세요.');
-  if (tax === '' || isNaN(Number(tax))) return cfWarn('적용세율을 입력하세요.');
-  if (!id && g('rtLimit') === '') return cfWarn('한도를 입력하세요.');
-  const d = rtLoad();
-  const item = { bank: bank, name: name, pre: Number(pre).toFixed(2), tax: Number(tax).toFixed(1), post: rtPostText(pre, tax), limit: g('rtLimit').replace(/,/g, ''), cond: g('rtCond') };
-  if (id) {
-    const o = d.find(x => x.id === id);
-    if (o) Object.assign(o, item);
-  } else {
-    d.push(Object.assign({ id: Date.now() }, item));
-  }
-  rtSaveAll(d);
-  cfCloseModal();
-  rtRender();
-  showNotification('저장되었습니다', 1500, 'default');
-}
 // 상세 (모달): 입력한 내용 전부 표시, 아래 삭제 · 수정
-function rtOpenDetail(id) {
-  const r = rtLoad().find(x => x.id === id);
-  if (!r) return;
-  const row = (label, val) => '<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:6px 0; border-bottom:1px solid #E6E6E6;">'
-    + '<span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">' + label + '</span>'
-    + '<span style="font-size:14px; font-weight:700; color:#000; text-align:right; word-break:break-all;">' + (val || '-') + '</span></div>';
-  const pct = x => cfEsc(x) + ' ' + '<span style="font-size:12px;">%</span>';
-  const tax = r.tax != null ? Number(r.tax).toFixed(1) : '15.4';
-  const body = row('은행명', cfEsc(r.bank)) + row('상품명', cfEsc(r.name))
-    + row('파킹금리<span style="font-size:12px;">(%)</span>', pct(r.pre)) + row('적용세율<span style="font-size:12px;">(%)</span>', pct(tax))
-    + row('세후<span style="font-size:12px;">(%)</span>', pct(r.post)) + row('한도', cfEsc(rtFmtLimit(r.limit) || '-')) + '<div style="display:flex; align-items:flex-start; gap:12px; padding:6px 0;"><span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">메모</span><span style="flex:1; min-width:0; font-size:14px; font-weight:700; color:#000; text-align:left; white-space:pre-wrap; word-break:break-all;">' + cfEsc(r.cond || '-') + '</span></div>';
-  const footer = '<button class="honeypot-button-delete" onclick="rtDelete(' + id + ')">삭제</button>'
-    + '<button class="honeypot-button-save" onclick="rtOpenForm(' + id + ')">수정</button>';
-  const nested = '<div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:4px 12px; margin-top:12px;">' + body + '</div>';
-  cfOpenModal('파킹상품상세', nested, footer, '#00A8A8');
-}
-function rtDelete(id) {
-  cfCloseModal();
-  showConfirmModal('이 항목을 삭제하시겠습니까?', () => {
-    rtSaveAll(rtLoad().filter(x => x.id !== id));
-    rtRender();
-    showNotification('삭제되었습니다', 1500, 'delete');
-  }, null, '삭제', '#FF0000');
-}
-// 표 메모: 10자까지만 보이고 이후는 … (상세 모달에서 전체 확인)
-function rtShortMemo(t) {
-  const x = String(t || '');
-  return x.length > 10 ? x.slice(0, 10) + '…' : x;
-}
-function rtRender() {
-  const tb = document.getElementById('rtTbody');
-  if (!tb) return;
-  // 세전금리 높은 순 정렬 (같은 금리는 입력 순서 유지)
-  const list = rtLoad().slice().sort((a, b) => Number(b.pre) - Number(a.pre));
-  tb.innerHTML = list.map(r =>
-    '<tr style="cursor:pointer;" onclick="rtOpenDetail(' + r.id + ')"><td class="c bk">' + cfEsc(String(r.bank || '')) + '</td>'
-    + '<td class="nm">' + cfEsc(r.name || '') + '</td>'
-    + '<td class="r pre">' + r.pre + '</td>'
-    + '<td class="r">' + r.post + '</td>'
-    + '<td class="c lim">' + cfEsc(rtFmtLimit(r.limit)) + '</td>'
-    + '<td class="c memo mm" title="' + cfEsc(r.cond || '') + '">' + cfEsc(String(r.cond || '')) + '</td></tr>'
-  ).join('');
-  rtFitNames();
-  rtFitBanks();
-  rtFitMemos();
-  rtFitLimits();
-  rtSmallRates();
-}
-function rtFitMemos() {
-  document.querySelectorAll('#rtTbody td.mm').forEach(el => {
-    let s = 14;
-    el.style.fontSize = s + 'px';
-    while (el.scrollWidth > el.clientWidth && s > 8) {
-      s = Math.max(8, s - 0.3);
-      el.style.fontSize = s + 'px';
-    }
-  });
-}
-// 세전·세후 금리: 정수 부분이 10 이상이면 글자 크기 2.5px 작게
-function rtSmallRates() {
-  document.querySelectorAll('#rtTbody tr').forEach(tr => {
-    [tr.querySelector('td.pre'), tr.children[3]].forEach(td => {
-      if (!td) return;
-      const v = Math.floor(Math.abs(Number(td.textContent)));
-      if (v >= 10) td.style.fontSize = '11.5px';
-    });
-  });
-}
-// 상품명 칸: 넘치면 0.3px씩 줄임 (세부 일정표 항목명과 같은 규칙, 칸 폭은 그대로)
-function rtFitNames() {
-  document.querySelectorAll('#rtTbody td.nm').forEach(el => {
-    let s = 14;
-    el.style.fontSize = s + 'px';
-    while (el.scrollWidth > el.clientWidth && s > 8) {
-      s = Math.max(8, s - 0.3);
-      el.style.fontSize = s + 'px';
-    }
-  });
-}
-function rtFitBanks() {
-  document.querySelectorAll('#rtTbody td.bk').forEach(el => {
-    let s = 14;
-    el.style.fontSize = s + 'px';
-    while (el.scrollWidth > el.clientWidth && s > 8) {
-      s = Math.max(8, s - 0.3);
-      el.style.fontSize = s + 'px';
-    }
-  });
-}
-function rtFitLimits() {
-  // 한도: 천만 단위까지 14px, 억 단위가 하나 늘 때마다 0.3px씩 줄임 (최소 8px)
-  document.querySelectorAll('#rtTbody td.lim').forEach(el => {
-    const v = Number(String(el.textContent).replace(/,/g, ''));
-    let s = 14;
-    if (isFinite(v) && v >= 100000000) s = Math.max(8, 14 - 0.3 * Math.floor(v / 100000000));
-    el.style.fontSize = s + 'px';
-  });
-}
 function initRateTablePage() {
-  rtRender();
   rtRenderBase();
 }
 
@@ -9670,12 +9514,17 @@ function cfDeleteOneOff(id) {
 function cfOpenParking(id, titleOverride) {
   const d = cfLoad();
   const p = id ? d.parking.find(x => x.id === id) : null;
-  const pfField = (label, html) => '<div class="form-group"><label class="form-label">' + label + '</label>' + html + '</div>';
-  const body = pfField('은행/통장명', '<input class="form-input" id="cfP_name" value="' + cfEsc(p ? p.name : '') + '" placeholder="예) 한국저축은행/한국파킹통장">')
-    + pfField('파킹금액', '<input type="number" class="form-input" id="cfP_amount" value="' + (p ? p.amount : '') + '" placeholder="예) 2000000">')
-    + pfField('금리(%)', '<input type="text" inputmode="decimal" class="form-input" id="cfP_rate" value="' + cfEsc(p ? cfRateNumText(p.rate) : '') + '" placeholder="예) 5.5">')
-    + pfField('한도', '<input type="text" inputmode="numeric" class="form-input" id="cfP_limit" value="' + (p && p.limit ? p.limit : '') + '" placeholder="예) 2000000">')
-    + pfField('메모', '<textarea class="form-input" id="cfP_memo" rows="1" oninput="rtAutoH(this)" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:40px;">' + cfEsc(p && p.memo ? p.memo : '') + '</textarea>');
+  const PCT = '<span style="font-size:12px;">(%)</span>';
+  const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
+  const body = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px 10px; padding-top:17px;">'
+    + f('은행명', '<input class="form-input" id="cfP_bank" value="' + cfEsc(p && p.bank ? p.bank : '') + '" placeholder="예) OK저축은행">')
+    + f('상품명', '<input class="form-input" id="cfP_name" value="' + cfEsc(p ? p.name : '') + '" placeholder="예) 짠테크통장II">')
+    + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfP_rate" value="' + cfEsc(p ? cfRateNumText(p.rate) : '') + '" placeholder="예) 7.00">')
+    + f('예치금액', '<input type="number" class="form-input" id="cfP_amount" value="' + (p ? p.amount : '') + '" placeholder="예) 2000000">')
+    + f('적용세율' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfP_tax" value="' + cfEsc(p && p.tax != null ? String(p.tax) : '') + '" placeholder="예) 15.4">')
+    + f('한도', '<input type="text" inputmode="numeric" class="form-input" id="cfP_limit" value="' + (p && p.limit ? p.limit : '') + '" placeholder="예) 2000000">')
+    + '<div style="grid-column:1 / -1;"><div class="form-label">조건/메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="cfP_memo" rows="1" placeholder="예) 필요정보입력" oninput="rtAutoH(this)" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:45px;">' + cfEsc(p && p.memo ? p.memo : '') + '</textarea></div>'
+    + '</div>';
   const footer = (p ? '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>' : '')
     + '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveParking(' + (id ? id : 'null') + ')">저장</button>';
@@ -9719,16 +9568,20 @@ function cfParkingSorted(list) {
 
 function cfSaveParking(id) {
   const d = cfLoad();
-  const name = document.getElementById('cfP_name').value.trim();
-  const rateRaw = document.getElementById('cfP_rate').value.trim();
-  const limitRaw = document.getElementById('cfP_limit').value.replace(/[^0-9]/g, '');
+  const g = elId => { const el = document.getElementById(elId); return el ? el.value.trim() : ''; };
+  const bank = g('cfP_bank');
+  const name = g('cfP_name');
+  const rateRaw = g('cfP_rate');
+  const taxRaw = g('cfP_tax');
+  const limitRaw = g('cfP_limit').replace(/[^0-9]/g, '');
   const amtRaw = document.getElementById('cfP_amount').value;
-  if (!name) return cfWarn('통장명을 입력하세요.');
-  if (rateRaw === '') return cfWarn('금리를 입력하세요.');
-  if (isNaN(Number(rateRaw))) return cfWarn('금리는 숫자로 입력하세요. 예) 5.5');
-  if (amtRaw === '' || isNaN(Number(amtRaw))) return cfWarn('금액을 입력하세요.');
-  const memoEl = document.getElementById('cfP_memo');
-  const item = { name, rate: rateRaw, limit: limitRaw ? Number(limitRaw) : 0, amount: Number(amtRaw), memo: memoEl ? memoEl.value.trim() : '' };
+  if (!bank) return cfWarn('은행명을 입력하세요.');
+  if (!name) return cfWarn('상품명을 입력하세요.');
+  if (rateRaw === '' || isNaN(Number(rateRaw))) return cfWarn('파킹금리를 입력하세요.');
+  if (amtRaw === '' || isNaN(Number(amtRaw))) return cfWarn('예치금액을 입력하세요.');
+  if (taxRaw === '' || isNaN(Number(taxRaw))) return cfWarn('적용세율을 입력하세요.');
+  if (!limitRaw) return cfWarn('한도를 입력하세요.');
+  const item = { bank: bank, name: name, rate: rateRaw, tax: taxRaw, limit: limitRaw ? Number(limitRaw) : 0, amount: Number(amtRaw), memo: g('cfP_memo') };
   if (id) {
     const p = d.parking.find(x => x.id === id);
     if (p) Object.assign(p, item);
@@ -9741,6 +9594,28 @@ function cfSaveParking(id) {
   showNotification(!id ? '추가되었습니다' : '저장되었습니다', 1500, 'default');
 }
 
+// 파킹예치 상세 모달: 표(은행명·상품명·파킹금리·예치금액·적용세율·한도·조건), 아래 왼쪽 삭제 · 오른쪽 수정
+function cfOpenParkingDetail(id) {
+  const p = cfLoad().parking.find(x => x.id === id);
+  if (!p) return;
+  const PCT = '<span style="font-size:12px;">(%)</span>';
+  const money = v => (v === '' || v == null || v === 0 || v === '0') ? '-' : Number(v).toLocaleString('ko-KR');
+  const row = (label, val) => '<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:6px 0; border-bottom:1px solid #E6E6E6;">'
+    + '<span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">' + label + '</span>'
+    + '<span style="font-size:14px; font-weight:700; color:#000; text-align:right; word-break:break-all;">' + (val || '-') + '</span></div>';
+  const body = row('은행명', cfEsc(p.bank || ''))
+    + row('상품명', cfEsc(p.name || ''))
+    + row('파킹금리' + PCT, p.rate !== '' && p.rate != null ? '<span style="color:#00A8A8;">' + cfEsc(cfRateNumText(p.rate)) + ' <span style="font-size:12px;">%</span></span>' : '')
+    + row('예치금액', money(p.amount))
+    + row('적용세율' + PCT, p.tax !== '' && p.tax != null ? cfEsc(String(p.tax)) + ' <span style="font-size:12px;">%</span>' : '')
+    + row('한도', money(p.limit))
+    + '<div style="display:flex; align-items:flex-start; gap:12px; padding:6px 0;"><span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">조건</span><span style="flex:1; min-width:0; font-size:14px; font-weight:700; color:#000; text-align:left; white-space:pre-wrap; word-break:break-all;">' + (p.memo ? cfEsc(p.memo) : '-') + '</span></div>';
+  const nested = '<div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:4px 12px; margin-top:12px;">' + body + '</div>';
+  const btns = '<div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-top:18px;">'
+    + '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>'
+    + '<button class="honeypot-button-save" onclick="cfOpenParking(' + id + ')">수정</button></div>';
+  cfOpenModal('파킹예치 상세', nested + btns, '', '#00A8A8');
+}
 // ---------- 보유잔금 (파킹 통장과 무관, 수입·지출 잔액의 시작 금액) ----------
 function cfHoldingRowHtml(h) {
   if (!h) h = { name: '', rate: '', limit: 0, amount: 0 };
@@ -9951,7 +9826,7 @@ const pageConfig = {
     initFunctions: []
   },
   'rate-table-page': {
-    title: '파킹/금리조견표',
+    title: '금리조견표',
     showBackButton: true,
     headerClass: '',
     renderFunctions: [],
@@ -25350,7 +25225,7 @@ function resetMenuStructure() {
               { id: 'savings-list', label: '적금목록' },
               { id: 'savings-schedule', label: '적금일정' },
               { id: 'savings-registration', label: '적금등록' },
-              { id: 'rate-table', label: '파킹/금리조견표' },
+              { id: 'rate-table', label: '금리조견표' },
               { id: 'kyung-eval', label: '경영평가등급' },
               { id: 'product-field-settings', label: '적금등록필드설정' }
             ]
@@ -25774,14 +25649,14 @@ function loadMenuData() {
         const savM = menuStructure.find(m => m.id === 'savings-management');
         if (savM && Array.isArray(savM.submenu) && !savM.submenu.some(x => x.id === 'rate-table')) {
           const idx = savM.submenu.findIndex(x => x.id === 'savings-registration');
-          savM.submenu.splice(idx >= 0 ? idx + 1 : savM.submenu.length, 0, { id: 'rate-table', label: '파킹/금리조견표' });
+          savM.submenu.splice(idx >= 0 ? idx + 1 : savM.submenu.length, 0, { id: 'rate-table', label: '금리조견표' });
           localStorage.setItem('menuStructure', JSON.stringify(menuStructure));
         }
         // 저장된 메뉴의 금리조견표 이름을 파킹/금리조견표로 1회 변경
         const rtM = menuStructure.find(m => m.id === 'savings-management');
         const rtI = rtM && Array.isArray(rtM.submenu) ? rtM.submenu.find(x => x.id === 'rate-table') : null;
-        if (rtI && rtI.label !== '파킹/금리조견표') {
-          rtI.label = '파킹/금리조견표';
+        if (rtI && rtI.label !== '금리조견표') {
+          rtI.label = '금리조견표';
           localStorage.setItem('menuStructure', JSON.stringify(menuStructure));
         }
       } catch (e) {}
