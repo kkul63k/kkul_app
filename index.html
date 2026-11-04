@@ -9522,7 +9522,7 @@ function cfOpenParking(id, titleOverride) {
     + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfP_rate" value="' + cfEsc(p ? cfRateNumText(p.rate) : '') + '" placeholder="예) 7.00">')
     + f('예치금액', '<input type="number" class="form-input" id="cfP_amount" value="' + (p ? p.amount : '') + '" placeholder="예) 2000000">')
     + f('적용세율' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfP_tax" value="' + cfEsc(p && p.tax != null ? String(p.tax) : '') + '" placeholder="예) 15.4">')
-    + f('한도', '<input type="text" class="form-input" id="cfP_limit" value="' + cfEsc(cfLimitLabel(p ? p.limit : '')) + '" placeholder="예) 5천만원">')
+    + f('한도', '<input type="text" inputmode="text" class="form-input" id="cfP_limit" value="' + cfEsc(cfLimitLabel(p ? p.limit : '')) + '" placeholder="예) 5천만원">')
     + '<div style="grid-column:1 / -1;"><div class="form-label">조건/메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="cfP_memo" rows="1" placeholder="예) 필요정보입력" oninput="rtAutoH(this)" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:45px;">' + cfEsc(p && p.memo ? p.memo : '') + '</textarea></div>'
     + '</div>';
   const footer = (p ? '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>' : '')
@@ -9642,7 +9642,7 @@ function cfOpenHolding() {
     + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfH_rate" value="' + cfEsc(h ? cfRateNumText(h.rate) : '') + '" placeholder="예) 7.00">')
     + f('예치금액', '<input type="number" class="form-input" id="cfH_amount" value="' + (h ? h.amount : '') + '" placeholder="예) 2000000">')
     + f('적용세율' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfH_tax" value="' + cfEsc(h && h.tax != null ? String(h.tax) : '') + '" placeholder="예) 15.4">')
-    + f('한도', '<input type="text" class="form-input" id="cfH_limit" value="' + cfEsc(cfLimitLabel(h ? h.limit : '')) + '" placeholder="예) 5천만원">')
+    + f('한도', '<input type="text" inputmode="text" class="form-input" id="cfH_limit" value="' + cfEsc(cfLimitLabel(h ? h.limit : '')) + '" placeholder="예) 5천만원">')
     + '<div style="grid-column:1 / -1;"><div class="form-label">조건/메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="cfH_memo" rows="1" placeholder="예) 필요정보입력" oninput="rtAutoH(this)" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:45px;">' + cfEsc(h && h.memo ? h.memo : '') + '</textarea></div>'
     + '</div>';
   const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
