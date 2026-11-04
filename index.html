@@ -9632,9 +9632,12 @@ function cfOpenHolding() {
   const h = d.holding || null;
   const PCT = '<span style="font-size:12px;">(%)</span>';
   const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
-  const pname = h ? (h.pname != null ? h.pname : (h.name || '')) : '';
+  // 예전 저장본(은행명 필드 없이 "은행/상품명" 한 줄로 저장된 값)은 첫 번째 "/" 기준으로 나눠서 채움
+  const legacy = h && !h.bank && h.name ? String(h.name).split('/') : null;
+  const bankVal = h ? (h.bank || (legacy && legacy.length > 1 ? legacy[0].trim() : '')) : '';
+  const pname = h ? (h.pname != null ? h.pname : (legacy && legacy.length > 1 ? legacy.slice(1).join('/').trim() : (h.name || ''))) : '';
   const body = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px 10px; padding-top:17px;">'
-    + f('은행명', '<input class="form-input" id="cfH_bank" value="' + cfEsc(h && h.bank ? h.bank : '') + '" placeholder="예) OK저축은행">')
+    + f('은행명', '<input class="form-input" id="cfH_bank" value="' + cfEsc(bankVal) + '" placeholder="예) OK저축은행">')
     + f('상품명', '<input class="form-input" id="cfH_pname" value="' + cfEsc(pname) + '" placeholder="예) 짠테크통장II">')
     + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfH_rate" value="' + cfEsc(h ? cfRateNumText(h.rate) : '') + '" placeholder="예) 7.00">')
     + f('예치금액', '<input type="number" class="form-input" id="cfH_amount" value="' + (h ? h.amount : '') + '" placeholder="예) 2000000">')
