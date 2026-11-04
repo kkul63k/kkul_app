@@ -25920,23 +25920,34 @@ function kkulAutoBackupNow() {
       products: JSON.parse(localStorage.getItem('products') || '[]'),
       ...extra
     };
-    saveBackupToStorage(data);
-  } catch (e) { /* 자동 백업 실패는 무시 */ }
+    let list = backups.slice();
+    list.push({ timestamp: data.timestamp, dateDisplay: new Date().toLocaleString('ko-KR'), data: data });
+    if (list.length > 10) list = list.slice(-10);
+    localStorage.setItem('kkul_backups', JSON.stringify(list));
+  } catch (e) {
+    showNotification('자동 백업 실패: ' + (e && e.message ? e.message : e), 4000, 'default');
+  }
 }
+// 한 번의 저장 동작이 끝나는 즉시(같은 실행 흐름의 마지막에) 백업: 타이머를 쓰지 않아서 바로 닫아도 빠지지 않음
+let kkulAutoBackupQueued = false;
 function kkulScheduleAutoBackup() {
-  clearTimeout(kkulAutoBackupTimer);
-  kkulAutoBackupTimer = setTimeout(kkulAutoBackupNow, 800);
+  if (kkulAutoBackupQueued) return;
+  kkulAutoBackupQueued = true;
+  Promise.resolve().then(function () {
+    kkulAutoBackupQueued = false;
+    kkulAutoBackupNow();
+  });
 }
 (function kkulHookStorageForBackup() {
   const origSet = Storage.prototype.setItem;
   const origRemove = Storage.prototype.removeItem;
   Storage.prototype.setItem = function (k, v) {
     origSet.call(this, k, v);
-    if (this === localStorage && k !== 'kkul_backups') kkulScheduleAutoBackup();
+    if (k !== 'kkul_backups') kkulScheduleAutoBackup();
   };
   Storage.prototype.removeItem = function (k) {
     origRemove.call(this, k);
-    if (this === localStorage && k !== 'kkul_backups') kkulScheduleAutoBackup();
+    if (k !== 'kkul_backups') kkulScheduleAutoBackup();
   };
 })();
 function exportMenuData() {
