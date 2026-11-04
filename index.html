@@ -5600,7 +5600,7 @@ textarea.add-product-input[data-filled="true"] {
         <div class="summary-card" style="margin-top: 8px !important; margin-bottom: 0 !important; background-color: #FFFFFF; border: none; padding: 16px; box-shadow: var(--shadow-card);">
           <div style="margin-bottom: 8px;"><div style="display: flex; align-items: center; gap: 8px; margin-top: -8px;">
             <span class="badge group-badge" style="background-color: #3E34F7; color: #FFFFFF;">자금</span>
-            <span style="font-size: 17px; font-weight: 700; color: #00A8A8; white-space: nowrap;">유동자금</span>
+            <span style="font-size: 17px; font-weight: 700; color: #00A8A8; white-space: nowrap;">유동자금 <span style="font-size: 12px; font-weight: 400; color: #FF0000;">(잔액 계산용)</span></span>
           </div></div>
           <div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:2px 6px 2px; margin-top:0;">
             <div class="cf-parking-first" style="margin:0 0 0 0;"><div style="padding:6px 0;font-size:14px;font-weight:400;color:#000000;"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:14px;"><span style="font-size:13px;font-weight:400;color:#000000;"></span></div><div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:5px;line-height:14px;"><div style="display:flex;align-items:baseline;white-space:nowrap;min-width:0;"><span style="font-size:13px;font-weight:400;color:#000000;"></span></div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:14px;font-weight:700;color:#FF0000;">0</span><button onclick="cfOpenHolding()" style="display:inline-flex; align-items:center; justify-content:center; width:33.6px; height:19.2px; padding:0; align-self:flex-start; border-radius:30px; font-size:9px; font-weight:700; box-sizing:border-box; cursor:pointer; white-space:nowrap; box-shadow:none; background-color:#FFF30F; border:1px solid #000000; color:#000000;">수정</button></div></div></div></div>
@@ -9522,7 +9522,7 @@ function cfOpenParking(id, titleOverride) {
     + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfP_rate" value="' + cfEsc(p ? cfRateNumText(p.rate) : '') + '" placeholder="예) 7.00">')
     + f('예치금액', '<input type="number" class="form-input" id="cfP_amount" value="' + (p ? p.amount : '') + '" placeholder="예) 2000000">')
     + f('적용세율' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfP_tax" value="' + cfEsc(p && p.tax != null ? String(p.tax) : '') + '" placeholder="예) 15.4">')
-    + f('한도', '<input type="text" inputmode="numeric" class="form-input" id="cfP_limit" value="' + (p && p.limit ? p.limit : '') + '" placeholder="예) 2000000">')
+    + f('한도', '<input type="text" class="form-input" id="cfP_limit" value="' + cfEsc(cfLimitLabel(p ? p.limit : '')) + '" placeholder="예) 5천만원">')
     + '<div style="grid-column:1 / -1;"><div class="form-label">조건/메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="cfP_memo" rows="1" placeholder="예) 필요정보입력" oninput="rtAutoH(this)" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:45px;">' + cfEsc(p && p.memo ? p.memo : '') + '</textarea></div>'
     + '</div>';
   const footer = (p ? '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>' : '')
@@ -9545,9 +9545,9 @@ function cfRateLabel(rate) {
 }
 // 한도 표시: 입력한 숫자를 천 단위 구분만 넣어서 그대로 표시 (2000000 → 2,000,000)
 function cfLimitLabel(n) {
-  const v = Number(n) || 0;
-  if (!v) return '';
-  return v.toLocaleString('ko-KR');
+  // 한도: 예전에 숫자로 저장된 값은 천 단위 구분, 입력한 글자(예: 1억원)는 그대로 표시
+  if (typeof n === 'number') return n ? n.toLocaleString('ko-KR') : '';
+  return String(n == null ? '' : n).trim();
 }
 // 금리/한도 줄 HTML: 금리 숫자 청록 700 13px, % 기호 10px, 한도는 검정 400 13px
 function cfRateHtml(p) {
@@ -9573,7 +9573,7 @@ function cfSaveParking(id) {
   const name = g('cfP_name');
   const rateRaw = g('cfP_rate');
   const taxRaw = g('cfP_tax');
-  const limitRaw = g('cfP_limit').replace(/[^0-9]/g, '');
+  const limitRaw = g('cfP_limit');
   const amtRaw = document.getElementById('cfP_amount').value;
   if (!bank) return cfWarn('은행명을 입력하세요.');
   if (!name) return cfWarn('상품명을 입력하세요.');
@@ -9581,7 +9581,7 @@ function cfSaveParking(id) {
   if (amtRaw === '' || isNaN(Number(amtRaw))) return cfWarn('예치금액을 입력하세요.');
   if (taxRaw === '' || isNaN(Number(taxRaw))) return cfWarn('적용세율을 입력하세요.');
   if (!limitRaw) return cfWarn('한도를 입력하세요.');
-  const item = { bank: bank, name: name, rate: rateRaw, tax: taxRaw, limit: limitRaw ? Number(limitRaw) : 0, amount: Number(amtRaw), memo: g('cfP_memo') };
+  const item = { bank: bank, name: name, rate: rateRaw, tax: taxRaw, limit: limitRaw, amount: Number(amtRaw), memo: g('cfP_memo') };
   if (id) {
     const p = d.parking.find(x => x.id === id);
     if (p) Object.assign(p, item);
@@ -9608,7 +9608,7 @@ function cfOpenParkingDetail(id) {
     + row('파킹금리' + PCT, p.rate !== '' && p.rate != null ? '<span style="color:#00A8A8;">' + cfEsc(cfRateNumText(p.rate)) + ' <span style="font-size:12px;">%</span></span>' : '')
     + row('예치금액', money(p.amount))
     + row('적용세율' + PCT, p.tax !== '' && p.tax != null ? cfEsc(String(p.tax)) + ' <span style="font-size:12px;">%</span>' : '')
-    + row('한도', money(p.limit))
+    + row('한도', cfEsc(cfLimitLabel(p.limit)))
     + '<div style="display:flex; align-items:flex-start; gap:12px; padding:6px 0;"><span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">조건</span><span style="flex:1; min-width:0; font-size:14px; font-weight:700; color:#000; text-align:left; white-space:pre-wrap; word-break:break-all;">' + (p.memo ? cfEsc(p.memo) : '-') + '</span></div>';
   const nested = '<div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:4px 12px; margin-top:12px;">' + body + '</div>';
   const btns = '<div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-top:18px;">'
@@ -9626,30 +9626,46 @@ function cfHoldingRowHtml(h) {
     + '<button onclick="cfOpenHolding()" style="display:inline-flex; align-items:center; justify-content:center; width:33.6px; height:19.2px; padding:0; align-self:flex-start; border-radius:30px; font-size:9px; font-weight:700; box-sizing:border-box; cursor:pointer; white-space:nowrap; box-shadow:none; background-color:#FFF30F; border:1px solid #000000; color:#000000;">수정</button></div></div></div>';
 }
 
+// 유동자금 수정 모달: 파킹예치 추가·수정과 동일한 입력 페이지 (삭제 없음, 취소·저장만)
 function cfOpenHolding() {
   const d = cfLoad();
   const h = d.holding || null;
-  const pfField = (label, html) => '<div class="form-group"><label class="form-label">' + label + '</label>' + html + '</div>';
-  const body = pfField('은행/통장명', '<input class="form-input" id="cfH_name" value="' + cfEsc(h ? h.name : '') + '" placeholder="예) 한국저축은행/한국파킹통장">')
-    + pfField('파킹금액', '<input type="number" class="form-input" id="cfH_amount" value="' + (h ? h.amount : '') + '">')
-    + pfField('금리(%)', '<input type="text" inputmode="decimal" class="form-input" id="cfH_rate" value="' + cfEsc(h ? cfRateNumText(h.rate) : '') + '" placeholder="예) 5.5">')
-    + pfField('한도', '<input type="text" inputmode="numeric" class="form-input" id="cfH_limit" value="' + (h && h.limit ? h.limit : '') + '" placeholder="예) 2000000">');
+  const PCT = '<span style="font-size:12px;">(%)</span>';
+  const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
+  const pname = h ? (h.pname != null ? h.pname : (h.name || '')) : '';
+  const body = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px 10px; padding-top:17px;">'
+    + f('은행명', '<input class="form-input" id="cfH_bank" value="' + cfEsc(h && h.bank ? h.bank : '') + '" placeholder="예) OK저축은행">')
+    + f('상품명', '<input class="form-input" id="cfH_pname" value="' + cfEsc(pname) + '" placeholder="예) 짠테크통장II">')
+    + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfH_rate" value="' + cfEsc(h ? cfRateNumText(h.rate) : '') + '" placeholder="예) 7.00">')
+    + f('예치금액', '<input type="number" class="form-input" id="cfH_amount" value="' + (h ? h.amount : '') + '" placeholder="예) 2000000">')
+    + f('적용세율' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfH_tax" value="' + cfEsc(h && h.tax != null ? String(h.tax) : '') + '" placeholder="예) 15.4">')
+    + f('한도', '<input type="text" class="form-input" id="cfH_limit" value="' + cfEsc(cfLimitLabel(h ? h.limit : '')) + '" placeholder="예) 5천만원">')
+    + '<div style="grid-column:1 / -1;"><div class="form-label">조건/메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="cfH_memo" rows="1" placeholder="예) 필요정보입력" oninput="rtAutoH(this)" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:45px;">' + cfEsc(h && h.memo ? h.memo : '') + '</textarea></div>'
+    + '</div>';
   const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveHolding()">저장</button>';
-  cfOpenModal('유동자금 수정', body, footer, '#00A8A8');
+  cfOpenModal('유동자금 수정 <span style="font-size:12px; font-weight:400; color:#FF0000;">(잔액 계산용)</span>', body, footer, '#00A8A8');
+  const memoEl = document.getElementById('cfH_memo');
+  if (memoEl) rtAutoH(memoEl);
 }
 
 function cfSaveHolding() {
   const d = cfLoad();
-  const name = document.getElementById('cfH_name').value.trim();
-  const rateRaw = document.getElementById('cfH_rate').value.trim();
-  const limitRaw = document.getElementById('cfH_limit').value.replace(/[^0-9]/g, '');
+  const g = elId => { const el = document.getElementById(elId); return el ? el.value.trim() : ''; };
+  const bank = g('cfH_bank');
+  const pname = g('cfH_pname');
+  const rateRaw = g('cfH_rate');
+  const taxRaw = g('cfH_tax');
+  const limitRaw = g('cfH_limit');
   const amtRaw = document.getElementById('cfH_amount').value;
-  if (!name) return cfWarn('통장명을 입력하세요.');
-  if (rateRaw === '') return cfWarn('금리를 입력하세요.');
-  if (isNaN(Number(rateRaw))) return cfWarn('금리는 숫자로 입력하세요. 예) 5.5');
-  if (amtRaw === '' || isNaN(Number(amtRaw))) return cfWarn('금액을 입력하세요.');
-  d.holding = { name, rate: rateRaw, limit: limitRaw ? Number(limitRaw) : 0, amount: Number(amtRaw) };
+  if (!bank) return cfWarn('은행명을 입력하세요.');
+  if (!pname) return cfWarn('상품명을 입력하세요.');
+  if (rateRaw === '' || isNaN(Number(rateRaw))) return cfWarn('파킹금리를 입력하세요.');
+  if (amtRaw === '' || isNaN(Number(amtRaw))) return cfWarn('예치금액을 입력하세요.');
+  if (taxRaw === '' || isNaN(Number(taxRaw))) return cfWarn('적용세율을 입력하세요.');
+  if (!limitRaw) return cfWarn('한도를 입력하세요.');
+  const name = bank + '/' + pname;
+  d.holding = { name: name, bank: bank, pname: pname, rate: rateRaw, tax: taxRaw, limit: limitRaw, amount: Number(amtRaw), memo: g('cfH_memo') };
   d.base = { date: cfTodayISO(), amount: Number(amtRaw) };
   cfSave();
   cfCloseModal();
