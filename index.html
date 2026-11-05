@@ -2208,12 +2208,15 @@ textarea.add-product-input[data-filled="true"] {
 #settings-page > div:first-child { padding-top: 0 !important; }
 /* 적금등록/수정 입력 필드 규격: 높이 40px, 안쪽 여백 위·아래 5px·좌우 7px, 라벨-필드 3px, 필드 아래~다음 라벨 17px, 메모 45px */
 #add-product-page .add-product-input:not(#prepayTableSection *) { height: 40px !important; padding: 5px 7px !important; box-sizing: border-box; }
-#add-product-page textarea.add-product-input#memo { height: 45px !important; min-height: 45px !important; }
+#add-product-page textarea.add-product-input#memo { height: auto !important; min-height: 45px; }
 #add-product-page .add-product-label { margin-bottom: 3px; }
 #add-product-page .add-product-field { margin-top: 17px !important; }
 /* 주식등록 입력 필드 규격 (적금등록과 동일): 높이 40px, 안쪽 여백 위·아래 5px·좌우 7px, 라벨-필드 3px, 필드 아래~다음 라벨 17px, 메모 45px */
 #stock-registration-page .add-product-input { height: 40px !important; padding: 5px 7px !important; box-sizing: border-box; }
-#stock-registration-page textarea.add-product-input#stockMemo { height: 45px !important; min-height: 45px !important; }
+#stock-registration-page textarea.add-product-input#stockMemo { height: auto !important; min-height: 45px; }
+/* 조건/메모 입력칸: 입력된 줄 수만큼 높이가 자동으로 늘어남 (목록 메모 3종은 제외, 기존 유지) */
+#rtCond, #cfP_memo, #cfH_memo, #memo, #stockMemo { field-sizing: content; height: auto !important; }
+
 /* 입력 필드 모서리: 카드 등록 입력 필드와 동일한 4px (등록 페이지 입력칸 한정, 필터 제외) */
 #add-product-page .add-product-input, #stock-registration-page .add-product-input { border-radius: 4px !important; }
 /* 계산기 세금 입력칸도 동일 4px */
@@ -9823,7 +9826,7 @@ function cfOpenParking(id, titleOverride) {
   const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
   const body = '<style>'
     + '.pk-form .form-input{height:40px !important;box-sizing:border-box;padding:5px 7px !important;}'
-    + '.pk-form #cfP_memo{height:45px !important;min-height:45px !important;}'
+    + '.pk-form #cfP_memo{min-height:45px;}'
     + '</style>'
     + '<div class="pk-form" style="display:grid; grid-template-columns:1fr 1fr; gap:17px 10px; padding-top:22px;">'
     + f('은행명', '<input class="form-input" id="cfP_bank" value="' + cfEsc(p && p.bank ? p.bank : '') + '" placeholder="예) OK저축은행">')
@@ -9946,7 +9949,7 @@ function cfOpenHolding() {
   const pname = h ? (h.pname != null ? h.pname : (legacy && legacy.length > 1 ? legacy.slice(1).join('/').trim() : (h.name || ''))) : '';
   const body = '<style>'
     + '.pk-form .form-input{height:40px !important;box-sizing:border-box;padding:5px 7px !important;}'
-    + '.pk-form #cfH_memo{height:45px !important;min-height:45px !important;}'
+    + '.pk-form #cfH_memo{min-height:45px;}'
     + '</style>'
     + '<div class="pk-form" style="display:grid; grid-template-columns:1fr 1fr; gap:17px 10px; padding-top:22px;">'
     + f('은행명', '<input class="form-input" id="cfH_bank" value="' + cfEsc(bankVal) + '" placeholder="예) OK저축은행">')
