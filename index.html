@@ -569,22 +569,22 @@ body {
 
 #menu-settings-page .summary-card,
 #product-field-settings-page .summary-card,
-#other-settings-page .summary-card {
+#basic-settings-page .summary-card {
   padding: 13px var(--card-padding);
 }
 
 /* 기본 설정: 제목과 카드 사이 간격 줄이고, 제목 밑줄을 연한 회색으로 또렷하게 */
-#other-settings-page .group-header {
+#basic-settings-page .group-header {
   padding-bottom: 2px;
   margin-bottom: 0px;
   border-bottom: 1px solid #9ED9D9;
 }
-#other-settings-page .summary-card {
+#basic-settings-page .summary-card {
   margin-top: 12px !important;
 }
 
 /* 기본 설정: 모드변경·터치효과 항목 글자 크기 2px 키움 (13px → 15px) */
-#other-settings-page .mode-toggle-label {
+#basic-settings-page .mode-toggle-label {
   font-size: 15px;
 }
 
@@ -644,6 +644,10 @@ body {
 #calc-prepay-page > .summary-card:nth-of-type(2) {
   margin-top: -9px !important;
   padding-top: 10px;
+}
+
+#calc-prepay-page .form-input {
+  height: 40px;
 }
 
 .summary-card.group {
@@ -1032,11 +1036,12 @@ body {
 
 .form-label {
   display: block;
-  font-size: 13px;
-  font-weight: 700;
-  color: #666;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  letter-spacing: -0.3px;
   margin-bottom: 3px;
-  line-height: 1.2;
+  line-height: normal;
 }
 
 .form-input,
@@ -1227,6 +1232,25 @@ input[type="date"]:read-only {
   font-weight: 400;
   color: var(--color-gray-dark);
   letter-spacing: -0.3px;
+}
+
+/* 공휴일 관리: 고정휴일·변동휴일 배지 글자 12px, 입력 필드 높이 40px */
+#cfSubHoliday .group-badge { font-size: 12px; letter-spacing: -1px; }
+#cfSubHoliday .cf-hol-input { height: 40px !important; }
+
+/* 등록·수정 화면과 모달의 사용자 입력 필드 규격: 높이 40px (검색·필터·표 안의 칸은 제외) */
+#cfModal input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]):not([type="color"]):not([type="file"]),
+#cfModal select,
+#add-product-page input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#add-product-page select,
+#stock-registration-page input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#stock-registration-page select,
+#card-registration-page input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#card-registration-page select,
+#calc-edit-overlay input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+#calc-edit-overlay select {
+  height: 40px !important;
+  box-sizing: border-box !important;
 }
 
 .add-product-input {
@@ -1573,13 +1597,19 @@ textarea.add-product-input[data-filled="true"] {
 #settings-page .honeypot-button-cancel,
 #menu-settings-page .honeypot-button-cancel,
 #product-field-settings-page .honeypot-button-cancel,
-#other-settings-page .honeypot-button-cancel {
+#basic-settings-page .honeypot-button-save {
+  width: 63px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: 700;
+}
+#basic-settings-page .honeypot-button-cancel {
   background: linear-gradient(to right, #666666, #999999);
 }
 #settings-page .honeypot-button-delete,
 #menu-settings-page .honeypot-button-delete,
 #product-field-settings-page .honeypot-button-delete,
-#other-settings-page .honeypot-button-delete {
+#basic-settings-page .honeypot-button-delete {
   background: linear-gradient(to right, #E60012, #FF4444);
 }
 
@@ -1659,6 +1689,23 @@ textarea.add-product-input[data-filled="true"] {
   display: none; /* 기본적으로 숨김 - active 페이지에서만 표시 */
 }
 
+/* 하단 고정 바의 버튼 규격: 글자 14px 굵기 700, 버튼 63×30 (색상은 기존 그대로) */
+[style*="position: fixed; bottom: 0"] > button,
+[style*="position:fixed;bottom:0"] > button {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  width: 63px !important;
+  height: 30px !important;
+}
+/* 상품등록에 반영 버튼: 두 줄로 표시 (글자 12px, 최소 63px 폭, 높이 30px 안에 맞춤) */
+#calcPrepayLinkButton { white-space: normal !important; font-size: 12px !important; line-height: 1.1 !important; width: auto !important; min-width: 63px !important; height: 30px !important; padding: 0 6px !important; text-align: center !important; }
+/* 하단 고정 바 안쪽 여백: 위 8px, 아래 8px (좌우는 기존 유지) → 바 전체 높이 47px */
+[style*="position: fixed; bottom: 0"],
+[style*="position:fixed;bottom:0"] {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
 /* Active 페이지의 닫기 버튼만 표시 */
 .page-content.active .honeypot-floating-close {
   display: flex !important;
@@ -1687,7 +1734,7 @@ textarea.add-product-input[data-filled="true"] {
 
 /* 선납방식 패턴 버튼 */
 .prepay-pattern-btn {
-  height: 35px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2144,7 +2191,71 @@ textarea.add-product-input[data-filled="true"] {
   box-sizing: border-box;
   outline: none;
 }
-  </style>
+  
+/* 카드등록 입력 필드 규격: 높이 40px, 안쪽 여백 위·아래 5px·좌우 7px, 필드 아래~다음 라벨 17px */
+#card-registration-page .form-input, #card-registration-page .form-select, #card-registration-page select.form-input { height: 40px !important; box-sizing: border-box; padding: 5px 7px !important; }
+#card-registration-page .form-group { margin-bottom: 17px; }
+
+/* 예금계산기·적금계산기: 카드 사이 간격 20px */
+#calc-deposit-page > form, #calc-savings-page > form { gap: 20px !important; }
+#calc-deposit-page > form > .summary-card:last-child, #calc-savings-page > form > .summary-card:last-child { margin-bottom: 0 !important; }
+/* 헤더 ~ 첫 카드 간격 20px 일괄 통일: 페이지 맨 위 요소와 카드의 위 여백을 0으로 (헤더 아래 12px + 페이지 여백 8px = 20px) */
+#pageContainer .page-content > :first-child { margin-top: 0 !important; }
+#pageContainer .page-content > form:first-child > .summary-card:first-child, #pageContainer .page-content > div:first-child > .summary-card:first-child { margin-top: 0 !important; }
+/* 헤더 ~ 첫 카드 간격 20px 통일 (페이지 상단 여백 8px + 첫 카드 위 여백 제거) */
+#savings-detail > .summary-card:first-child, #calc-rate-page form > .summary-card:first-child, #basic-settings-page > .summary-card:first-child, #basic-settings-page > :first-child { margin-top: 0 !important; }
+#savings-detail > #savings-detail-cards > .summary-card:first-child, #basic-settings-page > div:first-child > .summary-card:first-child { margin-top: 0 !important; }
+#settings-page > div:first-child { padding-top: 0 !important; }
+/* 적금등록/수정 입력 필드 규격: 높이 40px, 안쪽 여백 위·아래 5px·좌우 7px, 라벨-필드 3px, 필드 아래~다음 라벨 17px, 메모 45px */
+#add-product-page .add-product-input:not(#prepayTableSection *) { height: 40px !important; padding: 5px 7px !important; box-sizing: border-box; }
+#add-product-page textarea.add-product-input#memo { height: 45px !important; min-height: 45px !important; }
+#add-product-page .add-product-label { margin-bottom: 3px; }
+#add-product-page .add-product-field { margin-top: 17px !important; }
+/* 주식등록 입력 필드 규격 (적금등록과 동일): 높이 40px, 안쪽 여백 위·아래 5px·좌우 7px, 라벨-필드 3px, 필드 아래~다음 라벨 17px, 메모 45px */
+#stock-registration-page .add-product-input { height: 40px !important; padding: 5px 7px !important; box-sizing: border-box; }
+#stock-registration-page textarea.add-product-input#stockMemo { height: 45px !important; min-height: 45px !important; }
+/* 입력 필드 모서리: 카드 등록 입력 필드와 동일한 4px (등록 페이지 입력칸 한정, 필터 제외) */
+#add-product-page .add-product-input, #stock-registration-page .add-product-input { border-radius: 4px !important; }
+/* 계산기 세금 입력칸도 동일 4px */
+input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !important; }
+/* 필터·키워드 검색·체크박스 필드: 높이 35px, 내용 가운데 정렬 (적금목록·주식목록·카드사용실적 한정) */
+#products-list-page input#productKeywordSearch,
+#card-usage-page input[placeholder="키워드 검색"],
+#stock-list-page input#stockKeywordSearch,
+#products-list-page select#sortAllProductsDropdown,
+#products-list-page select#productTypeFilter,
+#products-list-page select#productYearFilter,
+#products-list-page select#productGroupFilter,
+#products-list-page select#productInterestRateFilter,
+#card-usage-page select#cuGroupFilter,
+#card-usage-page select#cuKindFilter,
+#card-usage-page select#cuDeductFilter,
+#card-usage-page select#cuYearFilter,
+#card-usage-page select#cuMonthFilter,
+#stock-list-page #stockFilterBar select { height: 35px !important; }
+/* 35px 필드 안 글자가 잘리지 않도록 위아래 안쪽 여백 0, 세로 가운데 정렬 */
+#products-list-page input#productKeywordSearch, #card-usage-page input[placeholder="키워드 검색"], #stock-list-page input#stockKeywordSearch { padding-top: 0 !important; padding-bottom: 0 !important; line-height: 33px !important; }
+#products-list-page select, #card-usage-page select { padding-top: 0 !important; padding-bottom: 0 !important; line-height: 33px !important; }
+#stock-list-page #stockFilterBar select { padding-top: 1px !important; padding-bottom: 0 !important; line-height: 33px !important; }
+#stock-list-page #stockFilterBar select { border-radius: 4px !important; }
+/* 필터 필드 글꼴을 본문 글꼴과 동일하게 (기본값 Arial이면 한글 글자 위치가 기기마다 어긋남) */
+#products-list-page input#productKeywordSearch, #card-usage-page input[placeholder="키워드 검색"], #stock-list-page input#stockKeywordSearch, #products-list-page select, #card-usage-page select, #stock-list-page #stockFilterBar select { font-family: "Noto Sans CJK KR", "Segoe UI", sans-serif !important; }
+#products-list-page div:has(> input#showOneMonthCheckbox),
+#products-list-page div:has(> input#hideExpiredAllCheckbox),
+#card-usage-page div:has(> input#cuShowDeleted) { height: 35px !important; padding: 0 12px !important; box-sizing: border-box; }
+#stock-list-page #stockKeywordSearch + button { height: 24px !important; }
+#stock-registration-page .add-product-label { margin-bottom: 3px; }
+#stock-registration-page .add-product-field { margin-top: 17px !important; }
+#stock-registration-page #stockRegFields > .add-product-field:first-child, #stock-registration-page #stockRegForm > .add-product-field:first-child { margin-top: 0 !important; }
+/* 주식등록 입력 배치: 한 줄에 두 칸씩, 메모·계산 결과는 한 줄 전체 */
+#stock-registration-page #stockRegForm { display: grid !important; grid-template-columns: 1fr 1fr; column-gap: 10px; row-gap: 17px; align-items: start; }
+#stock-registration-page #stockRegFields { display: contents; }
+#stock-registration-page #stockRegForm .add-product-field { margin-top: 0 !important; min-width: 0; }
+#stock-registration-page #stockPreviewBox, #stock-registration-page #stockRegForm > .add-product-field:has(> #stockMemo) { grid-column: 1 / -1; }
+#stock-registration-page #stockPreviewBox { margin: 0 !important; display: flex; flex-direction: column; gap: 5.33px; }
+#add-product-page #productForm > .add-product-field:first-child { margin-top: 0 !important; }
+#add-product-page #savingsFields, #add-product-page #depositFields, #add-product-page #paymentCycleFields, #add-product-page #paymentMethodFields { margin-top: 0 !important; }
+</style>
 
 <!-- 모바일 디버그 콘솔 초기화 -->
 <script>
@@ -2438,15 +2549,45 @@ textarea.add-product-input[data-filled="true"] {
 
     <!-- 주식목록 페이지: 총괄 → 그룹별 총괄(본인, 배우자) → 개별 종목 카드 (적금목록과 동일 형식, 예시 데이터) -->
     <div id="stock-list-page" class="page-content" style="padding-bottom: 41px;">
-      <div id="stockFilterBar"><div style="display:flex; gap:10px; margin-bottom:10px;"><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;group&#39;, this.value)"><option value="all" selected="">그룹 전체</option><option value="본인">본인</option><option value="배우자">배우자</option></select></div><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;year&#39;, this.value)"><option value="all" selected="">년도 전체</option></select></div></div><div style="display:flex; gap:10px; margin-bottom:14px;"><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;tradeType&#39;, this.value)"><option value="all" selected="">구분 전체</option><option value="매수">매수</option><option value="매도">매도</option><option value="배당">배당</option></select></div><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;holding&#39;, this.value)"><option value="all" selected="">보유 전체</option><option value="holding">보유중</option><option value="closed">정리완료</option></select></div></div></div>
+      <div id="stockFilterBar"><div style="display:flex; gap:12px; margin-bottom:6px;"><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;group&#39;, this.value)"><option value="all" selected="">그룹 전체</option><option value="본인">본인</option><option value="배우자">배우자</option></select></div><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;year&#39;, this.value)"><option value="all" selected="">년도 전체</option></select></div></div><div style="display:flex; gap:12px; margin-bottom:6px;"><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;tradeType&#39;, this.value)"><option value="all" selected="">구분 전체</option><option value="매수">매수</option><option value="매도">매도</option><option value="배당">배당</option></select></div><div style="flex:1; min-width:0;"><select class="add-product-input" style="width:100%; height:40px; box-sizing:border-box; border:1px solid #00A8A8 !important;" onchange="setStockFilter(&#39;holding&#39;, this.value)"><option value="all" selected="">보유 전체</option><option value="holding">보유중</option><option value="closed">정리완료</option></select></div></div></div>
+      <!-- 키워드 검색 필드 (필터 아래 일렬, 주황색 테두리) -->
+      <div style="position: relative; display: flex; align-items: center; margin-top: 0;">
+        <input type="text" id="stockKeywordSearch" oninput="setStockKeyword(this.value)" placeholder="키워드 검색" style="width: 100%; height: 40px; padding: 10px 60px 10px 12px; border: 1px solid #FF9800; border-radius: 4px; font-size: 13px; font-weight: 400; color: var(--color-gray-dark); background-color: #FFFFFF; cursor: text; box-sizing: border-box;">
+        <button type="button" onclick="setStockKeyword(document.getElementById('stockKeywordSearch').value)" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background-color: #FF8C00; color: white; border: none; border-radius: 3px; width: 52px; height: 28px; padding: 0; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; z-index: 2;">확인</button>
+      </div>
+      <!-- 주식 메모 한 칸 (적금메모와 동일: 칸 아무 곳이나 누르면 메모 모달, 위·아래 여백 20px) -->
+      <div style="font-size: 15px; font-weight: 700; color: #00A8A8; margin-top: 16.5px; margin-bottom: 0; white-space: nowrap;">주식메모</div>
+      <div id="stMemoRow" onclick="stOpenMemo()" style="margin-top: 2px; margin-bottom: 0; padding: 8px 12px; border: 1px solid #00A8A8; border-radius: 4px; background-color: #FFFFFF; min-height: 67px; box-sizing: border-box; cursor: pointer;">
+        <div id="stMemoText" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; min-height: 17px; font-size: 13px; font-weight: 400; line-height: 17px; color: #FF0000; text-align: left; white-space: pre-wrap; word-break: break-all;"><button type="button" onclick="event.stopPropagation(); stOpenMemo()" style="float: right; margin-left: 8px; margin-bottom: -2px; height: 17px; min-width: 58px; padding: 0 8px; border-radius: 30px; font-size: 9px; font-weight: 700; line-height: 15px; text-align: center; white-space: nowrap; box-sizing: border-box; cursor: pointer; box-shadow: none; background-color: #FFF30F; border: 1px solid #000000; color: #000000;">더보기/수정</button><span id="stMemoBody"></span></div>
+      </div>
       <div id="stockListContainer"><div style="padding:24px 8px; text-align:center; color:#888888; font-size:14px;">등록된 주식이 없습니다. 주식등록에서 체결 내역을 저장해 주세요.</div></div>
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
 
       <script>
+        // 주식 메모 한 칸: 저장값은 이 브라우저에 보관, 모달에서 수정·저장 (적금메모와 같은 방식)
+        var ST_MEMO_KEY = 'stockListMemo';
+        function stMemoLoad() { try { return localStorage.getItem(ST_MEMO_KEY) || ''; } catch (e) { return ''; } }
+        function stMemoStore(v) { try { localStorage.setItem(ST_MEMO_KEY, v); } catch (e) { } }
+        function stRenderMemo() { var el = document.getElementById('stMemoBody'); if (el) el.textContent = stMemoLoad(); }
+        function stOpenMemo() {
+          var body = '<div><textarea class="form-input" id="stMemoInput" rows="1" oninput="rtAutoH(this)" placeholder="예) 필요정보입력" style="resize:none; overflow:hidden; white-space:pre-wrap; text-align:left; line-height:1.4; min-height:90px; font-size:13px; color:#000000;">' + cfEsc(stMemoLoad()) + '</textarea></div>';
+          var footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
+            + '<button class="honeypot-button-save" onclick="stSaveMemo()">저장</button>';
+          cfOpenModal('주식메모<span style="margin-left:0.5px;">(수정)</span>', body, footer, '#00A8A8');
+          var t = document.getElementById('stMemoInput');
+          if (t) rtAutoH(t);
+        }
+        function stSaveMemo() {
+          var t = document.getElementById('stMemoInput');
+          stMemoStore(t ? t.value.trim() : '');
+          cfCloseModal();
+          stRenderMemo();
+          showNotification('저장되었습니다', 1500, 'default');
+        }
+        stRenderMemo();
         // ===== 주식목록 =====
         // 취득가 = 매수 금액 + 매수 수수료 누적, 평균단가 = 이동평균법 (전체 체결 이력으로 계산)
         // 필터(그룹·연도·보유·구분)는 합계와 목록에만 적용: 평균단가는 항상 전체 이력 기준
-        var stockFilter = { group: 'all', year: 'all', holding: 'all', tradeType: 'all' };
+        var stockFilter = { group: 'all', year: 'all', holding: 'all', tradeType: 'all', keyword: '' };
 
         function computeStockPositions(trades) {
           var map = {};
@@ -2493,6 +2634,8 @@ textarea.add-product-input[data-filled="true"] {
 
         function passesPosition(p, f) {
           if (f.group !== 'all' && p.group !== f.group) return false;
+          var kw = String(f.keyword || '').trim().toLowerCase();
+          if (kw && (String(p.stockName || '') + ' ' + String(p.stockCode || '') + ' ' + String(p.group || '')).toLowerCase().indexOf(kw) < 0) return false;
           if (f.holding === 'holding' && !p.holding) return false;
           if (f.holding === 'closed' && p.holding) return false;
           return eventsFor(p, f).length > 0;
@@ -2500,6 +2643,11 @@ textarea.add-product-input[data-filled="true"] {
 
         function setStockFilter(key, value) {
           stockFilter[key] = value;
+          renderStockList();
+        }
+        // 키워드 검색: 입력하는 대로 종목명·종목코드·그룹에서 찾아 목록 필터링
+        function setStockKeyword(value) {
+          stockFilter.keyword = value || '';
           renderStockList();
         }
 
@@ -2512,10 +2660,10 @@ textarea.add-product-input[data-filled="true"] {
               options.map(function (o) { return '<option value="' + o[0] + '"' + (stockFilter[key] === o[0] ? ' selected' : '') + '>' + (o[0] === 'all' ? label + ' 전체' : o[1]) + '</option>'; }).join('') +
               '</select></div>';
           };
-          box.innerHTML = '<div style="display:flex; gap:10px; margin-bottom:10px;">' +
+          box.innerHTML = '<div style="display:flex; gap:12px; margin-bottom:6px;">' +
             sel('group', '그룹', [['all', '']].concat(groups.map(function (g) { return [g, g]; }))) +
             sel('year', '년도', [['all', '']].concat(years.map(function (y) { return [y, y + '년']; }))) +
-            '</div><div style="display:flex; gap:10px; margin-bottom:14px;">' +
+            '</div><div style="display:flex; gap:12px; margin-bottom:6px;">' +
             sel('tradeType', '구분', [['all', ''], ['매수', '매수'], ['매도', '매도'], ['배당', '배당']]) +
             sel('holding', '보유', [['all', ''], ['holding', '보유중'], ['closed', '정리완료']]) +
             '</div>';
@@ -2625,7 +2773,7 @@ textarea.add-product-input[data-filled="true"] {
             if (f) {
               const lab = wrap.querySelector('label');
               if (lab) {
-                if (id === 'cardSubAlias') lab.innerHTML = String(f.label).replace(/</g, '&lt;') + '<span style="color:#FF9800; font-size:11px; font-weight:700;">(필수입력 아님)</span>';
+                if (id === 'cardSubAlias') lab.innerHTML = String(f.label).replace(/</g, '&lt;') + '<span style="color:#FF0000; font-size:12px; font-weight:400;">(필수입력 아님)</span>';
                 else lab.textContent = f.label;
               }
             }
@@ -2663,7 +2811,7 @@ textarea.add-product-input[data-filled="true"] {
             if (!ctl || (ctl.tagName === 'SELECT') !== isSel) {
               const cur = ctl ? ctl.value : '';
               holder.innerHTML = isSel
-                ? '<select class="form-select" id="cardCustom-' + id + '" style="height: 45px !important;"></select>'
+                ? '<select class="form-select" id="cardCustom-' + id + '" style="height: 40px !important;"></select>'
                 : '<input type="text" class="form-input" id="cardCustom-' + id + '" placeholder="입력">';
               ctl = document.getElementById('cardCustom-' + id);
               ctl.value = cur;
@@ -2674,9 +2822,13 @@ textarea.add-product-input[data-filled="true"] {
               ctl.value = cur;
             }
           });
+          const regGrid = document.getElementById('cardRegGrid');
+          const gridIds = ['groupName', 'cardAlias', 'cardSubAlias', 'cardIssuer', 'cardKind'];
+          if (regGrid) saveRow.parentNode.insertBefore(regGrid, saveRow);
           cfg.order.forEach(function (id) {
             const wrap = CARD_DEFAULT_FIELD_CTRL[id] ? cardFormWrap(id) : document.getElementById('cardCustomWrap-' + id);
             if (!wrap || !cfg.fields[id]) return;
+            if (regGrid && gridIds.indexOf(id) >= 0) { regGrid.appendChild(wrap); return; }
             saveRow.parentNode.insertBefore(wrap, saveRow);
             if (id === 'discountTarget' && tierBox) saveRow.parentNode.insertBefore(tierBox, saveRow);
           });
@@ -2685,7 +2837,8 @@ textarea.add-product-input[data-filled="true"] {
           const kindWrap = cardFormWrap('cardKind');
           if (lastFourWrap && kindWrap) kindWrap.parentNode.insertBefore(lastFourWrap, kindWrap.nextSibling);
           const idWrap = document.getElementById('cardIdWrap');
-          if (idWrap && lastFourWrap) lastFourWrap.parentNode.insertBefore(idWrap, lastFourWrap.nextSibling);
+          if (idWrap && regGrid) regGrid.parentNode.insertBefore(idWrap, regGrid.nextSibling);
+          else if (idWrap && lastFourWrap) lastFourWrap.parentNode.insertBefore(idWrap, lastFourWrap.nextSibling);
         }
         // 미분류 문자 목록 (카드사용내역 화면: 그룹별 요약과 카드목록 사이). 항목이 없으면 아무것도 표시하지 않음
         function unclassifiedSectionHTML() {
@@ -2926,6 +3079,11 @@ textarea.add-product-input[data-filled="true"] {
             showNotification('구간이 삭제되었습니다', 2000, 'delete', btn);
           }, null, '삭제', '#FF0000');
         };
+        // 카드등록 화면 제목: 수정 중이면 '카드등록수정', 아니면 '카드등록'
+        function cardSetHeaderTitle(editing) {
+          const ht = document.getElementById('headerTitle');
+          if (ht && document.getElementById('card-registration-page') && document.getElementById('card-registration-page').classList.contains('active')) ht.textContent = editing ? '카드등록수정' : '카드등록';
+        }
         function clearCardForm() {
           document.getElementById('cardAliasInput').value = '';
           document.getElementById('cardSubAliasInput').value = '';
@@ -2939,6 +3097,7 @@ textarea.add-product-input[data-filled="true"] {
           window.cardTierRows = [{ min: '', amt: '' }];
           const box = document.getElementById('cardTierBox');
           if (box) box.style.display = 'none';
+          cardSetHeaderTitle(false);
         }
         function collectCardTiers() {
           readCardTierInputs();
@@ -2981,9 +3140,10 @@ textarea.add-product-input[data-filled="true"] {
             saveCardRegistry(list);
             clearCardForm();
             document.getElementById('cardSaveBtn').textContent = '등록';
-            window.cardUsageReturnId = editedId;
+            window.cardDetailId = editedId;
+            window.cardDetailSelected = false;
             showNotification('✓ 저장되었습니다', 2000, 'apply', btn);
-            navigateTo('card-usage-page');
+            goBack();
             return;
           }
           const newId = String(Date.now());
@@ -2992,6 +3152,7 @@ textarea.add-product-input[data-filled="true"] {
           clearCardForm();
           window.cardUsageReturnId = newId;
           showNotification('✓ 카드가 등록되었습니다', 2000, 'apply', btn);
+          window.kkulPendingScroll = '#cardUsageContainer .summary-card[data-card-id="' + newId + '"]';
           navigateTo('card-usage-page');
         };
         window.editCardInRegistry = function (id) {
@@ -3016,6 +3177,7 @@ textarea.add-product-input[data-filled="true"] {
           if (box) box.style.display = c.discountTarget ? 'block' : 'none';
           if (c.discountTarget) renderCardTierRows();
           document.getElementById('cardSaveBtn').textContent = '저장';
+          cardSetHeaderTitle(true);
           const form = document.getElementById('cardAliasInput');
           if (form) form.scrollIntoView({ block: 'start' });
         };
@@ -3232,6 +3394,27 @@ textarea.add-product-input[data-filled="true"] {
           fill('cuGroupFilter', '그룹 전체', cfg.fields.groupName ? cfg.fields.groupName.items : null);
           fill('cuKindFilter', '카드 전체', cfg.fields.cardKind ? cfg.fields.cardKind.items : null);
         }
+        // 적금 메모 한 칸: 저장값은 이 브라우저에 보관, 모달에서 수정·저장 (카드메모와 같은 방식)
+        const SM_MEMO_KEY = 'savingsListMemo';
+        function smMemoLoad() { try { return localStorage.getItem(SM_MEMO_KEY) || ''; } catch (e) { return ''; } }
+        function smMemoStore(v) { try { localStorage.setItem(SM_MEMO_KEY, v); } catch (e) { } }
+        function smRenderMemo() { const el = document.getElementById('smMemoBody'); if (el) el.textContent = smMemoLoad(); }
+        function smOpenMemo() {
+          const body = '<div><textarea class="form-input" id="smMemoInput" rows="1" oninput="rtAutoH(this)" placeholder="예) 필요정보입력" style="resize:none; overflow:hidden; white-space:pre-wrap; text-align:left; line-height:1.4; min-height:90px; font-size:13px; color:#000000;">' + cfEsc(smMemoLoad()) + '</textarea></div>';
+          const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
+            + '<button class="honeypot-button-save" onclick="smSaveMemo()">저장</button>';
+          cfOpenModal('적금메모<span style="margin-left:0.5px;">(수정)</span>', body, footer, '#00A8A8');
+          const t = document.getElementById('smMemoInput');
+          if (t) rtAutoH(t);
+        }
+        function smSaveMemo() {
+          const t = document.getElementById('smMemoInput');
+          smMemoStore(t ? t.value.trim() : '');
+          cfCloseModal();
+          smRenderMemo();
+          showNotification('저장되었습니다', 1500, 'default');
+        }
+        smRenderMemo();
         // 카드 메모 한 칸: 저장값은 이 브라우저에 보관, 모달에서 수정·저장
         const CU_MEMO_KEY = 'cardUsageMemo';
         function cuMemoLoad() { try { return localStorage.getItem(CU_MEMO_KEY) || ''; } catch (e) { return ''; } }
@@ -3410,6 +3593,7 @@ textarea.add-product-input[data-filled="true"] {
           if (!loadCardRegistry().find(function (x) { return x.id === id; })) return;
           window.editCardInRegistry(id);
           navigateTo('card-registration-page');
+          cardSetHeaderTitle(true);
         };
         window.handleCardPurge = function (btn) {
           const id = window.cardDetailId;
@@ -3819,6 +4003,9 @@ textarea.add-product-input[data-filled="true"] {
           }
         }
       </script>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
     </div>
 
     <!-- 주식상세 페이지: 하단 고정 바 삭제 | 수정 | 닫기 (적금 상세와 동일 규격) -->
@@ -3944,7 +4131,7 @@ textarea.add-product-input[data-filled="true"] {
         </script>
 
         <!-- 계산 결과 미리보기 (입력값으로 자동 계산, 입력 불가) -->
-        <div id="stockPreviewBox" style="margin: 12px 0px 18px; padding: 14px 16px; border-radius: 6px; background-color: rgb(232, 232, 232); border: 1px solid rgb(0, 168, 168); font-size: 14px; color: rgb(26, 26, 26); display: block;"><div style="color: #888888; font-size: 13px;">위의 모든 필드가 입력되면,<br>이 곳에 계산 결과가 표시됩니다.</div></div>
+        <div id="stockPreviewBox" style="margin: 12px 0px 18px; padding: 4.67px 16px; border-radius: 6px; background-color: rgb(232, 232, 232); border: 1px solid rgb(0, 168, 168); font-size: 14px; color: rgb(26, 26, 26); display: block;"><div style="color: #888888; font-size: 13px;">위의 모든 필드가 입력되면,<br>이 곳에 계산 결과가 표시됩니다.</div></div>
 
         <!-- 메모 (적금등록과 동일 형식) -->
         <div class="add-product-field">
@@ -4002,7 +4189,7 @@ textarea.add-product-input[data-filled="true"] {
             var r = calcStockAmounts(f);
             var won = function (n) { return Math.round(n).toLocaleString('ko-KR'); };  // '원' 생략
             var line = function (label, value, bold) {
-              return '<div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>' + label + '</span><span style="font-weight: ' + (bold ? 700 : 400) + ';">' + value + '</span></div>';
+              return '<div style="display: flex; justify-content: space-between; padding: 0;"><span>' + label + '</span><span style="font-weight: ' + (bold ? 700 : 400) + ';">' + value + '</span></div>';
             };
             var html = '';
             if (f.tradeType === '배당') {
@@ -4221,6 +4408,8 @@ textarea.add-product-input[data-filled="true"] {
             window.stockEditIndex = idx;
             window.stockEditPending = true;
             navigateTo('stock-registration-page');
+            var stockTitleEl = document.getElementById('headerTitle');
+            if (stockTitleEl) stockTitleEl.textContent = '주식등록수정';
           }
 
           // 주식등록 페이지 진입 시: 수정 흐름이면 해당 체결 값을 채우고, 일반 진입이면 수정 상태 해제
@@ -4319,6 +4508,7 @@ textarea.add-product-input[data-filled="true"] {
             updateStockPreview();
             // 저장 후 주식목록으로 이동하고, 방금 등록한 종목 카드가 보이도록 이동
             window.stockJustSaved = { group: rec.group, code: rec.stockCode };
+            window.kkulPendingScroll = '.stock-sub-card[data-group="' + rec.group + '"][data-code="' + rec.stockCode + '"]';
             navigateTo('stock-list-page');
           }
 
@@ -4378,14 +4568,14 @@ textarea.add-product-input[data-filled="true"] {
         <select id="cuYearFilter" style="width: 100%; height: 40px; padding: 10px 12px; padding-right: 44px; border: 1px solid #00A8A8 !important; border-radius: 4px; font-size: 13px; font-weight: 400; color: var(--color-gray-dark); background-color: #E8F4F4; cursor: pointer; appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; min-width: 0; outline: none; box-shadow: none;"><option value="all" selected="">년도 전체</option></select>
         <select id="cuMonthFilter" style="width: 100%; height: 40px; padding: 10px 12px; padding-right: 44px; border: 1px solid #00A8A8 !important; border-radius: 4px; font-size: 13px; font-weight: 400; color: var(--color-gray-dark); background-color: #E8F4F4; cursor: pointer; appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; min-width: 0; outline: none; box-shadow: none;"><option value="all" selected="">월별 전체</option></select>
       </div>
-      <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px; margin-bottom: 6px; padding: 8px 12px; border: 1px solid #FF9800; border-radius: 4px; background-color: rgba(255, 152, 0, 0.03); height: 40px; box-sizing: border-box; white-space: nowrap; overflow: hidden;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px; margin-bottom: 0; padding: 8px 12px; border: 1px solid #FF9800; border-radius: 4px; background-color: rgba(255, 152, 0, 0.03); height: 40px; box-sizing: border-box; white-space: nowrap; overflow: hidden;">
         <input type="checkbox" id="cuShowDeleted" style="width: 18px; height: 18px; cursor: pointer; flex-shrink: 0;">
         <label for="cuShowDeleted" style="font-size: 13px; font-weight: 400; color: var(--color-gray-dark); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">삭제된 카드 보기</label>
       </div>
       <!-- 카드 메모 한 칸 (청록 테두리, 저장된 메모 표시 + 노란 수정 버튼) -->
-      <div style="font-size: 15px; font-weight: 700; color: #00A8A8; margin-top: 12px; margin-bottom: 0; white-space: nowrap;">카드메모</div>
-      <div id="cuMemoRow" style="margin-top: 2px; margin-bottom: 6px; padding: 8px 12px; border: 1px solid #00A8A8; border-radius: 4px; background-color: #FFFFFF; min-height: 67px; box-sizing: border-box;">
-        <div id="cuMemoText" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; font-size: 13px; font-weight: 400; line-height: 17px; color: #FF0000; text-align: left; white-space: pre-wrap; word-break: break-all;"><button type="button" onclick="cuOpenMemo()" style="float: right; margin-left: 8px; margin-bottom: -2px; height: 17px; min-width: 58px; padding: 0 8px; border-radius: 30px; font-size: 9px; font-weight: 700; line-height: 15px; text-align: center; white-space: nowrap; box-sizing: border-box; cursor: pointer; box-shadow: none; background-color: #FFF30F; border: 1px solid #000000; color: #000000;">더보기/수정</button><span id="cuMemoBody"></span></div>
+      <div style="font-size: 15px; font-weight: 700; color: #00A8A8; margin-top: 16.5px; margin-bottom: 0; white-space: nowrap;">카드메모</div>
+      <div id="cuMemoRow" onclick="cuOpenMemo()" style="margin-top: 2px; margin-bottom: 0; padding: 8px 12px; border: 1px solid #00A8A8; border-radius: 4px; background-color: #FFFFFF; min-height: 67px; box-sizing: border-box; cursor: pointer;">
+        <div id="cuMemoText" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; min-height: 17px; font-size: 13px; font-weight: 400; line-height: 17px; color: #FF0000; text-align: left; white-space: pre-wrap; word-break: break-all;"><button type="button" onclick="event.stopPropagation(); cuOpenMemo()" style="float: right; margin-left: 8px; margin-bottom: -2px; height: 17px; min-width: 58px; padding: 0 8px; border-radius: 30px; font-size: 9px; font-weight: 700; line-height: 15px; text-align: center; white-space: nowrap; box-sizing: border-box; cursor: pointer; box-shadow: none; background-color: #FFF30F; border: 1px solid #000000; color: #000000;">더보기/수정</button><span id="cuMemoBody"></span></div>
       </div>
       <div id="cardUsageContainer"></div>
       <div id="cuSpacer" aria-hidden="true" style="height: 32px; flex-shrink: 0;"></div>
@@ -4398,9 +4588,11 @@ textarea.add-product-input[data-filled="true"] {
     <!-- 카드등록 페이지 (카드 추가·삭제) -->
     <div id="card-registration-page" class="page-content" style="padding-bottom: 31px;">
       <div class="summary-card" style="margin-top: 0 !important;">
+        <style>.cardreg-grid > .form-group{min-width:0; margin-bottom:0 !important;} .cardreg-grid .form-input, .cardreg-grid .form-select{width:100%; min-width:0; box-sizing:border-box;}</style>
+        <div id="cardRegGrid" class="cardreg-grid" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:17px 10px; margin-bottom:17px;">
         <div class="form-group">
           <label class="form-label">그룹명</label>
-          <select class="form-select" id="cardGroupInput" style="height: 45px !important;">
+          <select class="form-select" id="cardGroupInput" style="height: 40px !important;">
             <option value="">선택하세요</option>
             <option value="본인">본인</option>
             <option value="배우자">배우자</option>
@@ -4411,7 +4603,7 @@ textarea.add-product-input[data-filled="true"] {
           <input type="text" class="form-input" id="cardAliasInput" placeholder="예) NH신용">
         </div>
         <div class="form-group">
-          <label class="form-label" style="color:#000000; font-weight:450;">부별칭<span style="color:#FF9800; font-size:11px; font-weight:700;">(필수입력 아님)</span></label>
+          <label class="form-label">부별칭<span style="color:#FF0000; font-size:12px; font-weight:400;">(필수입력 아님)</span></label>
           <input type="text" class="form-input" id="cardSubAliasInput" placeholder="예) 청구할인">
         </div>
         <div class="form-group">
@@ -4420,7 +4612,7 @@ textarea.add-product-input[data-filled="true"] {
         </div>
         <div class="form-group">
           <label class="form-label">카드종류</label>
-          <select class="form-select" id="cardKindInput" style="height: 45px !important;">
+          <select class="form-select" id="cardKindInput" style="height: 40px !important;">
             <option value="">선택하세요</option>
             <option value="신용">신용</option>
             <option value="체크">체크</option>
@@ -4428,8 +4620,9 @@ textarea.add-product-input[data-filled="true"] {
           </select>
         </div>
         <div class="form-group" id="cardLastFourWrap">
-          <label class="form-label">카드번호<span style="color:#FF9800; font-size:11px; font-weight:700;">(카드 뒷번호 네 자리)</span></label>
+          <label class="form-label">카드번호<span style="color:#FF0000; font-size:12px; font-weight:400;">(끝 네 자리)</span></label>
           <input type="text" class="form-input" id="cardLastFourInput" maxlength="4" placeholder="예) 1234">
+        </div>
         </div>
         <div class="form-group" id="cardIdWrap">
           <label class="form-label">식별문구</label>
@@ -4443,12 +4636,12 @@ textarea.add-product-input[data-filled="true"] {
           <div id="cardTierList"></div>
           <div style="display: flex; justify-content: center; margin-top: 8px;"><button type="button" onclick="addCardTierRow(this)" style="height:22px; padding:0 12px; border:none; border-radius:11px; background-color:#26BDBD; color:#FFFFFF; font-size:12px; font-weight:700; cursor:pointer;">구간추가</button></div>
         </div>
-        <div id="cardSaveRow" style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 30px;"><button type="button" id="cardCancelBtn" class="honeypot-button-cancel" onclick="cancelCardEdit(this)">취소</button><button type="button" id="cardSaveBtn" class="honeypot-button-save" onclick="addCardFromForm(this)">등록</button></div>
+        <div id="cardSaveRow" style="display: none;"></div>
       </div>
       <div id="cardRegistryList"></div>
       <div id="crSpacer" aria-hidden="true" style="height: 10px; flex-shrink: 0;"></div>
-      <div id="cardRegistryFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: none; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
-        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      <div id="cardRegistryFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" id="cardCancelBtn" class="honeypot-button-cancel" onclick="cancelCardEdit(this)">취소</button><button type="button" id="cardSaveBtn" class="honeypot-button-save" onclick="addCardFromForm(this)">등록</button>
       </div>
     </div>
 
@@ -4524,16 +4717,22 @@ textarea.add-product-input[data-filled="true"] {
 
       <!-- 6. 만기상품 숨기기 체크박스 -->
       <!-- 🔧 [FIX] height: 40px 고정 + white-space: nowrap으로 체크박스 너비 고정 (레이아웃 밀림 방지) -->
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px; padding: 8px 12px; border: 1px solid #FF9800; border-radius: 4px; background-color: rgba(255, 152, 0, 0.03); height: 40px; box-sizing: border-box; white-space: nowrap; overflow: hidden;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 0; padding: 8px 12px; border: 1px solid #FF9800; border-radius: 4px; background-color: rgba(255, 152, 0, 0.03); height: 40px; box-sizing: border-box; white-space: nowrap; overflow: hidden;">
         <input type="checkbox" id="hideExpiredAllCheckbox" style="width: 18px; height: 18px; cursor: pointer; flex-shrink: 0;">
         <label for="hideExpiredAllCheckbox" style="font-size: 13px; font-weight: 400; color: var(--color-gray-dark); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">만기지난상품 보기</label>
       </div>
 
+      <!-- 적금 메모 한 칸 (카드메모와 동일: 칸 아무 곳이나 누르면 메모 모달) -->
+      <div style="font-size: 15px; font-weight: 700; color: #00A8A8; margin-top: 16.5px; margin-bottom: 0; white-space: nowrap;">적금메모</div>
+      <div id="smMemoRow" onclick="smOpenMemo()" style="margin-top: 2px; margin-bottom: 0; padding: 8px 12px; border: 1px solid #00A8A8; border-radius: 4px; background-color: #FFFFFF; min-height: 67px; box-sizing: border-box; cursor: pointer;">
+        <div id="smMemoText" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; min-height: 17px; font-size: 13px; font-weight: 400; line-height: 17px; color: #FF0000; text-align: left; white-space: pre-wrap; word-break: break-all;"><button type="button" onclick="event.stopPropagation(); smOpenMemo()" style="float: right; margin-left: 8px; margin-bottom: -2px; height: 17px; min-width: 58px; padding: 0 8px; border-radius: 30px; font-size: 9px; font-weight: 700; line-height: 15px; text-align: center; white-space: nowrap; box-sizing: border-box; cursor: pointer; box-shadow: none; background-color: #FFF30F; border: 1px solid #000000; color: #000000;">더보기/수정</button><span id="smMemoBody"></span></div>
+      </div>
       <!-- 요약 카드 컨테이너 (필터 아래에 배치, 상하 여백 15px) -->
-      <div id="productsListContainer" style="display: flex; flex-direction: column; gap: 13px; padding: 0px; margin-bottom: 13px; margin-top: 10px;"><div style="text-align: center; color: var(--color-gray-medium); padding: 40px 16px;">등록된 상품이 없습니다.</div></div>
+      <div id="productsListContainer" style="display: flex; flex-direction: column; gap: 13px; padding: 0px; margin-bottom: 13px; margin-top: 5px;"><div style="text-align: center; color: var(--color-gray-medium); padding: 40px 16px;">등록된 상품이 없습니다.</div></div>
 
-      <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
     </div>
 
     <!-- 상품 상세현황 페이지 -->
@@ -4617,16 +4816,18 @@ textarea.add-product-input[data-filled="true"] {
       <!-- 데이터 표시 영역 -->
       <div id="scheduleContainer" style="display: flex; flex-direction: column; gap: 15px; padding: 0px; margin-bottom: 15px; margin-top: 12px;"></div>
 
-      <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
 
     <!-- 계산기 메뉴 페이지 (서브메뉴 목록) -->
     <div id="calculator-page" class="page-content">
       <div id="calculatorMenu" style="margin-top: 0px;"></div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
 
@@ -4639,9 +4840,10 @@ textarea.add-product-input[data-filled="true"] {
         #prepay-profit-compare-page .ppc-inner { background-color: #EEEEEE; border: 1px solid #E0E0E0; box-shadow: none; border-radius: 8px; padding: 12px 14px; margin: 0 !important; }
         #prepay-profit-compare-page .ppc-sec { font-size: 15px; font-weight: 700; color: #00A8A8; margin: 0 0 8px; }
         #prepay-profit-compare-page .ppc-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        #prepay-profit-compare-page .form-group { margin-bottom: 10px; }
+        #prepay-profit-compare-page .form-label { color: #333; font-size: 14px; font-weight: 400; }
+        #prepay-profit-compare-page .form-group { margin-bottom: 20px; }
         #prepay-profit-compare-page .form-group:last-child { margin-bottom: 0; }
-        #prepay-profit-compare-page .form-label { font-size: 14px; color: #000000; }
+        
         #prepay-profit-compare-page .form-input { font-size: 14px; color: #000000; height: 40px; background-color: #FFFFFF; }
         #prepay-profit-compare-page .ppc-label { font-size: 14px; font-weight: 700; color: #00A8A8; margin-bottom: 8px; }
         #prepay-profit-compare-page .ppc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-top: 1px solid #DADADA; }
@@ -4660,7 +4862,7 @@ textarea.add-product-input[data-filled="true"] {
         #prepay-profit-compare-page .ppc-pct { font-size: 12px; margin-left: 1px; color: inherit; }
         #prepay-profit-compare-page.page-content { padding-bottom: 30px !important; }
         #prepay-profit-compare-page .ppc-close { color: #FFFFFF; }
-        #prepay-profit-compare-page .ppc-note { font-size: 12px; color: #666666; margin-top: 8px; line-height: 1.5; }
+        #prepay-profit-compare-page .ppc-note { font-size: 12px; color: #FF0000; margin-top: 8px; line-height: 1.5; }
       </style>
 
       <div class="summary-card">
@@ -4746,7 +4948,7 @@ textarea.add-product-input[data-filled="true"] {
           </table>
           <div class="ppc-divider"></div>
           <button type="button" id="ppcTaxCalcBtn" class="honeypot-button-save" style="display:block; margin:6px auto 0; width:95px; height:33px; box-sizing:border-box; padding:0; font-size:16px; line-height:1; background:#00A8A8; border-color:#00A8A8; color:#FFFFFF; box-shadow:0px 2px 6px rgba(0,0,0,0.25);">계산하기</button>
-          <div class="ppc-note">세율 칸에 숫자를 넣으면 이자수익과 비교금리가 자동 계산됩니다.<br>비어 있으면 그 줄은 비워 둡니다.</div>
+          <div class="ppc-note">세율 칸에 숫자를 입력하면 이자수익과<br>비교금리가 자동 계산됩니다.<br>비어 있으면 그 줄은 비워 둡니다.</div>
         </div>
       </div>
       <div id="prepayCompareSpacer" aria-hidden="true" style="height: 27px; flex-shrink: 0;"></div>
@@ -4781,8 +4983,9 @@ textarea.add-product-input[data-filled="true"] {
 
       <!-- 상품별 이자 현황 (실제 등록 상품만 표시) -->
       <div id="interestTotalProductList" style="margin-top: 20px;"></div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
     <!-- 년도별이자 페이지 -->
@@ -4796,8 +4999,9 @@ textarea.add-product-input[data-filled="true"] {
 
       <!-- 년도별 콘텐츠 컨테이너 -->
       <div id="yearlyInterestContentContainer"></div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
     <!-- 그룹별이자 페이지 -->
@@ -4901,15 +5105,17 @@ textarea.add-product-input[data-filled="true"] {
 
                       <!-- 그룹별 이자 상세 콘텐츠 컨테이너 (그룹 선택에 따라 채워짐) -->
       <div id="interestGroupContentContainer" style="margin-top: 16px;"></div>
-                <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
     <!-- 세율별이자 페이지 -->
     <div id="interest-taxrate-page" class="page-content">
       <!-- 세율별 콘텐츠 컨테이너 -->
       <div id="interestTaxrateContentContainer" style="margin-top: 0px;"></div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
 
@@ -4926,10 +5132,10 @@ textarea.add-product-input[data-filled="true"] {
       .taxcmp input.tc-tin { height: 26px; width: 100%; padding: 0 8px; text-align: right; font-size: 14px; background-color: #FFFFFF; border: 1px solid #DDDDDD; border-radius: 6px; }
       .taxcmp .tc-pct { font-size: 12px; margin-left: 1px; color: inherit; }
       .taxcmp .tc-divider { height: 1px; background: #00A8A8; margin: 8px 0; }
-      .taxcmp .tc-note { font-size: 12px; color: #666666; margin-top: 8px; line-height: 1.5; }
+      .taxcmp .tc-note { font-size: 12px; color: #FF0000; margin-top: 8px; line-height: 1.5; }
     </style>
     <div id="calc-savings-page" class="page-content">
-      <style>#calc-savings-page .form-input:not(.tc-tin){height:36px !important;}</style>
+      <style>#calc-savings-page .form-input:not(.tc-tin){height:40px !important;}</style>
       <form style="display: flex; flex-direction: column; gap: 18px; margin-top: 0px;">
         <div class="summary-card" style="padding: 16px 16px 0 16px !important; margin-top: 0 !important; margin-bottom: 0 !important;">
           <div class="summary-card" style="background-color: #EEEEEE; border: 1px solid #E0E0E0; box-shadow: none; border-radius: 8px; padding: 15px 15px 15px 15px; margin-top: 2px !important; margin-bottom: 18px !important;">
@@ -5063,16 +5269,17 @@ textarea.add-product-input[data-filled="true"] {
           </table>
           <div class="tc-divider"></div>
           <button type="button" class="honeypot-button-save" onclick="taxCmpCalc('sx','savingsInterest','savingsRate')" style="display:block; margin:6px auto 0; width:95px; height:33px; box-sizing:border-box; padding:0; font-size:16px; line-height:1; background:#00A8A8; border-color:#00A8A8; color:#FFFFFF; box-shadow:0px 2px 6px rgba(0,0,0,0.25);">계산하기</button>
-          <div class="tc-note">세율 칸에 숫자를 넣으면 이자수익과 비교금리가 자동 계산됩니다.<br>비어 있으면 그 줄은 비워 둡니다.</div>
+          <div class="tc-note">세율 칸에 숫자를 입력하면 이자수익과<br>비교금리가 자동 계산됩니다.<br>비어 있으면 그 줄은 비워 둡니다.</div>
         </div>
       </div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
     <!-- 예금계산기 페이지 -->
     <div id="calc-deposit-page" class="page-content">
-      <style>#calc-deposit-page .form-input:not(.tc-tin){height:36px !important;}</style>
+      <style>#calc-deposit-page .form-input:not(.tc-tin){height:40px !important;}</style>
       <form style="display: flex; flex-direction: column; gap: 18px; margin-top: 0px;">
         <div class="summary-card" style="padding: 16px 16px 0 16px !important; margin-top: 0 !important; margin-bottom: 0 !important;">
           <div class="summary-card" style="background-color: #EEEEEE; border: 1px solid #E0E0E0; box-shadow: none; border-radius: 8px; padding: 15px 15px 15px 15px; margin-top: 2px !important; margin-bottom: 18px !important;">
@@ -5204,16 +5411,17 @@ textarea.add-product-input[data-filled="true"] {
           </table>
           <div class="tc-divider"></div>
           <button type="button" class="honeypot-button-save" onclick="taxCmpCalc('dx','depositCalcInterest','depositCalcRate')" style="display:block; margin:6px auto 0; width:95px; height:33px; box-sizing:border-box; padding:0; font-size:16px; line-height:1; background:#00A8A8; border-color:#00A8A8; color:#FFFFFF; box-shadow:0px 2px 6px rgba(0,0,0,0.25);">계산하기</button>
-          <div class="tc-note">세율 칸에 숫자를 넣으면 이자수익과 비교금리가 자동 계산됩니다.<br>비어 있으면 그 줄은 비워 둡니다.</div>
+          <div class="tc-note">세율 칸에 숫자를 입력하면 이자수익과<br>비교금리가 자동 계산됩니다.<br>비어 있으면 그 줄은 비워 둡니다.</div>
         </div>
       </div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
     <!-- 금리환산계산기 페이지 -->
     <div id="calc-rate-page" class="page-content">
-      <style>#calc-rate-page select.form-input, #calc-rate-page input.form-input{height:36px !important; padding-top:0 !important; padding-bottom:0 !important;}</style>
+      <style>#calc-rate-page select.form-input, #calc-rate-page input.form-input{height:40px !important; padding-top:0 !important; padding-bottom:0 !important;}</style>
       <form style="display: flex; flex-direction: column; gap: 17px; margin-top: 0px;">
         <div class="summary-card" style="padding: 16px !important;">
           <!-- 서브 카드 -->
@@ -5238,12 +5446,12 @@ textarea.add-product-input[data-filled="true"] {
             <!-- 2열 배치: 두 번째 행 -->
             <div style="display: flex; gap: 16px; margin-bottom: 18px; align-items: center;">
               <!-- 왼쪽: 자동 상품명 표시 (주황색 테두리 박스) -->
-              <div style="flex: 0 0 auto; border: 1px solid #FF9800; padding: 0 4px; background-color: #FFFFFF; display: flex; align-items: center; justify-content: center; width: 70px; height: 36px; border-radius: 4px; box-sizing: border-box;">
+              <div style="flex: 0 0 auto; border: 1px solid #FF9800; padding: 0 4px; background-color: #FFFFFF; display: flex; align-items: center; justify-content: center; width: 70px; height: 40px; border-radius: 4px; box-sizing: border-box;">
                 <span id="rateOutputProductName" style="font-size: 17px; font-weight: 700; color: #00A8A8; text-align: center;">예금</span>
               </div>
 
               <!-- 오른쪽: 상품명 박스의 복사본 -->
-              <div style="flex: 0 0 auto; border: 1px solid #FF9800; padding: 0 4px; background-color: #FFFFFF; display: flex; align-items: center; justify-content: center; width: 70px; height: 36px; border-radius: 4px; box-sizing: border-box;">
+              <div style="flex: 0 0 auto; border: 1px solid #FF9800; padding: 0 4px; background-color: #FFFFFF; display: flex; align-items: center; justify-content: center; width: 70px; height: 40px; border-radius: 4px; box-sizing: border-box;">
                 <span id="rateOutputProductName2" style="font-size: 17px; font-weight: 700; color: #00A8A8; text-align: center; white-space: nowrap;">0.00</span>
               </div>
 
@@ -5261,18 +5469,19 @@ textarea.add-product-input[data-filled="true"] {
             <div style="font-size: 13px; line-height: 1.6; color: #333;">
               <div style="margin-bottom: 12px;">
                 <div style="font-weight: 700; margin-bottom: 4px; color: #00A8A8;"><span style="font-size: 50%;">●</span> 적금이자는<br>예금이자의 54.166% 이다.</div>
-                <div style="font-weight: 600; color: #000000;">따라서,<br>적금 6%×54.166%=<br>예금 3.25% 와 동일하다</div>
+                <div style="font-weight: 600; color: #FF0000;">따라서,<br>적금 6%×54.166%=<br>예금 3.25% 와 동일하다</div>
               </div>
               <div>
                 <div style="font-weight: 700; margin-bottom: 4px; color: #00A8A8;"><span style="font-size: 50%;">●</span> 예금이자는<br>적금이자의 184.6% 이다.</div>
-                <div style="font-weight: 600; color: #000000;">따라서,<br>예금 4%×184.6%=<br>적금 7.38% 와 동일하다</div>
+                <div style="font-weight: 600; color: #FF0000;">따라서,<br>예금 4%×184.6%=<br>적금 7.38% 와 동일하다</div>
               </div>
             </div>
           </div>
         </div>
       </form>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
     <!-- 선납이연계산기 페이지 -->
@@ -5341,7 +5550,7 @@ textarea.add-product-input[data-filled="true"] {
       <div id="calcPrepayFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1101; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
         <button type="button" class="honeypot-button-cancel" onclick="calcPrepayCloseClick()">닫기</button>
         <button type="button" id="calcPrepayEditButton" class="honeypot-button-save" onclick="togglePrepayEditing()" style="display: none;">수정</button>
-        <button type="button" id="calcPrepayLinkButton" class="honeypot-button-save" onclick="applyRegPrepayFromCalc(this)" style="display: none; white-space: nowrap; font-size: 13px; min-width: 0; width: auto; padding: 0 12px;">상품등록에 반영</button>
+        <button type="button" id="calcPrepayLinkButton" class="honeypot-button-save" onclick="applyRegPrepayFromCalc(this)" style="display: none;">상품등록에<br>반영</button>
       </div>
     </div>
 
@@ -5627,7 +5836,7 @@ textarea.add-product-input[data-filled="true"] {
         <div class="summary-card" style="margin-top: 8px !important; margin-bottom: 0 !important; background-color: #FFFFFF; border: none; padding: 16px; box-shadow: var(--shadow-card);">
           <div style="margin-bottom: 8px;"><div style="display: flex; align-items: center; gap: 8px; margin-top: -8px;">
             <span class="badge group-badge" style="background-color: #3E34F7; color: #FFFFFF;">자금</span>
-            <span style="font-size: 17px; font-weight: 700; color: #00A8A8; white-space: nowrap;">유동자금 <span style="font-size: 12px; font-weight: 400; color: #FF0000;">(잔액 계산용)</span></span>
+            <span style="font-size: 17px; font-weight: 700; color: #00A8A8; white-space: nowrap;">유동자금 <span style="font-size: 12px; font-weight: 400; color: #FF0000;">(잔액계산용)</span></span>
           </div></div>
           <div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:2px 6px 2px; margin-top:0;">
             <div class="cf-parking-first" style="margin:0 0 0 0;"><div style="padding:6px 0;font-size:14px;font-weight:400;color:#000000;"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:14px;"><span style="font-size:13px;font-weight:400;color:#000000;"></span></div><div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:5px;line-height:14px;"><div style="display:flex;align-items:baseline;white-space:nowrap;min-width:0;"><span style="font-size:13px;font-weight:400;color:#000000;"></span></div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:14px;font-weight:700;color:#FF0000;">0</span><button onclick="cfOpenHolding()" style="display:inline-flex; align-items:center; justify-content:center; width:33.6px; height:19.2px; padding:0; align-self:flex-start; border-radius:30px; font-size:9px; font-weight:700; box-sizing:border-box; cursor:pointer; white-space:nowrap; box-shadow:none; background-color:#FFF30F; border:1px solid #000000; color:#000000;">수정</button></div></div></div></div>
@@ -5661,13 +5870,13 @@ textarea.add-product-input[data-filled="true"] {
       </div>
     </div>
 
-    <div id="cfSubRule" style="display: none; position: fixed; inset: 0; z-index: 1900; background-color: var(--color-bg-primary); overflow-y: auto; padding: 16px 16px 90px; box-sizing: border-box;">
+    <div id="cfSubRule" style="display: none; position: fixed; inset: 0; z-index: 1900; background-color: var(--color-bg-primary); overflow-y: auto; padding: 16px 16px 77px; box-sizing: border-box;">
       <div class="summary-card" style="margin-top: 0 !important; margin-bottom: 0 !important; background-color: #FFFFFF; border: none; padding: 16px; box-shadow: var(--shadow-card);">
         <div style="margin-bottom: 8px;"><div style="display: flex; align-items: center; gap: 8px; margin-top: -8px;">
           <span class="badge group-badge" data-group="본인">고정</span>
           <span style="font-size: 17px; font-weight: 700; color: #00A8A8; white-space: nowrap;">고정항목관리(수정/삭제)</span>
         </div></div>
-        <div style="font-size: 12px; font-weight: 500; color: #000000; margin: 0 0 10px 0;">📢 매년 또는 매월 주기로 자동 반영됩니다.<br>내용을 수정하면 수정 이후 일정에 적용되며,<br>지난 일정은 그대로 유지됩니다.</div>
+        <div style="font-size: 12px; font-weight: 400; color: #FF0000; margin: 0 0 10px 0;">📢 매년 또는 매월 주기로 자동 반영됩니다.<br>내용을 수정하면 수정 이후 일정에 적용되며,<br>지난 일정은 그대로 유지됩니다.</div>
         <div id="cfRuleList"><div style="font-size:12px;color:#888;">등록된 고정항목이 없습니다.</div></div>
       </div>
       <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1901; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
@@ -5675,7 +5884,7 @@ textarea.add-product-input[data-filled="true"] {
       </div>
     </div>
 
-    <div id="cfSubHoliday" style="display: none; position: fixed; inset: 0px; z-index: 1900; background-color: var(--color-bg-primary); overflow-y: auto; padding: 16px 16px 90px; box-sizing: border-box;">
+    <div id="cfSubHoliday" style="display: none; position: fixed; inset: 0px; z-index: 1900; background-color: var(--color-bg-primary); overflow-y: auto; padding: 16px 16px 77px; box-sizing: border-box;">
       <div class="summary-card" style="margin-top: 0 !important; margin-bottom: 0 !important; background-color: #FFFFFF; border: none; padding: 16px; box-shadow: var(--shadow-card);">
         <div style="margin-bottom: 8px;"><div style="display: flex; align-items: center; gap: 8px; margin-top: -8px;">
           <span class="badge group-badge" data-group="배우자">고정휴일</span>
@@ -5691,7 +5900,7 @@ textarea.add-product-input[data-filled="true"] {
         <input class="form-input cf-hol-input" id="cfSolarName" placeholder="예) 제헌절" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; font-size: 15px; height: 35px; padding-left: 6px; padding-right: 6px;">
       </div>
       <div style="display: flex; justify-content: center; margin-top: 6px;">
-        <button class="honeypot-button-save" onclick="cfAddSolar()">추가</button>
+        <button class="honeypot-button-save" onclick="cfAddSolar()" style="width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
       </div>
       </div>
         </div>
@@ -5710,7 +5919,7 @@ textarea.add-product-input[data-filled="true"] {
           <input class="form-input cf-hol-input" id="cfHolDate" placeholder="예) YYYY-MM-DD" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; font-size: 15px; height: 35px; padding-left: 6px; padding-right: 6px;">
           <input class="form-input cf-hol-input" id="cfHolName" placeholder="예) 임시공휴일" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; font-size: 15px; height: 35px; padding-left: 6px; padding-right: 6px;">
         </div>
-        <button class="honeypot-button-save" onclick="cfAddHolidayLine()" style="align-self: center;">추가</button>
+        <button class="honeypot-button-save" onclick="cfAddHolidayLine()" style="align-self: center; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
       </div>
       </div>
         </div>
@@ -5761,12 +5970,13 @@ textarea.add-product-input[data-filled="true"] {
           <button class="calc-btn calc-btn-equals" onclick="generalCalcEquals()">=</button>
         </div>
       </div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
     </div>
 
     <!-- 선납이연 모달 (상품 등록 페이지에서 신규 생성용) -->
-    <div id="prepay-modal-for-product-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; overflow-y: auto;">
+    <div id="prepay-modal-for-product-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1950; overflow-y: auto;">
       <div id="prepay-modal-for-product-content" style="position: relative; width: 100%; max-width: 375px; margin: 0 auto; background-color: var(--color-bg-primary); min-height: 100vh;">
         <!-- 모달 헤더 -->
         <div style="position: sticky; top: 0; z-index: 10; background-color: var(--color-bg-primary); padding: 16px; border-bottom: 1px solid var(--color-divider); display: flex; justify-content: space-between; align-items: center;">
@@ -5830,18 +6040,18 @@ textarea.add-product-input[data-filled="true"] {
               </div>
             </div>
 
-            <!-- 모달 저장/취소 버튼 -->
-            <div style="display: flex; gap: 12px; margin-top: 24px; padding-bottom: 24px;">
-              <button type="button" onclick="closePrepayModalForProduct()" style="flex: 1; padding: 14px; background-color: var(--color-gray-light); border: 1px solid var(--color-line-primary); border-radius: 6px; font-size: 14px; font-weight: 600; color: var(--color-gray-dark); cursor: pointer;">취소</button>
-              <button type="button" onclick="savePrepayToProductForm()" style="flex: 1; padding: 14px; background-color: var(--color-primary); border: none; border-radius: 6px; font-size: 14px; font-weight: 600; color: var(--color-text-on-primary); cursor: pointer;">저장</button>
-            </div>
-          </form>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1001; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="closePrepayModalForProduct()">취소</button>
+        <button type="button" class="honeypot-button-save" onclick="savePrepayToProductForm()">저장</button>
+      </div>
+    </form>
+          <div style="height: 77px;" aria-hidden="true"></div>
         </div>
       </div>
     </div>
 
     <!-- 선납이연 모달 (상품 상세 페이지에서 편집용) -->
-    <div id="prepay-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; overflow-y: auto;">
+    <div id="prepay-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1950; overflow-y: auto;">
       <div id="prepay-modal-content" style="position: relative; width: 100%; max-width: 375px; margin: 0 auto; background-color: var(--color-bg-primary); min-height: 100vh;">
         <!-- 모달 헤더 -->
         <div style="position: sticky; top: 0; z-index: 10; background-color: var(--color-bg-primary); padding: 16px; border-bottom: 1px solid var(--color-divider); display: flex; justify-content: space-between; align-items: center;">
@@ -5909,12 +6119,12 @@ textarea.add-product-input[data-filled="true"] {
             <!-- 모달 납입 요약 -->
             <div id="modalPrepayScheduleSummary" style="margin-top: 24px;"></div>
 
-            <!-- 모달 저장/취소 버튼 -->
-            <div style="display: flex; gap: 12px; margin-top: 24px; padding-bottom: 24px;">
-              <button type="button" onclick="closePrepayModal()" style="flex: 1; padding: 14px; background-color: var(--color-gray-light); border: 1px solid var(--color-line-primary); border-radius: 6px; font-size: 14px; font-weight: 600; color: var(--color-gray-dark); cursor: pointer;">취소</button>
-              <button type="button" onclick="savePrepayFromModal()" style="flex: 1; padding: 14px; background-color: var(--color-primary); border: none; border-radius: 6px; font-size: 14px; font-weight: 600; color: var(--color-text-on-primary); cursor: pointer;">저장</button>
-            </div>
-          </form>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1001; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="closePrepayModal()">취소</button>
+        <button type="button" class="honeypot-button-save" onclick="savePrepayFromModal()">저장</button>
+      </div>
+    </form>
+          <div style="height: 77px;" aria-hidden="true"></div>
         </div>
       </div>
     </div>
@@ -5928,8 +6138,9 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 카드들이 동적으로 생성됨 -->
       </div>
 
-      <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
     </div>
 
     <!-- 예금 상세 페이지 -->
@@ -5960,8 +6171,9 @@ textarea.add-product-input[data-filled="true"] {
       <div style="text-align: center; margin-top: 40px; color: var(--color-gray-medium);">
         <p>등록된저율상품이 없습니다.</p>
       </div>
-          <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
 </div>
 
     <!-- 상품추가 페이지 -->
@@ -6114,7 +6326,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 이연만기일 -->
         <div class="add-product-field">
-          <label class="add-product-label">이연만기일<span style="font-size: 12px; color: #FF9800; font-weight: 600; letter-spacing: -1.5px; white-space: nowrap;">(이연만기일 없을 시 원만기일로 필히 입력)</span></label>
+          <label class="add-product-label">이연만기일<span style="font-size: 12px; color: #FF0000; font-weight: 400; letter-spacing: -1.5px; white-space: nowrap;">(이연만기일 없을 시 원만기일로 필히 입력)</span></label>
           <input type="date" class="add-product-input" id="extendedMaturityDate" data-filled="false">
         </div>
 
@@ -6197,7 +6409,7 @@ textarea.add-product-input[data-filled="true"] {
 </style>
         <div id="prepayTableSection" style="display: none; margin-bottom: 12px; padding-top: 18px;">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
-            <div style="font-size: 14px; font-weight: 400; color: #FF0000;">📋 선납이연 납입표</div>
+            <div style="font-size: 14px; font-weight: 700; color: #FF0000;">📋 선납이연 납입표</div>
             <button type="button" class="honeypot-button-save" onclick="openRegPrepayCalcPage()" style="width: auto; min-width: 120px; padding: 0 14px;">선납이연계산기</button>
           </div>
           <div style="border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; background-color: #FFFFFF;">
@@ -6211,13 +6423,18 @@ textarea.add-product-input[data-filled="true"] {
             <!-- 납입1 (파란색, 납입일자는 가입일자 자동입력) -->
             <div id="prepayRow_0" style="display: grid; grid-template-columns: 30px 1.29fr 0.8fr 1.41fr; align-items: center; gap: 4px; padding: 5.5px 4px; border-top: 1px solid #E0E0E0; color: #000000; font-size: 13px;">
               <div style="text-align: center; font-weight: 400; line-height: 1;">납입<br>1</div>
-              <div id="prepayDate_0" style="text-align: center; font-weight: 400; letter-spacing: -0.5px; white-space: nowrap;"></div>
+              <div style="min-width: 0;">
+                <div style="position: relative; height: 29px;">
+                  <div id="prepayDateText_0" style="height: 29px; line-height: 27px; padding: 0 30px 0 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; font-weight: 400; color: rgba(0, 0, 0, 0.4); text-align: center; box-sizing: border-box; background-color: #FFFFFF; background-image: url(&quot;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 24 24&#39; fill=&#39;none&#39; stroke=&#39;%2300A8A8&#39; stroke-width=&#39;2&#39;%3e%3crect x=&#39;3&#39; y=&#39;5&#39; width=&#39;18&#39; height=&#39;16&#39; rx=&#39;2&#39;/%3e%3cpath d=&#39;M3 10h18M8 3v4M16 3v4&#39;/%3e%3c/svg%3e&quot;); background-repeat: no-repeat; background-position: right 5px center; background-size: 20px 20px; white-space: nowrap; overflow: hidden;">선택하세요</div>
+                  <input type="date" disabled id="prepayDate_0" oninput="syncPrepayDateText(0)" onchange="syncPrepayDateText(0)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; margin: 0;">
+                </div>
+              </div>
               <div style="display: flex; align-items: center; gap: 2px; min-width: 0;">
-                <input type="number" id="prepayCount_0" min="0" placeholder="예) 6" style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 600; box-sizing: border-box;">
+                <input type="number" readonly id="prepayCount_0" min="0"  style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 600; box-sizing: border-box;">
                 
               </div>
               <div style="display: flex; align-items: center; gap: 2px; min-width: 0;">
-                <input type="text" inputmode="numeric" id="prepayAmount_0" placeholder="자동입력" style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 400; box-sizing: border-box;">
+                <input type="text" inputmode="numeric" readonly id="prepayAmount_0"  style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 400; box-sizing: border-box;">
                 
               </div>
             </div>
@@ -6228,15 +6445,15 @@ textarea.add-product-input[data-filled="true"] {
               <div style="min-width: 0;">
                 <div style="position: relative; height: 29px;">
                   <div id="prepayDateText_1" style="height: 29px; line-height: 27px; padding: 0 30px 0 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; font-weight: 400; color: rgba(0, 0, 0, 0.4); text-align: center; box-sizing: border-box; background-color: #FFFFFF; background-image: url(&quot;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 24 24&#39; fill=&#39;none&#39; stroke=&#39;%2300A8A8&#39; stroke-width=&#39;2&#39;%3e%3crect x=&#39;3&#39; y=&#39;5&#39; width=&#39;18&#39; height=&#39;16&#39; rx=&#39;2&#39;/%3e%3cpath d=&#39;M3 10h18M8 3v4M16 3v4&#39;/%3e%3c/svg%3e&quot;); background-repeat: no-repeat; background-position: right 5px center; background-size: 20px 20px; white-space: nowrap; overflow: hidden;">선택하세요</div>
-                  <input type="date" id="prepayDate_1" oninput="syncPrepayDateText(1)" onchange="syncPrepayDateText(1)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; margin: 0;">
+                  <input type="date" disabled id="prepayDate_1" oninput="syncPrepayDateText(1)" onchange="syncPrepayDateText(1)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; margin: 0;">
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 2px; min-width: 0;">
-                <input type="number" id="prepayCount_1" min="0" placeholder="예) 1" style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 600; box-sizing: border-box;">
+                <input type="number" readonly id="prepayCount_1" min="0"  style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 600; box-sizing: border-box;">
                 
               </div>
               <div style="display: flex; align-items: center; gap: 2px; min-width: 0;">
-                <input type="text" inputmode="numeric" id="prepayAmount_1" placeholder="자동입력" style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 400; box-sizing: border-box;">
+                <input type="text" inputmode="numeric" readonly id="prepayAmount_1"  style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 400; box-sizing: border-box;">
                 
               </div>
             </div>
@@ -6247,15 +6464,15 @@ textarea.add-product-input[data-filled="true"] {
               <div style="min-width: 0;">
                 <div style="position: relative; height: 29px;">
                   <div id="prepayDateText_2" style="height: 29px; line-height: 27px; padding: 0 30px 0 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; font-weight: 400; color: rgba(0, 0, 0, 0.4); text-align: center; box-sizing: border-box; background-color: #FFFFFF; background-image: url(&quot;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 24 24&#39; fill=&#39;none&#39; stroke=&#39;%2300A8A8&#39; stroke-width=&#39;2&#39;%3e%3crect x=&#39;3&#39; y=&#39;5&#39; width=&#39;18&#39; height=&#39;16&#39; rx=&#39;2&#39;/%3e%3cpath d=&#39;M3 10h18M8 3v4M16 3v4&#39;/%3e%3c/svg%3e&quot;); background-repeat: no-repeat; background-position: right 5px center; background-size: 20px 20px; white-space: nowrap; overflow: hidden;">선택하세요</div>
-                  <input type="date" id="prepayDate_2" oninput="syncPrepayDateText(2)" onchange="syncPrepayDateText(2)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; margin: 0;">
+                  <input type="date" disabled id="prepayDate_2" oninput="syncPrepayDateText(2)" onchange="syncPrepayDateText(2)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; margin: 0;">
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 2px; min-width: 0;">
-                <input type="number" id="prepayCount_2" min="0" placeholder="예) 5" style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 600; box-sizing: border-box;">
+                <input type="number" readonly id="prepayCount_2" min="0"  style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 600; box-sizing: border-box;">
                 
               </div>
               <div style="display: flex; align-items: center; gap: 2px; min-width: 0;">
-                <input type="text" inputmode="numeric" id="prepayAmount_2" placeholder="자동입력" style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 400; box-sizing: border-box;">
+                <input type="text" inputmode="numeric" readonly id="prepayAmount_2"  style="width: 100%; min-width: 0; padding: 6px 4px; border: 1px solid #D4D4D4; border-radius: 4px; font-size: 13px; color: #000000; font-weight: 400; box-sizing: border-box;">
                 
               </div>
             </div>
@@ -6287,8 +6504,9 @@ textarea.add-product-input[data-filled="true"] {
 
     <!-- 설정 페이지 (사용 안 함 - 각각의 서브페이지로 대체됨) -->
     <div id="settings-page" class="page-content">
-      <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
-      <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
+      <div style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; background-color: var(--color-bg-primary); border-top: 1px solid #E0E0E0;">
+        <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
+      </div>
     </div>
 
     <!-- 메뉴설정 페이지 -->
@@ -6349,7 +6567,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 적용 버튼과 안내 텍스트 (이자분석필드관리와 동일) -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyMenuChanges(0)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6400,7 +6618,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 적용 버튼과 안내 텍스트 (이자분석필드관리와 동일) -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyMenuChanges(1)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6451,7 +6669,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 적용 버튼과 안내 텍스트 (이자분석필드관리와 동일) -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyMenuChanges(2)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6488,7 +6706,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 적용 버튼과 안내 텍스트 (이자분석필드관리와 동일) -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyMenuChanges(3)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6553,7 +6771,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 적용 버튼과 안내 텍스트 (이자분석필드관리와 동일) -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyMenuChanges(4)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6597,7 +6815,7 @@ textarea.add-product-input[data-filled="true"] {
 
         <!-- 적용 버튼과 안내 텍스트 (이자분석필드관리와 동일) -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyMenuChanges(5)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6660,12 +6878,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-groupName" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;groupName&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;groupName&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;groupName&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6690,12 +6908,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-bankName" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;bankName&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;bankName&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;bankName&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6720,12 +6938,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-productName" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;productName&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;productName&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;productName&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6764,12 +6982,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-productType" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;productType&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;productType&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;productType&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6815,12 +7033,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-paymentCycle" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;paymentCycle&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;paymentCycle&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;paymentCycle&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6845,12 +7063,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-paymentPeriod" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;paymentPeriod&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;paymentPeriod&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;paymentPeriod&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6875,12 +7093,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-subscriptionAmount" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;subscriptionAmount&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;subscriptionAmount&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;subscriptionAmount&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6905,12 +7123,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-interestRate" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;interestRate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;interestRate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;interestRate&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -6963,12 +7181,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-interestType" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;interestType&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;interestType&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;interestType&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7007,12 +7225,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-taxRate" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;taxRate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;taxRate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;taxRate&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7065,12 +7283,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-lowTaxRateValue" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;lowTaxRateValue&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;lowTaxRateValue&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;lowTaxRateValue&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7109,12 +7327,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-interestPayment" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;interestPayment&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;interestPayment&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;interestPayment&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7153,12 +7371,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-paymentMethod" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;paymentMethod&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;paymentMethod&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;paymentMethod&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7204,12 +7422,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-prepaymentType" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;prepaymentType&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;prepaymentType&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;prepaymentType&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7234,12 +7452,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-subscriptionDate" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;subscriptionDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;subscriptionDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;subscriptionDate&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7264,12 +7482,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-maturityDate" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;maturityDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;maturityDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;maturityDate&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7294,12 +7512,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-extendedMaturityDate" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;extendedMaturityDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;extendedMaturityDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;extendedMaturityDate&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7338,12 +7556,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-status" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;status&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;status&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;status&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7368,12 +7586,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-earlyTerminationDate" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;earlyTerminationDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;earlyTerminationDate&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;earlyTerminationDate&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7398,12 +7616,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-earlyTerminationBeforeTaxInterest" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;earlyTerminationBeforeTaxInterest&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;earlyTerminationBeforeTaxInterest&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;earlyTerminationBeforeTaxInterest&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7428,12 +7646,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-earlyTerminationAfterTaxInterest" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;earlyTerminationAfterTaxInterest&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;earlyTerminationAfterTaxInterest&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;earlyTerminationAfterTaxInterest&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7458,12 +7676,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-accountNumber" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;accountNumber&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;accountNumber&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;accountNumber&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7488,12 +7706,12 @@ textarea.add-product-input[data-filled="true"] {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-memo" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption(&#39;memo&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption(&#39;memo&#39;, this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges(&#39;memo&#39;, this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -7546,7 +7764,7 @@ textarea.add-product-input[data-filled="true"] {
       </div>
     </div>
 
-    <!-- 기타설정 페이지 -->
+    <!-- 기본설정 페이지 -->
     <div id="databackup-page" class="page-content" style="padding-bottom: 0;">
       <!-- 데이터 관리 -->
       <div style="margin-bottom: 16px;">
@@ -7555,12 +7773,12 @@ textarea.add-product-input[data-filled="true"] {
           <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center;" onclick="exportMenuDataAsFile()">💾 데이터 파일 저장</button>
           <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="document.getElementById(&#39;fileInputAutoRestore&#39;).click()">📂 데이터 파일 가져오기</button>
 
-          <div style="border-top: 2px solid #FF9800; margin: 6px 0; padding: 0;"></div>
+          <div style="border-top: 2px solid #FF0000; margin: 6px 0; padding: 0;"></div>
 
           <!-- 두 번째: 10개 백업 저장 / 복구 -->
           <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center;" onclick="saveBackupToStorageManual()">💾 백업 저장(최근 10개)</button>
           <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="showBackupList()">🕘 백업 목록 복구(최근 10개)</button>
-          <div style="border-top: 2px solid #FF9800; margin: 6px 0; padding: 0;"></div>
+          <div style="border-top: 2px solid #FF0000; margin: 6px 0; padding: 0;"></div>
 
           <!-- 세 번째: 클립보드 복사 / 붙여넣기 복구 -->
           <button class="form-input" style="background-color: var(--color-gray-light); color: var(--color-gray-dark); cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="exportMenuDataLegacy()">📋 클립보드 자동 복사</button>
@@ -7577,7 +7795,7 @@ textarea.add-product-input[data-filled="true"] {
         <button type="button" class="honeypot-button-cancel" onclick="goBack()">닫기</button>
       </div>
     </div>
-    <div id="other-settings-page" class="page-content" style="padding-bottom: 0;">
+    <div id="basic-settings-page" class="page-content" style="padding-bottom: 0;">
       <!-- 모드변경 -->
       <div style="margin-bottom: 32px; margin-top: 0px; padding-top: 0px;">
         <div class="group-header">모드변경</div>
@@ -7693,7 +7911,6 @@ textarea.add-product-input[data-filled="true"] {
         </div>
       </div>
 
-      <!-- 닫기 팝업 버튼 (화면 오른쪽 하단 고정) -->
       <!-- 하단 고정 바와 본문 사이 여백 (마지막 카드 끝에서 바 윗선까지 18px) -->
       <div aria-hidden="true" style="height: 13px; flex-shrink: 0;"></div>
       <!-- 하단 고정 바: 닫기 (회색) -->
@@ -7722,6 +7939,27 @@ textarea.add-product-input[data-filled="true"] {
   <!-- 숨겨진 input (파일 업로드용) -->
 
   <script>
+// 자동 백업 감시: 스크립트 맨 앞에서 설치 (뒤쪽 코드에서 오류가 나도 자동 백업이 빠지지 않도록)
+(function kkulInstallAutoBackupHook() {
+  try {
+    if (window.__kkulHookInstalled) return;
+    window.__kkulHookInstalled = true;
+    const origSet = Storage.prototype.setItem;
+    const origRemove = Storage.prototype.removeItem;
+    Storage.prototype.setItem = function (k, v) {
+      origSet.call(this, k, v);
+      if (k !== 'kkul_backups' && typeof window.kkulScheduleAutoBackup === 'function') window.kkulScheduleAutoBackup();
+    };
+    Storage.prototype.removeItem = function (k) {
+      origRemove.call(this, k);
+      if (k !== 'kkul_backups' && typeof window.kkulScheduleAutoBackup === 'function') window.kkulScheduleAutoBackup();
+    };
+  } catch (e) { }
+})();
+// 앱 오류를 화면 알림으로 표시 (휴대폰에서 원인 확인용)
+window.addEventListener('error', function (ev) {
+  try { showNotification('오류: ' + (ev && ev.message ? ev.message : '알 수 없음') + ' (' + (ev && ev.lineno ? ev.lineno : '') + ')', 5000, 'default'); } catch (e) { }
+});
 // ============================================
 // 전역 변수 선언
 // ============================================
@@ -7772,7 +8010,7 @@ const i18n = {
       'card-field-settings': '카드등록필드설정',
       'card-usage': '카드사용실적',
       'card-registration': '카드등록',
-      'other-settings': '기본설정'
+      'basic-settings': '기본설정'
     }
   }
 };
@@ -7848,7 +8086,7 @@ let menuStructure = [
     icon: '⚙️',
     submenu: [
       {
-        id: 'other-settings',
+        id: 'basic-settings',
         label: '기본설정'
       },
       {
@@ -8427,7 +8665,7 @@ function cfRenderCalViewer() {
     <div class="cfc-title">${y}년 ${m}월</div>
     <div style="display:flex; gap:6px;">
       <button type="button" class="cfc-nav" onclick="cfCalShift(1)">▶</button>
-      <button type="button" class="honeypot-button-cancel" onclick="cfCloseCalViewer()" style="width:80px; font-size:16px; font-weight:700;">닫기</button>
+      <button type="button" class="honeypot-button-cancel" onclick="cfCloseCalViewer()" style="width:63px; height:30px; font-size:14px; font-weight:700;">닫기</button>
     </div>
   </div>
   <div class="cfc-stage"><div class="cfc-pane" data-off="0">${cfCalPaneHtml(y, m)}</div></div>`;
@@ -8646,15 +8884,16 @@ function cfOpenModal(title, body, footer, titleColor) {
     document.body.appendChild(m);
   }
   // 모달 페이지: 전체 화면으로 열고, 하단 고정 닫기 버튼 (cfSubRule 페이지와 같은 형식)
-  m.style.cssText = 'position:fixed;inset:0;z-index:1900;background-color:var(--color-bg-primary);overflow-y:auto;padding:20px 16px 90px 16px;box-sizing:border-box;display:block;';
+  m.style.cssText = 'position:fixed;inset:0;z-index:1900;background-color:var(--color-bg-primary);overflow-y:auto;padding:20px 16px 77px 16px;box-sizing:border-box;display:block;';
   m.innerHTML = '<div class="summary-card" style="margin-top:0 !important;margin-bottom:0 !important;background-color:#FFFFFF;border:none;padding:16px;box-shadow:var(--shadow-card);">'
     + '<div style="margin-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-top:-8px;">'
     + '<span style="font-size:17px;font-weight:700;color:' + (titleColor || '#00A8A8') + ';white-space:nowrap;">' + title + '</span>'
     + '</div></div>'
     + body
-    + '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;">' + footer + '</div></div>'
+    + '</div>'
     + '<div style="position:fixed;bottom:0;left:0;right:0;z-index:1901;display:flex;gap:12px;justify-content:center;align-items:center;padding:10px 14px;background-color:var(--color-bg-primary);border-top:1px solid #E0E0E0;">'
-    + '<button class="honeypot-button-cancel" onclick="cfCloseModal()">닫기</button></div>';
+    + footer
+    + (/취소/.test(footer || '') ? '' : '<button class="honeypot-button-cancel" onclick="cfCloseModal()">닫기</button>') + '</div>';
   m.style.display = 'block';
   m.scrollTop = 0;
 }
@@ -8737,20 +8976,50 @@ function cfOpenRule(id) {
   const today = cfTodayISO();
   const cur = r ? cfAmountAt(r, today) : '';
   const monthOpts = Array.from({ length: 12 }, (_, i) => [String(i + 1), (i + 1) + '월']);
-  const body = cfField('항목명', '<input class="form-input" id="cfR_name" value="' + cfEsc(r ? r.name : '') + '" placeholder="예) 급여">')
+  const body = '<style>.cf-oneoff-grid > div{min-width:0; margin-bottom:0 !important;} .cf-oneoff-grid .form-input, .cf-oneoff-grid .form-select{width:100%;min-width:0;box-sizing:border-box;}</style>'
+    + '<div class="cf-oneoff-grid" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:17px 10px; padding-top:22px;">'
+    + cfField('항목명', '<input class="form-input" id="cfR_name" value="' + cfEsc(r ? r.name : '') + '" placeholder="예) 급여">')
     + cfField('구분', cfRuleDirSelect('cfR_dir', r ? r.dir : 'out'))
     + cfField('금액', '<input type="number" class="form-input" id="cfR_amount" value="' + cur + '" placeholder="예) 200000">')
     + cfField('주기', '<select class="form-select" id="cfR_cycle" onchange="cfToggleMonth(this.value)"><option value="month" ' + ((!r || r.cycle !== 'year') ? 'selected' : '') + '>매월</option><option value="year" ' + (r && r.cycle === 'year' ? 'selected' : '') + '>매년</option></select>')
     + '<div id="cfR_month_wrap" style="display:' + (r && r.cycle === 'year' ? 'block' : 'none') + ';">' + cfField('월', cfSelect('cfR_month', monthOpts, r && r.month ? r.month : 1)) + '</div>'
     + cfField('일', '<input type="text" inputmode="numeric" class="form-input" id="cfR_day" value="' + (r ? r.day : '') + '" placeholder="예) 15">')
     + cfField('주말·공휴일이면', cfSelect('cfR_shift', Object.keys(CF_SHIFT_LABEL).map(k => [k, CF_SHIFT_LABEL[k]]), r ? r.shift : 'none'))
-    + cfField('시작 월', '<input type="month" class="form-input cf-month-field" id="cfR_start" value="' + (r ? r.start : cfYM(today)) + '">')
-    + cfField('종료 월 <span style="font-size:12px;color:#FF9800;">(비우면 계속)</span>', '<div style="position:relative;"><input type="month" class="form-input cf-month-field" id="cfR_end" value="' + (r && r.end ? r.end : '') + '" style="' + (r && r.end ? '' : 'color:transparent;') + '" oninput="cfMonthPh(this)" onchange="cfMonthPh(this)"><span id="cfR_end_ph" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:16px;color:#000000;display:' + (r && r.end ? 'none' : 'block') + ';">--- 년 ---</span></div>');
+    + cfField('시작 월', cfMonthBox('cfR_start', r ? r.start : cfYM(today), ''))
+    + cfField('종료 월 <span style="font-size:12px;color:#FF0000;">(비우면 계속)</span>', cfMonthBox('cfR_end', r && r.end ? r.end : '', '--- 년 ---'))
+    + '</div>';
   const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveRule(' + (id ? id : 'null') + ')">저장</button>';
-  cfOpenModal(r ? '고정항목 수정' : '고정항목 추가', body, footer, r ? undefined : '#00A8A8');
+  cfOpenModal(r ? '고정항목수정' : '고정항목추가', body, footer, r ? undefined : '#00A8A8');
 }
 
+// 날짜 입력칸: 앱 날짜 표시 형식(YYYY-MM-DD)으로 보이게 하고, 달력 아이콘을 얹은 날짜 선택 칸
+function cfDateBox(id, val) {
+  return '<div style="position:relative; height:40px;">'
+    + '<div id="' + id + '_text" style="position:absolute; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; padding:5px 26px 5px 7px; font-size:14px; color:#333; pointer-events:none; box-sizing:border-box; background-color:#FFFFFF; border:1px solid #00A8A8; border-radius:4px;">' + String(val || '') + '</div>'
+    + '<svg style="position:absolute; right:6px; top:50%; transform:translateY(-50%); pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00A8A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+    + '<input type="date" id="' + id + '" value="' + (val || '') + '" oninput="cfDateTxt(this)" onchange="cfDateTxt(this)" style="position:absolute; left:0; top:0; width:100%; height:100%; opacity:0; cursor:pointer; box-sizing:border-box; margin:0;">'
+    + '</div>';
+}
+function cfDateTxt(el) {
+  const t = document.getElementById(el.id + '_text');
+  if (t) t.textContent = el.value || '';
+}
+// 월 입력칸: 앱 날짜 표시 형식(YYYY-MM)으로 보이게 하고, 달력 아이콘을 얹은 월 선택 칸
+function cfMonthBox(id, val, ph) {
+  const shown = val ? val : (ph || '');
+  return '<div style="position:relative; height:40px;">'
+    + '<div id="' + id + '_text" style="position:absolute; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; padding:5px 26px 5px 7px; font-size:14px; color:' + (val ? '#333' : '#000') + '; pointer-events:none; box-sizing:border-box; background-color:#FFFFFF; border:1px solid #00A8A8; border-radius:4px;">' + shown + '</div>'
+    + '<svg style="position:absolute; right:6px; top:50%; transform:translateY(-50%); pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00A8A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+    + '<input type="month" id="' + id + '" data-ph="' + (ph || '') + '" value="' + (val || '') + '" oninput="cfMonthTxt(this)" onchange="cfMonthTxt(this)" style="position:absolute; left:0; top:0; width:100%; height:100%; opacity:0; cursor:pointer; box-sizing:border-box; margin:0;">'
+    + '</div>';
+}
+function cfMonthTxt(el) {
+  const t = document.getElementById(el.id + '_text');
+  if (!t) return;
+  t.textContent = el.value || (el.dataset.ph || '');
+  t.style.color = el.value ? '#333' : '#000';
+}
 function cfMonthPh(el) {
   const sp = document.getElementById(el.id + '_ph');
   const empty = !el.value;
@@ -8893,16 +9162,18 @@ function cfOpenOccurrence(ruleId, ym) {
     group: ov.group != null ? ov.group : def.group,
     amount: ov.amount != null ? ov.amount : def.amount
   };
-  const body = '<div style="font-size:12px;font-weight:500;color:#FF0000;line-height:14px;margin-bottom:10px;">📢 ' + ym.slice(0, 4) + '년 ' + ym.slice(5, 7) + '월 일정만 수정/삭제됩니다.<br>이 일정 전체의 수정/삭제는 ‘고정항목관리’에서 하세요.</div>'
-    + cfField('년월일', '<input type="date" class="form-input" id="cfO_date" value="' + cur.date + '">')
+  const body = '<style>.cf-oneoff-grid > div{min-width:0; margin-bottom:0 !important;} .cf-oneoff-grid .form-input, .cf-oneoff-grid .form-select{width:100%;min-width:0;box-sizing:border-box;}</style>'
+    + '<div style="font-size:12px;font-weight:500;color:#FF0000;line-height:14px;margin:22px 0 10px;">📢 ' + ym.slice(0, 4) + '년 ' + ym.slice(5, 7) + '월 일정만 수정/삭제됩니다.<br>이 일정 전체의 수정/삭제는 ‘고정항목관리’에서 하세요.</div>'
+    + '<div class="cf-oneoff-grid" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:17px 10px;">'
+    + cfField('년월일', cfDateBox('cfO_date', cur.date))
     + cfField('항목명', '<input class="form-input" id="cfO_name" value="' + cfEsc(cur.name) + '">')
     + cfField('구분', cfDirSelect('cfO_dir', cur.dir))
-    + cfField('금액', '<input type="number" class="form-input" id="cfO_amount" value="' + cur.amount + '">');
-  const footer = (Object.keys(ov).length ? '<button class="honeypot-button-cancel" onclick="cfResetOccurrence(' + ruleId + ',\'' + ym + '\')">기본값</button>' : '')
-    + '<button class="honeypot-button-delete" onclick="cfDeleteOccurrence(' + ruleId + ',\'' + ym + '\')">삭제</button>'
-    + '<button class="honeypot-button-cancel" onclick="cfCloseModal();cfOpenRule(' + ruleId + ')">고정항목 수정</button>'
+    + cfField('금액', '<input type="number" class="form-input" id="cfO_amount" value="' + cur.amount + '">')
+    + '</div>';
+  const footer = '<button class="honeypot-button-delete" onclick="cfDeleteOccurrence(' + ruleId + ',\'' + ym + '\')">삭제</button>'
+    + '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveOccurrence(' + ruleId + ',\'' + ym + '\')">저장</button>';
-  cfOpenModal('고정항목 수정', body, footer);
+  cfOpenModal('고정항목수정', body, footer);
 }
 
 function cfSaveOccurrence(ruleId, ym) {
@@ -8948,7 +9219,7 @@ function cfRemoveOccurrence(ruleId, ym) {
 }
 // 일정 한 건 삭제 (확인 후 그 날짜만 삭제, 이후 일정은 유지)
 function cfDeleteOccurrence(ruleId, ym) {
-  showConfirmModal('이 일정만 삭제하시겠습니까?', () => cfRemoveOccurrence(ruleId, ym), null, '삭제', '#FF0000');
+  showConfirmModal('정말로 삭제하시겠습니까?', () => cfRemoveOccurrence(ruleId, ym), null, '삭제', '#FF0000');
 }
 
 function cfResetOccurrence(ruleId, ym) {
@@ -9083,7 +9354,7 @@ function kyungFormBody() {
   const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
   const inp = (ph, mode) => '<input class="form-input"' + (mode ? ' inputmode="' + mode + '"' : '') + ' placeholder="' + ph + '">';
   const row = (first, body) => '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px 10px; ' + (first ? 'padding-top:5px;' : 'margin-top:16.67px;') + '">' + body + '</div>';
-  return '<style>.kyung-form-fields .form-input{height:36px !important;}</style><div class="kyung-form-fields">' + row(true,
+  return '<style>.kyung-form-fields .form-input{height:40px !important;}</style><div class="kyung-form-fields">' + row(true,
       f('기관분류', '<select class="form-input" id="rtBank" style="appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; padding-right: 44px;"><option value="신협">신협</option><option value="농축협" selected>농축협</option><option value="회원수협">회원수협</option><option value="새마을금고">새마을금고</option><option value="산림조합">산림조합</option><option value="저축은행">저축은행</option></select>')
     + f('은행명', '<input class="form-input" id="rtName" value="" placeholder="예) 화성원예농협">'))
     + row(false,
@@ -9245,9 +9516,7 @@ function kyungOpenDetail(idx) {
   const item = kyungLoad()[idx];
   if (!item) return;
   // 상세 모달: 페이지 제목 → 20px → 메인 카드(중첩 카드 + 삭제·수정 버튼) → 하단 닫기
-  const btns = '<div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">'
-    + '<button class="honeypot-button-delete" onclick="kyungConfirmDelete(' + idx + ')">삭제</button>'
-    + '<button class="honeypot-button-save" onclick="kyungOpenEdit(' + idx + ')">수정</button></div>';
+  const btns = '';
   cfOpenModal('경영평가등급', '', '', '#00A8A8');
   const m = document.getElementById('cfModal');
   if (!m) return;
@@ -9255,16 +9524,19 @@ function kyungOpenDetail(idx) {
     + '<span style="font-size:17px;font-weight:700;color:#00A8A8;white-space:nowrap;">경영평가등급</span></div></div>'
     + '<div style="margin-top:20px;">' + kyungCardHTML(item, 0, btns) + '</div>'
     + '<div style="position:fixed;bottom:0;left:0;right:0;z-index:1901;display:flex;gap:12px;justify-content:center;align-items:center;padding:10px 14px;background-color:var(--color-bg-primary);border-top:1px solid #E0E0E0;">'
-    + '<button class="honeypot-button-cancel" onclick="kyungCloseDetail()">닫기</button></div>';
+    + '<button class="honeypot-button-delete" style="width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;" onclick="kyungConfirmDelete(' + idx + ')">삭제</button>'
+    + '<button class="honeypot-button-save" style="width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;" onclick="kyungOpenEdit(' + idx + ')">수정</button>'
+    + '<button class="honeypot-button-cancel" style="width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;" onclick="kyungCloseDetail(' + idx + ')">닫기</button></div>';
   // 상세 카드 자체는 클릭 이벤트 제외 (버튼 클릭이 상세를 다시 여는 것 방지)
   const mc = m.querySelector('.kyung-item');
   if (mc) { mc.removeAttribute('onclick'); mc.style.cursor = 'default'; }
   m.scrollTop = 0;
 }
-function kyungCloseDetail() {
+// 닫기: 눌렀던 카드 위치로 돌아감
+function kyungCloseDetail(idx) {
   cfCloseModal();
-  const list = document.getElementById('kyungList');
-  if (list) list.scrollIntoView({ behavior: 'auto', block: 'start' });
+  const card = document.querySelector('#kyungList .kyung-item[onclick="kyungOpenDetail(' + idx + ')"]');
+  if (card) card.scrollIntoView({ behavior: 'auto', block: 'start' });
 }
 // 수정 취소: 누른 카드 위치로 돌아감
 function kyungCancelEdit(idx) {
@@ -9495,12 +9767,18 @@ function cfOpenOneOff(id, presetDate) {
   const fName = cfField('항목명', '<input class="form-input" id="cfT_name" value="' + cfEsc(o ? o.name : '') + '" placeholder="예) 급여">');
   const fDir = cfField('구분', cfRuleDirSelect('cfT_dir', o ? o.dir : 'out'));
   const fAmt = cfField('금액', '<input type="number" class="form-input" id="cfT_amount" value="' + (o ? o.amount : '') + '" placeholder="예) 200000">');
-  const fDate = cfField('년월일', '<input type="date" class="form-input" id="cfT_date" value="' + (o ? o.date : (presetDate || cfTodayISO())) + '">');
-  const body = fDate + fName + fDir + fAmt;
+  const dVal = o ? o.date : (presetDate || cfTodayISO());
+  const fDate = cfField('년월일', '<div style="position:relative; height:40px;">'
+    + '<div id="cfT_dateText" style="position:absolute; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; padding:5px 26px 5px 7px; font-size:14px; color:#333; pointer-events:none; box-sizing:border-box; background-color:#FFFFFF; border:1px solid #00A8A8; border-radius:4px;">' + String(dVal || '') + '</div>'
+    + '<svg style="position:absolute; right:6px; top:50%; transform:translateY(-50%); pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00A8A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+    + '<input type="date" id="cfT_date" value="' + dVal + '" oninput="document.getElementById(\'cfT_dateText\').textContent=(this.value||\'\')" onchange="document.getElementById(\'cfT_dateText\').textContent=(this.value||\'\')" style="position:absolute; left:0; top:0; width:100%; height:100%; opacity:0; cursor:pointer; box-sizing:border-box; margin:0;">'
+    + '</div>');
+  const body = '<style>.cf-oneoff-grid > div{min-width:0; margin-bottom:0 !important;} .cf-oneoff-grid .form-input, .cf-oneoff-grid .form-select{width:100%;min-width:0;box-sizing:border-box;} .cf-oneoff-grid input[type=date]{padding:7px 26px 7px 6px !important;}</style>'
+    + '<div class="cf-oneoff-grid" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:17px 10px; padding-top:22px;">' + fDate + fName + fDir + fAmt + '</div>';
   const footer = (o ? '<button class="honeypot-button-delete" onclick="cfDeleteOneOff(' + id + ')">삭제</button>' : '')
     + '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveOneOff(' + (id ? id : 'null') + ')">저장</button>';
-  cfOpenModal(o ? '임시항목 수정' : '임시항목 추가', body, footer, o ? undefined : '#00A8A8');
+  cfOpenModal(o ? '임시항목수정' : '임시항목추가', body, footer, o ? undefined : '#00A8A8');
 }
 
 function cfSaveOneOff(id) {
@@ -9543,7 +9821,11 @@ function cfOpenParking(id, titleOverride) {
   const p = id ? d.parking.find(x => x.id === id) : null;
   const PCT = '<span style="font-size:12px;">(%)</span>';
   const f = (label, html) => '<div><div class="form-label">' + label + '</div>' + html + '</div>';
-  const body = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px 10px; padding-top:17px;">'
+  const body = '<style>'
+    + '.pk-form .form-input{height:40px !important;box-sizing:border-box;padding:5px 7px !important;}'
+    + '.pk-form #cfP_memo{height:45px !important;min-height:45px !important;}'
+    + '</style>'
+    + '<div class="pk-form" style="display:grid; grid-template-columns:1fr 1fr; gap:17px 10px; padding-top:22px;">'
     + f('은행명', '<input class="form-input" id="cfP_bank" value="' + cfEsc(p && p.bank ? p.bank : '') + '" placeholder="예) OK저축은행">')
     + f('상품명', '<input class="form-input" id="cfP_name" value="' + cfEsc(p ? p.name : '') + '" placeholder="예) 짠테크통장II">')
     + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfP_rate" value="' + cfEsc(p ? cfRateNumText(p.rate) : '') + '" placeholder="예) 7.00">')
@@ -9555,7 +9837,7 @@ function cfOpenParking(id, titleOverride) {
   const footer = (p ? '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>' : '')
     + '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveParking(' + (id ? id : 'null') + ')">저장</button>';
-  cfOpenModal(titleOverride || (p ? '파킹예치 수정' : '파킹예치 추가'), body, footer, '#00A8A8');
+  cfOpenModal(titleOverride || (p ? '파킹예치수정' : '파킹예치추가'), body, footer, '#00A8A8');
   const memoEl = document.getElementById('cfP_memo');
   if (memoEl) rtAutoH(memoEl);
 }
@@ -9638,10 +9920,9 @@ function cfOpenParkingDetail(id) {
     + row('한도', cfEsc(cfLimitLabel(p.limit)))
     + '<div style="display:flex; align-items:flex-start; gap:12px; padding:6px 0;"><span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">조건</span><span style="flex:1; min-width:0; font-size:14px; font-weight:700; color:#000; text-align:left; white-space:pre-wrap; word-break:break-all;">' + (p.memo ? cfEsc(p.memo) : '-') + '</span></div>';
   const nested = '<div class="stock-sub-card" style="background-color:#F5F5F5; border:1px solid #E0E0E0; border-radius:12px; box-shadow:none; padding:4px 12px; margin-top:12px;">' + body + '</div>';
-  const btns = '<div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-top:18px;">'
-    + '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>'
-    + '<button class="honeypot-button-save" onclick="cfOpenParking(' + id + ')">수정</button></div>';
-  cfOpenModal('파킹예치 상세', nested + btns, '', '#00A8A8');
+  const btns = '<button class="honeypot-button-delete" onclick="cfDeleteParking(' + id + ')">삭제</button>'
+    + '<button class="honeypot-button-save" onclick="cfOpenParking(' + id + ')">수정</button>';
+  cfOpenModal('파킹예치상세', nested, btns, '#00A8A8');
 }
 // ---------- 보유잔금 (파킹 통장과 무관, 수입·지출 잔액의 시작 금액) ----------
 function cfHoldingRowHtml(h) {
@@ -9663,7 +9944,11 @@ function cfOpenHolding() {
   const legacy = h && !h.bank && h.name ? String(h.name).split('/') : null;
   const bankVal = h ? (h.bank || (legacy && legacy.length > 1 ? legacy[0].trim() : '')) : '';
   const pname = h ? (h.pname != null ? h.pname : (legacy && legacy.length > 1 ? legacy.slice(1).join('/').trim() : (h.name || ''))) : '';
-  const body = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px 10px; padding-top:17px;">'
+  const body = '<style>'
+    + '.pk-form .form-input{height:40px !important;box-sizing:border-box;padding:5px 7px !important;}'
+    + '.pk-form #cfH_memo{height:45px !important;min-height:45px !important;}'
+    + '</style>'
+    + '<div class="pk-form" style="display:grid; grid-template-columns:1fr 1fr; gap:17px 10px; padding-top:22px;">'
     + f('은행명', '<input class="form-input" id="cfH_bank" value="' + cfEsc(bankVal) + '" placeholder="예) OK저축은행">')
     + f('상품명', '<input class="form-input" id="cfH_pname" value="' + cfEsc(pname) + '" placeholder="예) 짠테크통장II">')
     + f('파킹금리' + PCT, '<input type="text" inputmode="decimal" class="form-input" id="cfH_rate" value="' + cfEsc(h ? cfRateNumText(h.rate) : '') + '" placeholder="예) 7.00">')
@@ -9674,7 +9959,7 @@ function cfOpenHolding() {
     + '</div>';
   const footer = '<button class="honeypot-button-cancel" onclick="cfCancelModal()">취소</button>'
     + '<button class="honeypot-button-save" onclick="cfSaveHolding()">저장</button>';
-  cfOpenModal('유동자금 수정 <span style="font-size:12px; font-weight:400; color:#FF0000;">(잔액 계산용)</span>', body, footer, '#00A8A8');
+  cfOpenModal('유동자금수정 <span style="font-size:12px; font-weight:400; color:#FF0000;">(잔액계산용)</span>', body, footer, '#00A8A8');
   const memoEl = document.getElementById('cfH_memo');
   if (memoEl) rtAutoH(memoEl);
 }
@@ -9997,7 +10282,7 @@ const pageConfig = {
     renderFunctions: ['prepareStockRegistration'],
     initFunctions: ['applyStockFieldsToRegistration']
   },
-  'other-settings-page': {
+  'basic-settings-page': {
     title: '기본설정',
     showBackButton: true,
     headerClass: '',
@@ -10208,7 +10493,7 @@ function normalizePageBottom(pageId) {
   const fixedBar = FIXED_BAR_PAGES.find(t => t.page === pageId);
   if (fixedBar) return;
   // 기본 설정·상품등록필드설정·메뉴설정: 하단 고정 닫기 바 + 고정 여백 방식 (자동 보정 제외)
-  if (['menu-settings-page', 'product-field-settings-page', 'stock-field-settings-page', 'card-field-settings-page', 'stock-list-page', 'card-usage-page', 'other-settings-page', 'calc-cashflow-page'].includes(pageId)) return;
+  if (['menu-settings-page', 'product-field-settings-page', 'stock-field-settings-page', 'card-field-settings-page', 'stock-list-page', 'card-usage-page', 'basic-settings-page', 'calc-cashflow-page'].includes(pageId)) return;
   const pg = document.getElementById(pageId);
   if (!pg || !pg.classList.contains('active')) return;
   pg.style.paddingBottom = PAGE_BOTTOM_BASE_PAD + 'px';
@@ -10231,6 +10516,88 @@ function jumpScheduleToFirstUpcoming() {
   const scrollBox = document.getElementById('pageContainer');
   if (!firstUpcomingCard || !scrollBox) return;
   scrollBox.scrollTop += firstUpcomingCard.getBoundingClientRect().top - scrollBox.getBoundingClientRect().top;
+}
+
+// 페이지 끝단 간격: 마지막 카드/내용 아래부터 하단 고정바 상단까지 항상 30px (스크롤 끝 기준)
+const KKUL_GAP_PX = 30;
+// 화면에 실제로 보이는 내용의 가장 아래 위치 (배경·테두리·글자·입력칸이 있는 요소 기준, 하단 바/여백 제외)
+function kkulVisibleBottom(pg, bar, f) {
+  let mx = -Infinity;
+  pg.querySelectorAll('*').forEach(el => {
+    if (el === f || el.id === 'kkulGapFiller' || /spacer/i.test(el.id) || bar.contains(el)) return;
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') return;
+    const r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) return;
+    const bg = cs.backgroundColor;
+    const hasBg = bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent';
+    const hasBorder = parseFloat(cs.borderTopWidth) > 0 || parseFloat(cs.borderBottomWidth) > 0;
+    const hasText = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim() !== '');
+    const isCtl = /^(INPUT|BUTTON|TEXTAREA|SELECT|IMG|TABLE)$/.test(el.tagName);
+    if (hasBg || hasBorder || hasText || isCtl) mx = Math.max(mx, r.bottom);
+  });
+  return mx;
+}
+function kkulFitPageGap() {
+  try {
+    const sc = document.getElementById('pageContainer');
+    const pg = document.querySelector('.page-content.active');
+    if (!sc || !pg || pg.id === 'calc-cashflow-page') return;
+    const bar = [...pg.children].find(c => c.id !== 'kkulGapFiller' && getComputedStyle(c).position === 'fixed');
+    if (!bar) return;
+    let f = document.getElementById('kkulGapFiller');
+    if (!f) { f = document.createElement('div'); f.id = 'kkulGapFiller'; f.setAttribute('aria-hidden', 'true'); }
+    if (f.parentNode !== pg) pg.appendChild(f);
+    const savedTop = sc.scrollTop;
+    // 1) 초기화 후 스크롤 끝에서 측정
+    f.style.height = '0px'; f.style.marginTop = '0px';
+    sc.scrollTop = 1e9;
+    const scrollable = sc.scrollHeight > sc.clientHeight + 1;
+    const barTop = bar.getBoundingClientRect().top;
+    const vb = kkulVisibleBottom(pg, bar, f);
+    if (vb !== -Infinity) {
+      const need = Math.round(KKUL_GAP_PX - (barTop - vb));
+      if (scrollable) {
+        // 스크롤되는 페이지: 끝에서 여백을 더하거나(양수) 줄여서(음수 여백) 정확히 30px
+        f.style.height = Math.max(0, need) + 'px';
+        f.style.marginTop = Math.min(0, need) + 'px';
+      }
+    }
+    sc.scrollTop = savedTop;
+  } catch (e) {
+    console.warn('페이지 끝단 간격 계산 실패:', e);
+  }
+}
+let kkulGapRaf = 0;
+function kkulScheduleGapFit() {
+  if (kkulGapRaf) return;
+  kkulGapRaf = requestAnimationFrame(() => { kkulGapRaf = 0; kkulFitPageGap(); });
+}
+(function kkulInitGapFit() {
+  const init = () => {
+    const sc = document.getElementById('pageContainer');
+    if (!sc) return;
+    new MutationObserver(kkulScheduleGapFit).observe(sc, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('resize', kkulScheduleGapFit);
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(kkulScheduleGapFit);
+      document.querySelectorAll('.page-content').forEach(el => ro.observe(el));
+    }
+    kkulScheduleGapFit();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+// 저장 후 목록 복귀 시 카드 위치로 바로 이동 (window.kkulPendingScroll = CSS 선택자)
+function kkulApplyPendingScroll() {
+  const sel = window.kkulPendingScroll;
+  window.kkulPendingScroll = null;
+  if (!sel) return;
+  [0, 60, 150, 300].forEach(ms => setTimeout(() => {
+    const el = document.querySelector(sel);
+    if (el) el.scrollIntoView({ behavior: 'auto', block: 'center' });
+  }, ms));
 }
 
 function navigateTo(pageId) {
@@ -10340,6 +10707,8 @@ function navigateTo(pageId) {
       }
       newPageEl.scrollTop = 0; // page-content div 스크롤 위치 재확인 및 리셋
     }, 0);
+    kkulApplyPendingScroll(); // 저장 후 이동: 지정한 카드 위치로 (최상단 리셋 뒤에 실행)
+    setTimeout(kkulFitPageGap, 120); setTimeout(kkulFitPageGap, 400); // 페이지 끝 30px 여백 맞춤 (전환 애니메이션 후 측정)
   } else {
     console.error('Page element not found:', pageId);
   }
@@ -10408,14 +10777,23 @@ function goBack() {
       }
 
       // 적금/예금 목록으로 돌아올 때 해당 상품카드 위치로 스크롤
-      if ((prevPageId === 'products-list-page' || prevPageId === 'savings-detail') && selectedProductId) {
-        setTimeout(() => {
-          const productCard = document.querySelector(`[data-product-id="${selectedProductId}"]`);
-          if (productCard) {
-            productCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            console.log(`  → 상품 ${selectedProductId} 카드 위치로 스크롤`);
-          }
-        }, 100);
+      // 등록·수정 화면에서 저장/취소로 돌아올 때만 해당 상품 카드 위치로 이동, 그 밖의 이동은 최상단
+      const REG_RETURN_PAGES = ['add-product-page', 'stock-registration-page', 'card-registration-page'];
+      const REG_RETURN_LISTS = ['products-list-page', 'savings-detail', 'stock-list-page', 'card-usage-page'];
+      let anchorSel = null;
+      if (REG_RETURN_PAGES.includes(leavingPage) && REG_RETURN_LISTS.includes(prevPageId)) {
+        anchorSel = window.kkulPendingScroll || null;
+        if (!anchorSel && leavingPage === 'add-product-page' && selectedProductId) anchorSel = `[data-product-id="${selectedProductId}"]`;
+        if (!anchorSel && leavingPage === 'stock-registration-page' && window.stockEditIndex != null) {
+          const rec = loadStockTradesSafe()[window.stockEditIndex];
+          if (rec) anchorSel = `.stock-sub-card[data-group="${rec.group}"][data-code="${rec.stockCode}"]`;
+        }
+        if (!anchorSel && leavingPage === 'card-registration-page' && window.cardEditingId) anchorSel = `#cardUsageContainer .summary-card[data-card-id="${window.cardEditingId}"]`;
+      }
+      const keepListScroll = !!(anchorSel && document.querySelector(anchorSel));
+      if (keepListScroll) {
+        window.kkulPendingScroll = anchorSel;
+        kkulApplyPendingScroll();
       }
 
       // History API 업데이트
@@ -10426,13 +10804,16 @@ function goBack() {
         kkulReplaceHist(prevPageId);
       }
 
-      // 페이지 최상단으로 스크롤 (window와 pageContainer 모두)
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      const pageContainer = document.getElementById('pageContainer');
-      if (pageContainer) {
-        pageContainer.scrollTop = 0;
+      setTimeout(kkulFitPageGap, 120); setTimeout(kkulFitPageGap, 400); // 페이지 끝 30px 여백 맞춤 (전환 애니메이션 후 측정)
+      // 페이지 최상단으로 스크롤 (window와 pageContainer 모두) - 목록 복귀 시에는 카드 위치를 유지
+      if (!keepListScroll) {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        const pageContainer = document.getElementById('pageContainer');
+        if (pageContainer) {
+          pageContainer.scrollTop = 0;
+        }
       }
     }
   }
@@ -12027,7 +12408,7 @@ function renderInterestOverviewUnified() {
     let plannedHTML = `
       <div style="margin-top: -8px;">
         <div style="font-size: 15px; font-weight: 700; color: var(--color-gray-dark); margin-bottom: -10px; padding: 8px 0; border-radius: 6px;">
-          📅 예정상품 <span style="font-size: 14px; color: #FF9800; font-weight: 700;">(일일적금은 제외)</span>
+          📅 예정상품 <span style="font-size: 12px; color: #FF0000; font-weight: 400;">(일일적금은 제외)</span>
         </div>
         <div style="display: flex; align-items: flex-start; font-size: 13px; font-weight: 400; color: #FF0000; padding: 0; line-height: 1.2; margin-top: 7px; margin-bottom: 0px;"><span style="flex-shrink: 0; width: 22px;">📢</span><div>아래의 일정카드를 클릭하면,<br>상품 상세페이지를 볼 수 있습니다</div></div>
     `;
@@ -12870,7 +13251,7 @@ function navigateToSubmenu(submenuId) {
                  submenuId === 'card-field-settings' ? 'card-field-settings-page' :
                  submenuId === 'stock-list' ? 'stock-list-page' :
                  submenuId === 'stock-registration' ? 'stock-registration-page' :
-                 submenuId === 'other-settings' ? 'other-settings-page' :
+                 submenuId === 'basic-settings' ? 'basic-settings-page' :
                  submenuId === 'interest-total' ? 'interest-total-page' :
                  submenuId === 'interest-yearly' ? 'interest-yearly-page' :
                  submenuId === 'interest-group' ? 'interest-group-page' :
@@ -12892,7 +13273,27 @@ function navigateToSubmenu(submenuId) {
   console.log('navigateToSubmenu:', submenuId, '-> pageId:', pageId);
   window.__submenuPage = pageId;
   window.__submenuId = submenuId;
+  if (submenuId === 'calc-prepay') resetCalcPrepayForMenuEntry();
   navigateTo(pageId);
+}
+
+// 메뉴에서 선납이연계산기를 새로 들어갈 때 이전 입력·계산 결과를 비움
+function resetCalcPrepayForMenuEntry() {
+  ['prepayMonthlyAmount', 'prepayTermMonths'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  window.prepaySchedule = null;
+  window.prepayEditSnapshot = null;
+  window.prepayCalcSnapshot = null;
+  const info = document.getElementById('prepayInfoContainer');
+  if (info) info.innerHTML = '';
+  const sched = document.getElementById('prepayScheduleContainer');
+  if (sched) sched.innerHTML = '';
+  const adj = document.getElementById('prepayAdjustmentControls');
+  if (adj) adj.style.display = 'none';
+  const editBtn = document.getElementById('calcPrepayEditButton');
+  if (editBtn) editBtn.style.display = 'none';
 }
 
 // ============================================
@@ -14966,6 +15367,9 @@ function openCalcEditPopup() {
   const backdrop = document.getElementById('calc-edit-backdrop');
   if (backdrop) backdrop.style.display = 'block';
   renderCalcEditPopup();
+  // 수정 팝업을 열 때마다 일정 조정표는 최상단에서 시작
+  const _editBody = document.getElementById('calcEditBody');
+  if (_editBody) _editBody.scrollTop = 0;
 }
 
 function closeCalcEditPopup() {
@@ -14977,6 +15381,9 @@ function closeCalcEditPopup() {
     window.prepaySchedule.forEach(item => { item.isChecked = false; });
   }
   renderPrepayScheduleTable(window.prepaySchedule);
+  // 저장·취소로 팝업을 닫으면 계산기 페이지는 최상단에서 보이도록
+  const _pc = document.getElementById('pageContainer');
+  if (_pc) _pc.scrollTop = 0;
 }
 
 // 새로 고침: 계산하기를 누른 직후의 일정으로 되돌립니다 (테스트 후 원위치용).
@@ -14984,6 +15391,9 @@ function calcEditReset() {
   if (!window.prepayCalcSnapshot) return;
   window.prepaySchedule = JSON.parse(window.prepayCalcSnapshot);
   renderCalcEditPopup();
+  // 새로고침 후에는 납입 일정 조정표의 최상단으로 이동
+  const _editBody = document.getElementById('calcEditBody');
+  if (_editBody) _editBody.scrollTop = 0;
   renderPrepayScheduleTable(window.prepaySchedule);
 }
 
@@ -15000,7 +15410,7 @@ function cancelCalcEdit(btn) {
 // 하단 적용: 수정 내용을 반영하고 닫은 뒤 적용 메시지를 누른 버튼 위에 띄웁니다.
 function applyCalcEdit(btn) {
   // 버튼이 숨겨지기 전에 메시지 위치를 잡아야 버튼 바로 위에 뜹니다.
-  showNotification('✓ 일정표에 반영되었습니다', 2000, 'apply', btn);
+  showNotification('✓ 저장되었습니다', 2000, 'apply', btn);
   closeCalcEditPopup();
 }
 
@@ -16007,7 +16417,8 @@ function initializeRatePage() {
 
   // 입력 필드 초기화
   document.getElementById('rateInputValue').value = '';
-  document.getElementById('rateOutputValue').value = '';
+  const rateOutputEl = document.getElementById('rateOutputValue');
+  if (rateOutputEl) rateOutputEl.value = '';
 
   // 결과값 초기화
   const outputProductName = document.getElementById('rateOutputProductName');
@@ -16909,24 +17320,9 @@ function saveProduct() {
       return;
     }
     console.log('적금 목록 페이지로 이동');
+    window.kkulPendingScroll = selectedProductId ? `[data-product-id="${selectedProductId}"]` : null;
     navigateTo('products-list-page');
-
-    // 적금 목록 페이지 렌더링
-    setTimeout(() => {
-      console.log('renderProductsList() 호출');
-      renderProductsList();
-
-      // 수정한 상품카드 위치로 스크롤
-      if (selectedProductId) {
-        setTimeout(() => {
-          const productCard = document.querySelector(`[data-product-id="${selectedProductId}"]`);
-          if (productCard) {
-            productCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            console.log(`  → 상품 ${selectedProductId} 카드 위치로 스크롤`);
-          }
-        }, 100);
-      }
-    }, 300);
+    renderProductsList();
   }, 1000);
 }
 
@@ -18007,6 +18403,9 @@ function initializeAddProductPage() {
       });
     }
 
+    const d0Clear = document.getElementById('prepayDate_0');
+    if (d0Clear && !window.regReturnState) { d0Clear.value = ''; syncPrepayDateText(0); }
+
     console.log('%c🗑️ 신규 추가 모드: 모든 필드 초기화 완료', 'color: green; font-weight: bold;');
 
     // 신규 모드: 현재상태는 항상 "진행중"으로 기본 설정
@@ -18028,6 +18427,10 @@ function initializeAddProductPage() {
     startDateInput.value = todayStr;
     console.log('%c📅 신규 추가 모드: 오늘 날짜를 기본값으로 설정:', 'color: blue;', todayStr);
   }
+
+  // 납입표 표시 상태를 현재 입력값에 맞춤 (신규: 선택하세요 / 수정: 저장값, 납입1은 가입일자)
+  updatePrepayTableVisibility();
+  [1, 2].forEach(i => syncPrepayDateText(i));
 
   // 조건부 필드 초기화 (상품 타입에 따라 필드 표시/숨김)
   updateProductTypeFields();
@@ -18456,10 +18859,10 @@ function renderStockFieldsManager() {
         </div>
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="stock-new-item-${id}" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addStockOption('${id}', this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addStockOption('${id}', this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>` : ''}
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyStockField('${id}', this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
       </div>`;
@@ -18470,11 +18873,11 @@ function renderStockFieldsManager() {
         <div style="margin-bottom: 0px; display: flex; flex-direction: column; align-items: flex-end;">
           <div style="display: flex; gap: 9px; margin-bottom: 12px; align-items: center; justify-content: flex-end;">
             <input type="text" id="stock-new-field-name" placeholder="새 필드명 입력" style="width: 140px; padding: 10px 8px; border: 2px solid #00A8A8; border-radius: 4px; font-size: 12px; font-weight: 600; flex-shrink: 0;">
-            <button onclick="addStockField(this)" style="background: #00A8A8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">추가</button>
+            <button onclick="addStockField(this)" style="background: #00A8A8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
           </div>
         </div>
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: flex-start; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">새 필드는 사용자 입력으로 주식등록 맨 아래에 추가됩니다</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">새 필드는 사용자 입력으로 주식등록필드 맨 아래에<br>추가됩니다</span>
         </div>
       </div>`;
   manager.innerHTML = html;
@@ -18721,10 +19124,10 @@ function renderCardFieldsManager() {
         </div>
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="card-new-item-${id}" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addCardOption('${id}', this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addCardOption('${id}', this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>` : ''}
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyCardField('${id}', this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
       </div>`;
@@ -18734,11 +19137,11 @@ function renderCardFieldsManager() {
         <div style="margin-bottom: 0px; display: flex; flex-direction: column; align-items: flex-end;">
           <div style="display: flex; gap: 9px; margin-bottom: 12px; align-items: center; justify-content: flex-end;">
             <input type="text" id="card-new-field-name" placeholder="새 필드명 입력" style="width: 140px; padding: 10px 8px; border: 2px solid #00A8A8; border-radius: 4px; font-size: 12px; font-weight: 600; flex-shrink: 0;">
-            <button onclick="addCardField(this)" style="background: #00A8A8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">추가</button>
+            <button onclick="addCardField(this)" style="background: #00A8A8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
           </div>
         </div>
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: flex-start; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">새 필드는 사용자 입력으로 카드등록 맨 아래에 추가됩니다</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">새 필드는 사용자 입력으로 카드등록필드 맨 아래에<br>추가됩니다</span>
         </div>
       </div>`;
   manager.innerHTML = html;
@@ -18869,12 +19272,12 @@ function renderSelectFieldsManager() {
         <!-- 새 항목 추가 -->
         <div style="display: flex; gap: 9px; margin-bottom: 18px; margin-left: 12px; justify-content: flex-end;">
           <input type="text" id="new-item-${fieldId}" placeholder="새 항목 입력" style="width: 140px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 12px; flex-shrink: 0; background-color: #f9f9f9;">
-          <button onclick="addSelectFieldOption('${fieldId}', this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap;">추가</button>
+          <button onclick="addSelectFieldOption('${fieldId}', this)" style="background: #00A8A8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 11px; flex-shrink: 0; white-space: nowrap; width:63px; height:30px; padding:0; font-size:14px; font-weight:700; box-sizing:border-box;">추가</button>
         </div>
 
         <!-- 적용 버튼과 안내 텍스트 -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applySelectFieldChanges('${fieldId}', this)" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -21065,35 +21468,6 @@ function renderMainPageSummaryCards() {
         <span style="font-size: 14px; font-weight: 600; color: #00A8A8;">${formatNumber(totalAfterTaxInterest)}</span>
       </div>
 
-      <!-- 수평 구분선 -->
-      <div style="border-top: 1px solid #C5E5EB; margin-top: 7px; margin-bottom: 2px;"></div>
-
-      <!-- 일반세전이자 -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
-        <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">일반세전이자</span>
-        <span style="font-size: 14px; font-weight: 600; color: #1A1A1A;">${formatNumber(generalBeforeTaxInterest)}</span>
-      </div>
-
-      <!-- 일반세후이자 -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
-        <span style="font-size: 14px; font-weight: 600; color: #00A8A8;">일반세후이자</span>
-        <span style="font-size: 14px; font-weight: 600; color: #00A8A8;">${formatNumber(generalAfterTaxInterest)}</span>
-      </div>
-
-      <!-- 수평 구분선 -->
-      <div style="border-top: 1px solid #C5E5EB; margin-top: 7px; margin-bottom: 2px;"></div>
-
-      <!-- 저율세전이자 -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
-        <span style="font-size: 14px; font-weight: 700; color: #1A1A1A;">저율세전이자</span>
-        <span style="font-size: 14px; font-weight: 700; color: #1A1A1A;">${formatNumber(lowRateBeforeTaxInterest)}</span>
-      </div>
-
-      <!-- 저율세후이자 -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -4px;">
-        <span style="font-size: 14px; font-weight: 600; color: #00A8A8;">저율세후이자</span>
-        <span style="font-size: 14px; font-weight: 600; color: #00A8A8;">${formatNumber(lowRateAfterTaxInterest)}</span>
-      </div>
 
       </div>
     </div>
@@ -21121,7 +21495,7 @@ function renderMainPageSummaryCards() {
     try {
       // 메인 주식요약은 목록 필터와 무관하게 전체 총괄을 보여준다 (필터 잠시 해제 후 복원)
       var savedStockFilter = Object.assign({}, stockFilter);
-      stockFilter = { group: 'all', year: 'all', holding: 'all', tradeType: 'all' };
+      stockFilter = { group: 'all', year: 'all', holding: 'all', tradeType: 'all', keyword: '' };
       renderStockList();
       var stockFirst = document.getElementById('stockListContainer') && document.getElementById('stockListContainer').firstElementChild;
       var slot = document.getElementById('stockSummarySlot');
@@ -22411,9 +22785,6 @@ function updatePrepayTableVisibility() {
   const row2 = document.getElementById('prepayRow_2');
   if (row2) row2.style.display = prepaymentType === '1-11' ? 'none' : 'grid';
 
-  // 납입1 납입일자는 가입일자에서 자동 표시
-  const dateEl0 = document.getElementById('prepayDate_0');
-  if (dateEl0) dateEl0.textContent = document.getElementById('startDate')?.value || '';
 
   // 납입2·납입3 날짜: 네이티브 날짜 선택창 사용 (계산기와 동일, flatpickr 미사용)
   ['prepayDate_1', 'prepayDate_2'].forEach(id => {
@@ -22434,9 +22805,7 @@ function getPrepayTableValues() {
     if (i === 2 && prepaymentType === '1-11') return;
     rows.push({
       name: r.key,
-      date: i === 0
-        ? (document.getElementById('startDate')?.value || '')
-        : (document.getElementById('prepayDate_' + i)?.value || ''),
+      date: (document.getElementById('prepayDate_' + i)?.value || ''),
       count: document.getElementById('prepayCount_' + i)?.value || '',
       amount: (document.getElementById('prepayAmount_' + i)?.value || '').replace(/,/g, '')
     });
@@ -22456,7 +22825,7 @@ function syncPrepayDateText(i) {
   const inp = document.getElementById('prepayDate_' + i);
   const txt = document.getElementById('prepayDateText_' + i);
   if (!inp || !txt) return;
-  txt.textContent = inp.value || '선택하세요';
+  txt.textContent = inp.value || '';
   txt.style.color = inp.value ? '#000000' : 'rgba(0, 0, 0, 0.4)';
 }
 
@@ -22469,7 +22838,7 @@ function setPrepayTableValues(rows) {
     const amountEl = document.getElementById('prepayAmount_' + i);
     if (countEl) countEl.value = saved.count ?? '';
     if (amountEl) amountEl.value = formatPrepayAmountInput(saved.amount ?? '');
-    if (i > 0) {
+    {
       const dateEl = document.getElementById('prepayDate_' + i);
       if (dateEl) { dateEl.value = saved.date || ''; syncPrepayDateText(i); }
     }
@@ -24935,6 +25304,8 @@ function handleProductEdit() {
     // 상품등록 페이지로 이동 (initializeAddProductPage에서 폼 채우기)
     console.log('상품등록 페이지로 이동 중...');
     navigateTo('add-product-page');
+    const _apHeader = document.getElementById('headerTitle');
+    if (_apHeader) _apHeader.textContent = '적금등록수정';
   } else {
     console.error('%c❌ handleProductEdit 실패: 상품을 찾을 수 없음', 'color: red; font-weight: bold;');
   }
@@ -25043,7 +25414,7 @@ function renderSettingsPageMenu() {
   let html = `
     <div style="padding: 16px;">
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        <button class="settings-menu-button" onclick="navigateTo('other-settings-page')" style="width: 100%; padding: 16px; text-align: left; border: 1px solid #00A8A8; border-radius: 4px; background-color: #E8F4F4; cursor: pointer; font-size: 16px; font-weight: 600; color: var(--color-gray-dark);">
+        <button class="settings-menu-button" onclick="navigateTo('basic-settings-page')" style="width: 100%; padding: 16px; text-align: left; border: 1px solid #00A8A8; border-radius: 4px; background-color: #E8F4F4; cursor: pointer; font-size: 16px; font-weight: 600; color: var(--color-gray-dark);">
           ⚙️ 기본설정
         </button>
         <button class="settings-menu-button" onclick="navigateTo('product-field-settings-page')" style="width: 100%; padding: 16px; text-align: left; border: 1px solid #00A8A8; border-radius: 4px; background-color: #E8F4F4; cursor: pointer; font-size: 16px; font-weight: 600; color: var(--color-gray-dark);">
@@ -25054,7 +25425,6 @@ function renderSettingsPageMenu() {
         </button>
       </div>
     </div>
-    <button type="button" class="honeypot-button-close honeypot-floating-close" onclick="goBack()" title="닫기">닫기</button>
   `;
 
   settingsPage.innerHTML = html;
@@ -25168,7 +25538,7 @@ function renderMenuManager() {
 
         <!-- 적용 버튼과 안내 텍스트 (이자분석필드관리와 동일) -->
         <div style="display: flex; gap: 9px; margin-bottom: -1px; margin-left: 12px; justify-content: space-between; align-items: flex-end;">
-          <span style="font-size: 10px; color: #FF9800; font-weight: 700;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
+          <span style="font-size: 10px; color: #FF0000; font-weight: 500;">수정, 추가, 삭제 후 적용 버튼을 누르세요</span>
           <button onclick="applyMenuChanges(${index})" style="background: #FF8C00; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; flex-shrink: 0; white-space: nowrap;">적용</button>
         </div>
 
@@ -25315,7 +25685,7 @@ function resetMenuStructure() {
             icon: '⚙️',
             submenu: [
               {
-                id: 'other-settings',
+                id: 'basic-settings',
                 label: '기본설정'
               },
               {
@@ -25690,6 +26060,18 @@ function loadMenuData() {
   if (saved) {
     try {
       menuStructure = JSON.parse(saved);
+      // 기타설정 → 기본설정 id 1회 변경 (저장된 메뉴 호환)
+      try {
+        let renamed = false;
+        menuStructure.forEach(m => {
+          if (Array.isArray(m.submenu)) m.submenu.forEach(x => {
+            if (x.id === 'other-settings') { x.id = 'basic-settings'; renamed = true; }
+          });
+        });
+        if (renamed) localStorage.setItem('menuStructure', JSON.stringify(menuStructure));
+      } catch (e) {
+        console.warn('기본설정 메뉴 id 변환 실패:', e);
+      }
       // 금리조견표 1회 추가: 적금관리의 적금등록 아래 (이미 있으면 건너뜀)
       try {
         const savM = menuStructure.find(m => m.id === 'savings-management');
@@ -25929,27 +26311,14 @@ function kkulAutoBackupNow() {
   }
 }
 // 한 번의 저장 동작이 끝나는 즉시(같은 실행 흐름의 마지막에) 백업: 타이머를 쓰지 않아서 바로 닫아도 빠지지 않음
-let kkulAutoBackupQueued = false;
 function kkulScheduleAutoBackup() {
-  if (kkulAutoBackupQueued) return;
-  kkulAutoBackupQueued = true;
+  if (window.__kkulBackupQueued) return;
+  window.__kkulBackupQueued = true;
   Promise.resolve().then(function () {
-    kkulAutoBackupQueued = false;
+    window.__kkulBackupQueued = false;
     kkulAutoBackupNow();
   });
 }
-(function kkulHookStorageForBackup() {
-  const origSet = Storage.prototype.setItem;
-  const origRemove = Storage.prototype.removeItem;
-  Storage.prototype.setItem = function (k, v) {
-    origSet.call(this, k, v);
-    if (k !== 'kkul_backups') kkulScheduleAutoBackup();
-  };
-  Storage.prototype.removeItem = function (k) {
-    origRemove.call(this, k);
-    if (k !== 'kkul_backups') kkulScheduleAutoBackup();
-  };
-})();
 function exportMenuData() {
   const savedProducts = JSON.parse(localStorage.getItem('products') || '[]');
   const data = {
@@ -26931,7 +27300,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <!-- 선납이연 일정조정 팝업 (계산기 수정하기) -->
   <!-- 팝업 뒤 배경: 카드와 하단 바 사이 공백에 뒤 페이지 내용이 비치지 않도록 페이지 배경색으로 덮음 -->
   <div id="calc-edit-backdrop" style="display: none; position: fixed; top: 56px; bottom: 0; left: 0; right: 0; z-index: 1099; background: var(--color-bg-gradient);"></div>
-  <div id="calc-edit-overlay" style="display: none; position: fixed; top: 56px; bottom: 72px; left: 8px; right: 8px; z-index: 1100; background-color: #FFFFFF; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); flex-direction: column; overflow: hidden;">
+  <div id="calc-edit-overlay" style="display: none; position: fixed; top: 56px; bottom: 72px; left: 8px; right: 8px; z-index: 1200; background-color: #FFFFFF; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); flex-direction: column; overflow: hidden;">
     <div id="calcEditHeader" style="flex-shrink: 0; box-sizing: border-box; height: 47px; background-color: #FFFFFF;"></div>
     <div id="calcEditBody" style="flex: 1; overflow-y: auto; padding: 1px 14px 13px; -webkit-overflow-scrolling: touch;">
       <div id="calcEditContent" style="margin-top: -17px;"></div>
@@ -26939,7 +27308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <!-- 하단 고정 바: 취소(왼쪽) · 적용(오른쪽). 카드(흰 박스)와 18px 떨어져 화면 하단에 고정됩니다. -->
     <div id="calcEditFooter" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1101; display: flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 14px; border-top: 1px solid #E0E0E0; background-color: var(--color-bg-primary);">
       <button type="button" class="honeypot-button-cancel" onclick="cancelCalcEdit(this)">취소</button>
-      <button type="button" class="honeypot-button-save" onclick="applyCalcEdit(this)" style="width: auto; min-width: 0; padding: 0 12px; white-space: nowrap; font-size: 13px;">일정표에 반영</button>
+      <button type="button" class="honeypot-button-save" onclick="applyCalcEdit(this)" style="width: auto; min-width: 0; padding: 0 12px; white-space: nowrap; font-size: 13px;">저장</button>
     </div>
   </div>
 
@@ -27331,4 +27700,73 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+<script>
+// 하단 바 페이지 공통: 스크롤되는 화면은 마지막 내용과 하단 바 사이를 정확히 30px로 맞춤, 스크롤 안 되는 화면은 그대로
+(function () {
+  var GAP = 30;
+  function isBar(el) {
+    if (!el || el.nodeType !== 1) return false;
+    var cs = getComputedStyle(el);
+    return cs.position === 'fixed' && cs.bottom === '0px' && el.getBoundingClientRect().height > 0 && el.getBoundingClientRect().height < 120 && el.querySelector('button');
+  }
+  function scrollerOf(el) {
+    var p = el.parentElement;
+    while (p && p !== document.body) {
+      var oy = getComputedStyle(p).overflowY;
+      if (oy === 'auto' || oy === 'scroll') return p;
+      p = p.parentElement;
+    }
+    return null;
+  }
+  function gapOf(S, B) {
+    var bt = B.getBoundingClientRect().top, maxB = -1;
+    S.querySelectorAll('*').forEach(function (e) {
+      if (B.contains(e)) return;
+      var cs = getComputedStyle(e);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') return;
+      if (e.children.length === 0 && !(e.textContent || '').trim() && !/^(INPUT|SELECT|TEXTAREA|BUTTON|IMG|SVG)$/.test(e.tagName)) return;
+      var r = e.getBoundingClientRect();
+      if (r.height <= 0 || r.width <= 0) return;
+      if (r.bottom <= bt + 1 && r.bottom > maxB) maxB = r.bottom;
+    });
+    return maxB < 0 ? null : (bt - maxB);
+  }
+  function fit() {
+    var bars = Array.prototype.filter.call(document.querySelectorAll('div'), function (d) { return isBar(d) && d.getClientRects().length > 0; });
+    bars.forEach(function (B) {
+      var S = scrollerOf(B);
+      if (!S) return;
+      if (!S.dataset.kkulBase) S.dataset.kkulBase = String(parseFloat(getComputedStyle(S).paddingBottom) || 0);
+      var base = parseFloat(S.dataset.kkulBase) || 0;
+      var last = null;
+      Array.prototype.forEach.call(S.children, function (c) {
+        var cs = getComputedStyle(c);
+        if (cs.position !== 'fixed' && cs.display !== 'none' && c !== B && !B.contains(c)) last = c;
+      });
+      if (last && !last.dataset.kkulPb) last.dataset.kkulPb = String(parseFloat(getComputedStyle(last).paddingBottom) || 0);
+      var lpBase = last ? parseFloat(last.dataset.kkulPb) || 0 : 0;
+      S.style.paddingBottom = base + 'px';
+      if (last) last.style.paddingBottom = lpBase + 'px';
+      if (S.scrollHeight <= S.clientHeight + 2) return;
+      var savedTop = S.scrollTop;
+      S.scrollTop = S.scrollHeight;
+      var g = gapOf(S, B);
+      S.scrollTop = savedTop;
+      if (g === null) return;
+      var d = GAP - g;
+      if (d >= 0) { S.style.paddingBottom = (base + d) + 'px'; return; }
+      // 줄일 때: 스크롤 영역 여백 → 마지막 블록의 아래 여백 순서로 줄임
+      var cut = -d;
+      var fromS = Math.min(base, cut); S.style.paddingBottom = (base - fromS) + 'px'; cut -= fromS;
+      if (last && cut > 0) last.style.paddingBottom = Math.max(0, lpBase - cut) + 'px';
+    });
+  }
+  function fit2() { fit(); fit(); }
+  window.kkulFitBottomGap = fit2;
+  document.addEventListener('click', function () { setTimeout(fit2, 60); setTimeout(fit2, 260); }, true);
+  window.addEventListener('load', function () { setTimeout(fit2, 200); });
+  window.addEventListener('resize', function () { setTimeout(fit2, 60); });
+})();
+</script>
 </body></html>
