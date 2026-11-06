@@ -12253,129 +12253,7 @@ function renderInterestOverviewUnified() {
   const hideExpiredSchedule = !(document.getElementById('interestHideExpiredCheckbox') && document.getElementById('interestHideExpiredCheckbox').checked);
 
   // 📅 각 적금 상품의 모든 납입일별 카드를 생성하는 헬퍼 함수
-  const generatePaymentDateCards = (product) => {
-    // 적금이 아니면 원본 상품 그대로 반환 (카드 1개)
-    if ((product.productType || product.type) !== '적금') {
-      return [{ ...product, paymentType: 'maturity' }];
-    }
-
-    // 지난일정 보기 해제 시: 종료일이 어제 이전이면 상품 카드 전체(납입표 포함) 숨김
-    // 종료일 = 중도해지 상품은 중도해지일, 그 외는 이연만기일(없으면 원만기일)
-    const endRaw = product.status === '중도해지'
-      ? (product.earlyTerminationDate || product.extendedMaturityDate || product.maturityDate)
-      : (product.extendedMaturityDate || product.maturityDate);
-    const endDay = new Date(String(endRaw || '').replace(/\./g, '-'));
-    endDay.setHours(0, 0, 0, 0);
-    const todayStartForEnd = new Date();
-    todayStartForEnd.setHours(0, 0, 0, 0);
-    if (hideExpiredSchedule && !isNaN(endDay.getTime()) && endDay <= todayStartForEnd) return [];  // 당일 해지·만기도 지난 상품으로 숨김
-    // 중도해지 상품: 납입 회차 카드는 만들지 않고, 중도해지일에 해당하는 카드 한 장만 표시
-    if (product.status === '중도해지' && !isNaN(endDay.getTime())) {
-      return [{
-        ...product,
-        paymentType: 'scheduled',
-        scheduledPaymentDate: endDay,
-        paymentCycleNumber: null,
-        prepayRow: { name: '중도해지', count: '', amount: null, isMaturity: true, isTerminated: true }
-      }];
-    }
-
-    // 🟦 선납이연 적금: 월별 전개 대신 선납이연 납입표 행(납입1/납입2/납입3)마다 카드 생성
-    // 1-11 방식은 납입3 행이 없으므로 제외
-    if (product.paymentMethod === '선납이연') {
-      const prepayRows = Array.isArray(product.prepayTable) ? product.prepayTable : [];
-      const hideThirdRow = product.prepaymentType === '1-11';
-      // 회차 누적: 납입1 → 납입2 → 납입3 순으로 시작 회차 계산
-      let cumulativeNo = 0;
-      const numberedRows = prepayRows.map(r => {
-        const cnt = parseInt(String(r && r.count != null ? r.count : 0).replace(/,/g, '')) || 0;
-        const startNo = cumulativeNo + 1;
-        cumulativeNo += cnt;
-        return { ...r, cnt, startNo, endNo: cumulativeNo };
-      });
-      const totalNo = parseInt(product.paymentCycle) || cumulativeNo;
-      const prepayCards = numberedRows
-        .filter(r => r && r.date && !(hideThirdRow && r.name === '납입3'))
-        .map(r => {
-          const d = new Date(String(r.date).replace(/\./g, '-'));
-          d.setHours(0, 0, 0, 0);
-          return {
-            ...product,
-            paymentType: 'scheduled',
-            scheduledPaymentDate: d,
-            paymentCycleNumber: null,
-            prepayRow: { ...r, totalNo }
-          };
-        })
-        // 이미 납입된 행(당일 포함 과거)은 차기 일정에서 제외 (현재 납입액에는 포함)
-        .filter(card => {
-          const todayMidnight = new Date();
-          todayMidnight.setHours(0, 0, 0, 0);
-          return !isNaN(card.scheduledPaymentDate.getTime()) && (!hideExpiredSchedule || card.scheduledPaymentDate >= todayMidnight);
-        });
-      // 🟪 이연만기일 카드 추가 (회차 자리에 "만기", 금액 없음)
-      const finalMaturity = new Date(product.extendedMaturityDate || product.maturityDate);
-      if (!isNaN(finalMaturity.getTime())) {
-        finalMaturity.setHours(0, 0, 0, 0);
-        prepayCards.push({
-          ...product,
-          paymentType: 'scheduled',
-          scheduledPaymentDate: finalMaturity,
-          paymentCycleNumber: null,
-          prepayRow: { name: '만기', count: '', amount: null, isMaturity: true }
-        });
-      }
-      return prepayCards;
-    }
-
-    // 📌 1일 적금은 너무 방대하므로 리스트에서 제외 (사용자가 이미 알고 있음)
-    if ((product.paymentPeriod || '개월') === '일') {
-      return []; // 빈 배열 반환 → 리스트에 표시되지 않음
-    }
-
-    // 적금인 경우: 오늘부터 만기일까지의 모든 납입일별 카드 생성
-    let startDate = new Date(product.startDate || product.savedDate);
-    if (isNaN(startDate.getTime())) {
-      startDate = new Date(today);
-    }
-    startDate.setHours(0, 0, 0, 0);
-
-    const maturityDate = new Date(product.extendedMaturityDate || product.maturityDate);
-    maturityDate.setHours(0, 0, 0, 0);
-
-    const paymentPeriod = product.paymentPeriod || '개월';
-    const paymentCycleNum = parseInt(product.paymentCycle || 1) || 1;
-
-    const paymentCards = [];
-    let currentPaymentDate = new Date(startDate);
-    let cycleCount = 1;
-
-    // 오늘부터 시작하여 각 납입일별 카드 생성
-    while (currentPaymentDate <= maturityDate && cycleCount <= paymentCycleNum) {
-      // 오늘 이후의 납입일만 포함
-      if (!hideExpiredSchedule || currentPaymentDate >= today) {
-        paymentCards.push({
-          ...product,
-          paymentType: 'scheduled',
-          scheduledPaymentDate: new Date(currentPaymentDate), // 이 납입일의 날짜
-          paymentCycleNumber: cycleCount // 몇 회차인지
-        });
-      }
-
-      // 다음 납입일 계산
-      if (paymentPeriod === '일') {
-        currentPaymentDate.setDate(currentPaymentDate.getDate() + 1);
-      } else if (paymentPeriod === '주') {
-        currentPaymentDate.setDate(currentPaymentDate.getDate() + 7);
-      } else if (paymentPeriod === '개월') {
-        currentPaymentDate.setMonth(currentPaymentDate.getMonth() + 1);
-      }
-
-      cycleCount++;
-    }
-
-    return paymentCards;
-  };
+  const generatePaymentDateCards = (product) => kkulGeneratePaymentDateCards(product, today, hideExpiredSchedule);
 
   // 필터링된 상품을 그룹별로 분류 및 렌더링
   const nearbyMaturity = filtered.filter(p => {
@@ -27012,7 +26890,22 @@ function showDdayAlertModal(product, kind = 'payment') {
 
   // 납입액 포맷
   let amountStr = '0원';
-  if (product.type === '적금') {
+  const isSavingsProduct = product.productType === '적금' || product.type === '적금';
+  if (kind === 'payment' && product.prepayRow && !product.prepayRow.isMaturity) {
+    // 선납이연 납입 행: 일정표의 회차(n~m회(k회분))와 행 금액 그대로
+    const pr = product.prepayRow;
+    const noText = pr.cnt > 1 ? `${pr.startNo}~${pr.endNo}회` : `${pr.startNo}회`;
+    const amt = parseInt(String(pr.amount ?? 0).replace(/,/g, '')) || 0;
+    amountStr = `${noText}(${pr.cnt}회분) ${new Intl.NumberFormat('ko-KR').format(amt)}원`;
+  } else if (kind === 'payment' && isSavingsProduct) {
+    // 납입일 알림: 돌아오는 회차에 내야 할 금액 (일정표의 '차기납입금액'과 같은 기준, 총 납입금 아님)
+    const period = product.paymentPeriod || '개월';
+    let amount = 0;
+    if (period === '주') amount = parseInt(product.weeklyPaymentAmount) || parseInt(product.depositAmount) || 0;
+    else if (period === '일') amount = parseInt(product.dailyPaymentAmount) || parseInt(product.depositAmount) || 0;
+    else amount = parseInt(product.monthlyPaymentAmount) || parseInt(product.depositAmount) || 0;
+    amountStr = new Intl.NumberFormat('ko-KR').format(amount) + '원';
+  } else if (product.type === '적금') {
     const amount = parseInt(product.monthlyPaymentAmount) || parseInt(product.depositAmount) || 0;
     amountStr = new Intl.NumberFormat('ko-KR').format(amount) + '원';
   } else {
@@ -27102,6 +26995,131 @@ function showDdayAlertModal(product, kind = 'payment') {
 }
 
 // D-day 알림 확인 및 표시
+// 📅 일정표와 알림이 함께 쓰는 납입 카드 생성 함수 (일정표 closure에서 분리, 로직 동일)
+function kkulGeneratePaymentDateCards(product, today, hideExpiredSchedule) {
+    // 적금이 아니면 원본 상품 그대로 반환 (카드 1개)
+    if ((product.productType || product.type) !== '적금') {
+      return [{ ...product, paymentType: 'maturity' }];
+    }
+
+    // 지난일정 보기 해제 시: 종료일이 어제 이전이면 상품 카드 전체(납입표 포함) 숨김
+    // 종료일 = 중도해지 상품은 중도해지일, 그 외는 이연만기일(없으면 원만기일)
+    const endRaw = product.status === '중도해지'
+      ? (product.earlyTerminationDate || product.extendedMaturityDate || product.maturityDate)
+      : (product.extendedMaturityDate || product.maturityDate);
+    const endDay = new Date(String(endRaw || '').replace(/\./g, '-'));
+    endDay.setHours(0, 0, 0, 0);
+    const todayStartForEnd = new Date();
+    todayStartForEnd.setHours(0, 0, 0, 0);
+    if (hideExpiredSchedule && !isNaN(endDay.getTime()) && endDay <= todayStartForEnd) return [];  // 당일 해지·만기도 지난 상품으로 숨김
+    // 중도해지 상품: 납입 회차 카드는 만들지 않고, 중도해지일에 해당하는 카드 한 장만 표시
+    if (product.status === '중도해지' && !isNaN(endDay.getTime())) {
+      return [{
+        ...product,
+        paymentType: 'scheduled',
+        scheduledPaymentDate: endDay,
+        paymentCycleNumber: null,
+        prepayRow: { name: '중도해지', count: '', amount: null, isMaturity: true, isTerminated: true }
+      }];
+    }
+
+    // 🟦 선납이연 적금: 월별 전개 대신 선납이연 납입표 행(납입1/납입2/납입3)마다 카드 생성
+    // 1-11 방식은 납입3 행이 없으므로 제외
+    if (product.paymentMethod === '선납이연') {
+      const prepayRows = Array.isArray(product.prepayTable) ? product.prepayTable : [];
+      const hideThirdRow = product.prepaymentType === '1-11';
+      // 회차 누적: 납입1 → 납입2 → 납입3 순으로 시작 회차 계산
+      let cumulativeNo = 0;
+      const numberedRows = prepayRows.map(r => {
+        const cnt = parseInt(String(r && r.count != null ? r.count : 0).replace(/,/g, '')) || 0;
+        const startNo = cumulativeNo + 1;
+        cumulativeNo += cnt;
+        return { ...r, cnt, startNo, endNo: cumulativeNo };
+      });
+      const totalNo = parseInt(product.paymentCycle) || cumulativeNo;
+      const prepayCards = numberedRows
+        .filter(r => r && r.date && !(hideThirdRow && r.name === '납입3'))
+        .map(r => {
+          const d = new Date(String(r.date).replace(/\./g, '-'));
+          d.setHours(0, 0, 0, 0);
+          return {
+            ...product,
+            paymentType: 'scheduled',
+            scheduledPaymentDate: d,
+            paymentCycleNumber: null,
+            prepayRow: { ...r, totalNo }
+          };
+        })
+        // 이미 납입된 행(당일 포함 과거)은 차기 일정에서 제외 (현재 납입액에는 포함)
+        .filter(card => {
+          const todayMidnight = new Date();
+          todayMidnight.setHours(0, 0, 0, 0);
+          return !isNaN(card.scheduledPaymentDate.getTime()) && (!hideExpiredSchedule || card.scheduledPaymentDate >= todayMidnight);
+        });
+      // 🟪 이연만기일 카드 추가 (회차 자리에 "만기", 금액 없음)
+      const finalMaturity = new Date(product.extendedMaturityDate || product.maturityDate);
+      if (!isNaN(finalMaturity.getTime())) {
+        finalMaturity.setHours(0, 0, 0, 0);
+        prepayCards.push({
+          ...product,
+          paymentType: 'scheduled',
+          scheduledPaymentDate: finalMaturity,
+          paymentCycleNumber: null,
+          prepayRow: { name: '만기', count: '', amount: null, isMaturity: true }
+        });
+      }
+      return prepayCards;
+    }
+
+    // 📌 1일 적금은 너무 방대하므로 리스트에서 제외 (사용자가 이미 알고 있음)
+    if ((product.paymentPeriod || '개월') === '일') {
+      return []; // 빈 배열 반환 → 리스트에 표시되지 않음
+    }
+
+    // 적금인 경우: 오늘부터 만기일까지의 모든 납입일별 카드 생성
+    let startDate = new Date(product.startDate || product.savedDate);
+    if (isNaN(startDate.getTime())) {
+      startDate = new Date(today);
+    }
+    startDate.setHours(0, 0, 0, 0);
+
+    const maturityDate = new Date(product.extendedMaturityDate || product.maturityDate);
+    maturityDate.setHours(0, 0, 0, 0);
+
+    const paymentPeriod = product.paymentPeriod || '개월';
+    const paymentCycleNum = parseInt(product.paymentCycle || 1) || 1;
+
+    const paymentCards = [];
+    let currentPaymentDate = new Date(startDate);
+    let cycleCount = 1;
+
+    // 오늘부터 시작하여 각 납입일별 카드 생성
+    while (currentPaymentDate <= maturityDate && cycleCount <= paymentCycleNum) {
+      // 오늘 이후의 납입일만 포함
+      if (!hideExpiredSchedule || currentPaymentDate >= today) {
+        paymentCards.push({
+          ...product,
+          paymentType: 'scheduled',
+          scheduledPaymentDate: new Date(currentPaymentDate), // 이 납입일의 날짜
+          paymentCycleNumber: cycleCount // 몇 회차인지
+        });
+      }
+
+      // 다음 납입일 계산
+      if (paymentPeriod === '일') {
+        currentPaymentDate.setDate(currentPaymentDate.getDate() + 1);
+      } else if (paymentPeriod === '주') {
+        currentPaymentDate.setDate(currentPaymentDate.getDate() + 7);
+      } else if (paymentPeriod === '개월') {
+        currentPaymentDate.setMonth(currentPaymentDate.getMonth() + 1);
+      }
+
+      cycleCount++;
+    }
+
+    return paymentCards;
+}
+
 function checkAndShowDdayAlert() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -27111,51 +27129,21 @@ function checkAndShowDdayAlert() {
   // 알림은 '상품·구분별'로 하루 한 번만 뜸 (하루 전체 한 번 방식이면 먼저 뜬 알림 때문에 나중 알림이 막힘)
   const alertedPrefix = 'ddayAlerted_' + dateStr + '_';
   const alertKeyOf = function (product, kind) {
-    return alertedPrefix + kind + '_' + [product.id || '', product.product || product.productName || '', product.bank || product.bankName || '', product.startDate || product.savedDate || '', product.maturityDate || '', product.amount || ''].join('|');
+    const cardPart = (kind === 'payment' && product.scheduledPaymentDate) ? [new Date(product.scheduledPaymentDate).getTime(), product.paymentCycleNumber || '', product.prepayRow ? (product.prepayRow.startNo || product.prepayRow.name || '') : ''].join('|') : '';
+    return alertedPrefix + kind + '_' + [product.id || '', product.product || product.productName || '', product.bank || product.bankName || '', product.startDate || product.savedDate || '', product.maturityDate || '', product.amount || '', cardPart].join('|');
   };
 
   // 납입일(scheduledPaymentDate)과 만기일을 각각 독립적으로 D-9 ~ D-0 판단
   let ddayAlerts = [];
 
-  // 적금 다음 납입일 (일정표와 같은 규칙: 시작일 + 경과 회차 + 1회차, 주기는 일·주·개월)
-  function ddayNextSavingsPaymentDate(product) {
-    if (product.scheduledPaymentDate) {
-      const d = new Date(product.scheduledPaymentDate); d.setHours(0, 0, 0, 0); return d;
-    }
-    const type = product.productType || product.type || (String(product.product || '').includes('적금') ? '적금' : '예금');
-    if (type !== '적금') return null;
-    let startDate = new Date(product.startDate || product.savedDate);
-    if (isNaN(startDate.getTime())) return null;
-    startDate.setHours(0, 0, 0, 0);
-    const period = product.paymentPeriod || '개월';
-    const elapsedMs = today - startDate;
-    const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
-    let elapsedCycles = 0;
-    if (period === '일') elapsedCycles = elapsedDays;
-    else if (period === '주') elapsedCycles = Math.floor(elapsedDays / 7);
-    else {
-      let months = 0; const tmp = new Date(startDate);
-      while (true) { const nm = new Date(tmp); nm.setMonth(nm.getMonth() + 1); if (nm <= today) { months++; tmp.setMonth(tmp.getMonth() + 1); } else break; }
-      elapsedCycles = months;
-    }
-    const next = elapsedCycles + 1;
-    const pd = new Date(startDate);
-    if (period === '일') pd.setDate(pd.getDate() + next);
-    else if (period === '주') pd.setDate(pd.getDate() + next * 7);
-    else pd.setMonth(pd.getMonth() + next);
-    pd.setHours(0, 0, 0, 0);
-    return pd;
-  }
-
+  const hideExpiredForAlert = !(document.getElementById('interestHideExpiredCheckbox') && document.getElementById('interestHideExpiredCheckbox').checked);
   for (let product of products) {
-    // 납입 알림: D-9 ~ D-0 (적금 다음 납입일)
-    const payDate = ddayNextSavingsPaymentDate(product);
-    if (payDate) {
-      const payDays = Math.ceil((payDate - today) / (1000 * 60 * 60 * 24));
-      if (payDays >= 0 && payDays <= 9) {
-        ddayAlerts.push({ product: Object.assign({}, product, { scheduledPaymentDate: payDate }), kind: 'payment' });
-      }
-    }
+    // 납입 알림: D-9 ~ D-0 — 일정표와 같은 생성 함수가 만든 카드(날짜·회차·금액) 그대로 사용
+    kkulGeneratePaymentDateCards(product, today, hideExpiredForAlert).forEach(function (card) {
+      if (!card.scheduledPaymentDate || (card.prepayRow && (card.prepayRow.isMaturity || card.prepayRow.isTerminated))) return;
+      const days = Math.ceil((card.scheduledPaymentDate - today) / (1000 * 60 * 60 * 24));
+      if (days >= 0 && days <= 9) ddayAlerts.push({ product: card, kind: 'payment' });
+    });
     // 만기 알림: D-9 ~ D-0
     const matDate = new Date(product.extendedMaturityDate || product.maturityDate);
     matDate.setHours(0, 0, 0, 0);
