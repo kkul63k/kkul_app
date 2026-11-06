@@ -3922,7 +3922,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
             ev.forEach(function (e) { rs.realized += e.realized; rs.basis += e.basis; rs.dividend += e.dividend; rs.fee += e.fee; rs.tax += e.tax; });
             var rate = rs.basis > 0 ? (rs.realized / rs.basis) * 100 : 0;
             var total = rs.realized + rs.dividend;
-            var status = p.holding ? '<span class="badge" style="background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="background-color:#888888; color:#FFFFFF;">정리 완료</span>';
+            var status = p.holding ? '<span class="badge" style="background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="background-color:#888888; color:#FFFFFF;">정리완료</span>';
             var holdBody = row('보유수량', fmt(p.qty) + '주') +
               row('평균단가', p.holding ? won(p.avgPrice) : '-') +
               row('매수금액(보유분)', p.holding ? won(p.cost) : '-') +
@@ -4370,7 +4370,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
             box.innerHTML = '<div class="summary-card" style="margin-top:0 !important; margin-bottom:0 !important;">' +
               '<div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">' +
               '<div style="display:flex; align-items:center; gap:8px; min-width:0;"><span class="badge group-badge" data-group="' + key.group + '">' + key.group + '</span><div style="font-size:17px; font-weight:700; color:#1A1A1A;">' + name + '<br><span style="font-size:16px; font-weight:500; color:#555555;">(' + key.code + ')</span></div></div>' +
-              (pos && pos.holding ? '<span class="badge" style="background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="background-color:#888888; color:#FFFFFF;">정리 완료</span>') + '</div>' +
+              (pos && pos.holding ? '<span class="badge" style="background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="background-color:#888888; color:#FFFFFF;">정리완료</span>') + '</div>' +
               detailCards + '</div>' + tradeCards;
             // 체결 수정 후 돌아왔을 때: 방금 수정한 체결 카드 위치로 스크롤
             if (window.stockScrollToSelected) {
