@@ -27914,8 +27914,20 @@ function memoSetFilter(c) {
   memoRenderAll();
 }
 
+// 분류별 번호를 1번부터 다시 빈틈없이 맞춤 (삭제로 생긴 빈 번호 제거)
+function memoRenumber() {
+  const list = memoLoad();
+  let changed = false;
+  MEMO_CATS.forEach(function (c) {
+    list.filter(x => x.cat === c.id)
+      .sort((a, b) => (a.seq || 0) - (b.seq || 0))
+      .forEach(function (it, i) { if (it.seq !== i + 1) { it.seq = i + 1; changed = true; } });
+  });
+  if (changed) memoSave(list);
+}
 function memoRenderAll() {
   memoMigrate();
+  try { memoRenumber(); } catch (e) { }
   memoEnsureSeq();
   const chipBox = document.getElementById('memoChips');
   const box = document.getElementById('memoCardList');
