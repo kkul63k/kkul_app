@@ -27922,13 +27922,13 @@ function memoRenderAll() {
   }
   box.innerHTML = shown.map(function (m) {
     return '<div class="summary-card" onclick="memoOpenDetail(\'' + m.id + '\')" style="margin: 0 !important; padding: 12px 14px !important; box-sizing: border-box; border: 1px solid #E0E0E0 !important; background-color: #FFFFFF; box-shadow: var(--shadow-card); cursor: pointer;">'
-      + '<div style="margin: 0 -5px; padding: 7px 5px 9px; box-sizing: border-box; border: 1px solid #00A8A8; border-radius: 12px;">'
+      + '<div style="margin: 0 -5px; padding: 7px 5px 9px; box-sizing: border-box; border: 1px solid #00A8A8; border-radius: 12px; background-color: #FFFCF7;">'
       + '<div style="display: flex; align-items: center; gap: 8px;">'
-      + '<span style="font-size: 14px; font-weight: 700; color: #FF00FF; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + memoCatLabel(m.cat) + '</span>'
+      + '<span style="font-size: 15px; font-weight: 700; color: #FF00FF; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + memoCatLabel(m.cat) + '</span>'
       + '<span style="margin-left: auto; font-size: 13px; font-weight: 700; color: #00A8A8; white-space: nowrap;">' + memoCatLabel(m.cat) + ' ' + (m.seq || 0) + '</span>'
       + '</div>'
       + '<div style="margin-top: 3px; padding: 6px 0; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; font-size: 14px; font-weight: 700; color: #000000; word-break: break-all; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + memoEsc(m.title) + '</div>'
-      + '<div style="margin-top: 8px; font-size: 14px; font-weight: 400; line-height: 17px; color: #000000; text-align: left; white-space: pre-wrap; word-break: break-all; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden;">' + memoEsc(m.body) + '</div>'
+      + '<div style="margin-top: 8px; font-size: 14px; font-weight: 400; line-height: 18px; color: #000000; text-align: left; white-space: pre-wrap; word-break: break-all; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden;">' + memoEsc(m.body) + '</div>'
       + '<div style="margin-top: 0; text-align: right;"><button type="button" onclick="event.stopPropagation(); memoOpenDetail(\'' + m.id + '\')" style="height: 17px; min-width: 58px; padding: 0 8px; border-radius: 30px; font-size: 9px; font-weight: 700; line-height: 15px; cursor: pointer; background-color: #FFF30F; border: 1px solid #000000; color: #000000;">더보기</button></div>'
       + '</div>'
       + '</div>';
@@ -27979,7 +27979,7 @@ function memoOpenCatManage() {
       + '</span></div>';
   }).join('');
   const body = rows
-    ? '<div style="margin: 0 -6px; padding: 7px 5px 12px; box-sizing: border-box; border: 1px solid #00A8A8; border-radius: 12px;">' + rows + '</div>'
+    ? '<div style="margin: 0 -6px; padding: 7px 5px 12px; box-sizing: border-box; border: 1px solid #00A8A8; border-radius: 12px; background-color: #FFFCF7;">' + rows + '</div>'
     : '<div style="text-align: center; color: #666; font-size: 14px; padding: 24px 0;">분류가 없습니다.</div>';
   const footer = '<button type="button" class="honeypot-button-save" style="' + MEMO_BTN_STYLE + '" onclick="memoOpenCatAdd()">추가</button>'
     + '<button type="button" class="honeypot-button-cancel" style="' + MEMO_BTN_STYLE + '" onclick="memoCloseCatManage()">닫기</button>';
@@ -28052,11 +28052,11 @@ function memoFormHtml(cat, title, body) {
   }).join('');
   return '<div style="margin: 0 -6px; padding: 7px 0 12px; box-sizing: border-box;">'
     + '<div class="form-group"><label class="form-label">분류</label>'
-    + '<select class="form-select" id="memoCatInput" style="height: 40px !important; padding-left: 5px !important;">' + opts + '</select></div>'
+    + '<select class="form-select" id="memoCatInput" style="height: 40px !important; padding-left: 5px !important; font-size: 14px !important;">' + opts + '</select></div>'
     + '<div class="form-group"><label class="form-label">제목</label>'
-    + '<input type="text" class="form-input" id="memoTitleInput" style="padding-left: 5px !important; padding-right: 5px !important;" value="' + memoEsc(title) + '" placeholder="예) 가입 조건"></div>'
+    + '<input type="text" class="form-input" id="memoTitleInput" style="padding-left: 5px !important; padding-right: 5px !important; font-size: 14px !important;" value="' + memoEsc(title) + '" placeholder="예) 가입 조건"></div>'
     + '<div class="form-group"><label class="form-label">내용</label>'
-    + '<textarea class="form-input" id="memoBodyInput" style="resize: none; overflow: hidden; white-space: pre-wrap; text-align: left; line-height: 1.4; min-height: 120px; padding-left: 5px !important; padding-right: 5px !important;" placeholder="내용을 입력하세요">' + memoEsc(body) + '</textarea></div></div>';
+    + '<textarea class="form-input" id="memoBodyInput" style="resize: none; overflow: hidden; white-space: pre-wrap; text-align: left; font-size: 14px; line-height: 1.4; min-height: 120px; padding-left: 5px !important; padding-right: 5px !important;" placeholder="내용을 입력하세요">' + memoEsc(body) + '</textarea></div></div>';
 }
 function memoReadForm() {
   return {
@@ -28087,7 +28087,7 @@ function memoOpenDetail(id) {
   const m = memoLoad().find(x => x.id === id);
   if (!m) return;
   const label = memoCatLabel(m.cat);
-  const body = '<div style="margin: 0 -6px; padding: 7px 5px 12px; box-sizing: border-box; border: 1px solid #00A8A8; border-radius: 12px;">'
+  const body = '<div style="margin: 0 -6px; padding: 7px 5px 12px; box-sizing: border-box; border: 1px solid #00A8A8; border-radius: 12px; background-color: #FFFCF7;">'
     + '<div style="display: flex; align-items: center; gap: 8px;">'
     + '<span style="font-size: 15px; font-weight: 700; color: #FF00FF; white-space: nowrap;">' + label + '</span>'
     + '<span style="margin-left: auto; font-size: 13px; font-weight: 700; color: #00A8A8; white-space: nowrap;">' + label + ' ' + memoNumber(id) + '</span></div>'
