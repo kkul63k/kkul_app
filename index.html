@@ -27021,7 +27021,8 @@ function showDdayAlertModal(product, kind = 'payment') {
   }
 
   // 모달 HTML 생성
-  const modalId = 'ddayAlertModal_' + kind + '_' + product.id;
+  window.__ddayModalSeq = (window.__ddayModalSeq || 0) + 1;
+  const modalId = 'ddayAlertModal_' + kind + '_' + (product.id || '') + '_' + window.__ddayModalSeq;
   const modalHTML = `
     <div id="${modalId}" style="
       position: fixed;
@@ -27107,18 +27108,55 @@ function checkAndShowDdayAlert() {
 
   // 오늘 날짜 기반 localStorage 키
   const dateStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-  const alertedKey = 'ddayAlerted_' + dateStr;
-
-  // 이미 알림을 띄웠으면 스킵
-  if (localStorage.getItem(alertedKey)) {
-    console.log('✅ 오늘의 D-day 알림을 이미 확인했습니다.');
-    return;
-  }
+  // 알림은 '상품·구분별'로 하루 한 번만 뜸 (하루 전체 한 번 방식이면 먼저 뜬 알림 때문에 나중 알림이 막힘)
+  const alertedPrefix = 'ddayAlerted_' + dateStr + '_';
+  const alertKeyOf = function (product, kind) {
+    return alertedPrefix + kind + '_' + [product.id || '', product.product || product.productName || '', product.bank || product.bankName || '', product.startDate || product.savedDate || '', product.maturityDate || '', product.amount || ''].join('|');
+  };
 
   // 납입일(scheduledPaymentDate)과 만기일을 각각 독립적으로 D-9 ~ D-0 판단
   let ddayAlerts = [];
 
+  // 적금 다음 납입일 (일정표와 같은 규칙: 시작일 + 경과 회차 + 1회차, 주기는 일·주·개월)
+  function ddayNextSavingsPaymentDate(product) {
+    if (product.scheduledPaymentDate) {
+      const d = new Date(product.scheduledPaymentDate); d.setHours(0, 0, 0, 0); return d;
+    }
+    const type = product.productType || product.type || (String(product.product || '').includes('적금') ? '적금' : '예금');
+    if (type !== '적금') return null;
+    let startDate = new Date(product.startDate || product.savedDate);
+    if (isNaN(startDate.getTime())) return null;
+    startDate.setHours(0, 0, 0, 0);
+    const period = product.paymentPeriod || '개월';
+    const elapsedMs = today - startDate;
+    const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
+    let elapsedCycles = 0;
+    if (period === '일') elapsedCycles = elapsedDays;
+    else if (period === '주') elapsedCycles = Math.floor(elapsedDays / 7);
+    else {
+      let months = 0; const tmp = new Date(startDate);
+      while (true) { const nm = new Date(tmp); nm.setMonth(nm.getMonth() + 1); if (nm <= today) { months++; tmp.setMonth(tmp.getMonth() + 1); } else break; }
+      elapsedCycles = months;
+    }
+    const next = elapsedCycles + 1;
+    const pd = new Date(startDate);
+    if (period === '일') pd.setDate(pd.getDate() + next);
+    else if (period === '주') pd.setDate(pd.getDate() + next * 7);
+    else pd.setMonth(pd.getMonth() + next);
+    pd.setHours(0, 0, 0, 0);
+    return pd;
+  }
+
   for (let product of products) {
+    // 납입 알림: D-9 ~ D-0 (적금 다음 납입일)
+    const payDate = ddayNextSavingsPaymentDate(product);
+    if (payDate) {
+      const payDays = Math.ceil((payDate - today) / (1000 * 60 * 60 * 24));
+      if (payDays >= 0 && payDays <= 9) {
+        ddayAlerts.push({ product: Object.assign({}, product, { scheduledPaymentDate: payDate }), kind: 'payment' });
+      }
+    }
+    // 만기 알림: D-9 ~ D-0
     const matDate = new Date(product.extendedMaturityDate || product.maturityDate);
     matDate.setHours(0, 0, 0, 0);
     const matDays = Math.ceil((matDate - today) / (1000 * 60 * 60 * 24));
@@ -27128,12 +27166,17 @@ function checkAndShowDdayAlert() {
   }
 
   // 해당되는 모든 상품·구분에 대해 알림 표시
+  // 오늘 이미 띄운 항목은 제외
+  ddayAlerts = ddayAlerts.filter(function ({ product, kind }) {
+    try { return !localStorage.getItem(alertKeyOf(product, kind)); } catch (e) { return true; }
+  });
+
   if (ddayAlerts.length > 0) {
     console.log(`🔔 D-day 알림 ${ddayAlerts.length}건 발견`);
-    ddayAlerts.forEach(({ product, kind }) => showDdayAlertModal(product, kind));
-
-    // localStorage에 알림 표시 플래그 저장
-    localStorage.setItem(alertedKey, 'true');
+    ddayAlerts.forEach(({ product, kind }) => {
+      showDdayAlertModal(product, kind);
+      try { localStorage.setItem(alertKeyOf(product, kind), 'true'); } catch (e) { }
+    });
   } else {
     console.log('📭 D-day 알림 대상 상품 없음');
   }
