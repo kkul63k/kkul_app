@@ -3922,7 +3922,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
             ev.forEach(function (e) { rs.realized += e.realized; rs.basis += e.basis; rs.dividend += e.dividend; rs.fee += e.fee; rs.tax += e.tax; });
             var rate = rs.basis > 0 ? (rs.realized / rs.basis) * 100 : 0;
             var total = rs.realized + rs.dividend;
-            var status = p.holding ? '<span class="badge" style="background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="background-color:#888888; color:#FFFFFF;">정리완료</span>';
+            var status = p.holding ? '<span class="badge" style="flex-shrink:0; width:42px; min-width:42px; max-width:42px; background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="flex-shrink:0; width:42px; min-width:42px; max-width:42px; background-color:#888888; color:#FFFFFF;">정리완료</span>';
             var holdBody = row('보유수량', fmt(p.qty) + '주') +
               row('평균단가', p.holding ? won(p.avgPrice) : '-') +
               row('매수금액(보유분)', p.holding ? won(p.cost) : '-') +
@@ -3961,7 +3961,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
               row('평가금액', valAmt !== null ? won(valAmt) : NA),
               row('평가손익', valPL !== null ? pl(valPL) : NA, valPL !== null ? plColor(valPL) : undefined),
               row('평가수익률', valPct !== null ? pct(valPct) : NA, valPct !== null ? plColor(valPct) : undefined)];
-            var listBody = sect([row('보유수량', fmt(p.qty) + '주'), row('평균단가', p.holding ? won(p.avgPrice) : '-')].concat(curRows), 12) +
+            var listBody = sect([row('보유수량', fmt(p.qty) + '주'), row('평균단가', p.holding ? won(p.avgPrice) : '-')].concat(curRows), 0) +
               sect([row('매수금액(보유분)', p.holding ? won(p.cost) : '-')].concat(evalRowsArr), 20) +
               sect([row('실현손익', pl(rs.realized), plColor(rs.realized)),
                 row('실현수익률', pct(rate), plColor(rate)),
@@ -3973,8 +3973,11 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
                 row('최초 체결일', p.firstDate || '-'),
                 row('최근 체결일', p.lastDate || '-')], 20);
             return '<div class="stock-sub-card" data-group="' + p.group + '" data-code="' + p.stockCode + '" onclick="openStockDetailFromCard(this)" style="background-color:#FFFFFF; border:1px solid #C5E5EB; border-radius:12px; box-shadow:none; padding:12px 14px; margin-top:20px; cursor:pointer;">' +
-              '<div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">' +
-              '<div style="display:flex; align-items:center; gap:8px; min-width:0;"><span class="badge group-badge" data-group="' + p.group + '">' + p.group + '</span><div style="font-size:17px; font-weight:700; color:#1A1A1A;">' + p.stockName + '<span style="font-size:16px; font-weight:500; color:#555555;">(' + p.stockCode + ')</span></div></div>' + status + '</div>' +
+              '<div style="display:flex; align-items:center; gap:5px;">' +
+              '<span class="badge group-badge" data-group="' + p.group + '" style="flex-shrink:0;">' + p.group + '</span>' +
+              '<div style="flex:1; min-width:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#1A1A1A;"><span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + p.stockName + '</span></div>' +
+              status + '</div>' +
+              '<div style="margin:-1px 0 0 0; font-size:13.16px; font-weight:500; color:#555555; line-height:normal;">(' + p.stockCode + ')</div>' +
               listBody +
               '</div>';
           };
@@ -4354,7 +4357,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
               row('평가손익', dValPL !== null ? pl(dValPL) : dNA, dValPL !== null ? plColor(dValPL) : undefined),
               row('평가수익률', dValPct !== null ? dPct(dValPct) : dNA, dValPct !== null ? plColor(dValPct) : undefined)];
             var detailCards = pos ? (
-              dSect([row('보유수량', fmt(dp.qty) + '주'), row('평균단가', dp.holding ? fmt(dp.avgPrice) : '-')].concat(dCurRows), 12) +
+              dSect([row('보유수량', fmt(dp.qty) + '주'), row('평균단가', dp.holding ? fmt(dp.avgPrice) : '-')].concat(dCurRows), 0) +
               dSect([row('매수금액(보유분)', dp.holding ? fmt(dp.cost) : '-')].concat(dEvalArr), 20) +
               dSect([row('실현손익', pl(rs.realized), plColor(rs.realized)),
                 row('실현수익률', dPct(dRate), plColor(dRate)),
@@ -4368,10 +4371,12 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
             ) : '';
 
             box.innerHTML = '<div class="summary-card" style="margin-top:0 !important; margin-bottom:0 !important;">' +
-              '<div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">' +
-              '<div style="display:flex; align-items:center; gap:8px; min-width:0;"><span class="badge group-badge" data-group="' + key.group + '">' + key.group + '</span><div style="font-size:17px; font-weight:700; color:#1A1A1A;">' + name + '<br><span style="font-size:16px; font-weight:500; color:#555555;">(' + key.code + ')</span></div></div>' +
-              (pos && pos.holding ? '<span class="badge" style="background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="background-color:#888888; color:#FFFFFF;">정리완료</span>') + '</div>' +
-              detailCards + '</div>' + tradeCards;
+              '<div style="display:flex; align-items:center; gap:5px;">' +
+              '<span class="badge group-badge" data-group="' + key.group + '" style="flex-shrink:0;">' + key.group + '</span>' +
+              '<div style="flex:1; min-width:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#1A1A1A;"><span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + name + '</span></div>' +
+              (pos && pos.holding ? '<span class="badge" style="flex-shrink:0; width:42px; min-width:42px; max-width:42px; background-color:#00A8A8; color:#FFFFFF;">보유중</span>' : '<span class="badge" style="flex-shrink:0; width:42px; min-width:42px; max-width:42px; background-color:#888888; color:#FFFFFF;">정리완료</span>') + '</div>' +
+              '<div style="margin:-1px 0 0 0; font-size:13.16px; font-weight:500; color:#555555; line-height:normal;">(' + key.code + ')</div>' +
+              detailCards + '</div>' + tradeCards;              detailCards + '</div>' + tradeCards;
             // 체결 수정 후 돌아왔을 때: 방금 수정한 체결 카드 위치로 스크롤
             if (window.stockScrollToSelected) {
               window.stockScrollToSelected = false;
@@ -4407,7 +4412,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
               window.stockSelectedIndex = null;
               showNotification('✓ 삭제되었습니다', 2000, 'delete');
               var left = cur.filter(function (t) { return stockKeyMatch(t, window.stockDetailKey); }).length;
-              if (left === 0) { window.stockDetailKey = null; navigateTo('stock-list-page'); }
+              if (left === 0) { window.stockDetailKey = null; kkulStockDetailToList(); }
               else renderStockDetail();
             }, null, '삭제', '#FF0000');
           }
@@ -4416,6 +4421,14 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
           function handleStockDetailClose() {
             var h = (typeof pageHistory !== 'undefined' && pageHistory) ? pageHistory : [];
             if (h.length > 1 && h[h.length - 2] === 'stock-list-page') { goBack(); return; }
+            kkulStockDetailToList();
+          }
+          // 상세에서 목록으로 돌아갈 때: 목록 바로 위에 상세 기록이 남지 않도록 정리 (목록 닫기 때 상세가 다시 뜨는 것 방지)
+          function kkulStockDetailToList() {
+            var h = pageHistory;
+            var idx = h.lastIndexOf('stock-list-page');
+            if (idx !== -1) { h.splice(idx + 1); }
+            else if (h[h.length - 1] === 'stock-detail-page') { h.pop(); }
             navigateTo('stock-list-page');
           }
 
