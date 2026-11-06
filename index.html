@@ -27960,7 +27960,7 @@ function memoRenderAll() {
       + '<span style="font-size: 15px; font-weight: 700; color: #FF00FF; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + memoCatLabel(m.cat) + '</span>'
       + '<span style="margin-left: auto; font-size: 13px; font-weight: 700; color: #00A8A8; white-space: nowrap;">' + memoCatLabel(m.cat) + ' ' + (m.seq || 0) + '</span>'
       + '</div>'
-      + '<div style="margin-top: 3px; padding: 6px 0; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; font-size: 14px; font-weight: 700; color: #000000; word-break: break-all; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + memoEsc(m.title) + '</div>'
+      + '<div style="margin-top: 3px; padding: 6px 0; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; font-size: 14px; font-weight: 700; color: #00A8A8; word-break: break-all; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + memoEsc(m.title) + '</div>'
       + '<div style="margin-top: 8px; font-size: 14px; font-weight: 400; line-height: 18px; color: #000000; text-align: left; white-space: pre-wrap; word-break: break-all; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden;">' + memoEsc(m.body) + '</div>'
       + '<div style="margin-top: 0; text-align: right;"><button type="button" onclick="event.stopPropagation(); memoOpenDetail(\'' + m.id + '\')" style="height: 17px; min-width: 58px; padding: 0 8px; border-radius: 30px; font-size: 9px; font-weight: 700; line-height: 15px; cursor: pointer; background-color: #FFF30F; border: 1px solid #000000; color: #000000;">더보기</button></div>'
       + '</div>'
@@ -28124,7 +28124,7 @@ function memoOpenDetail(id) {
     + '<div style="display: flex; align-items: center; gap: 8px;">'
     + '<span style="font-size: 15px; font-weight: 700; color: #FF00FF; white-space: nowrap;">' + label + '</span>'
     + '<span style="margin-left: auto; font-size: 13px; font-weight: 700; color: #00A8A8; white-space: nowrap;">' + label + ' ' + memoNumber(id) + '</span></div>'
-    + '<div style="margin-top: 5px; padding: 3px 0; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; font-size: 14px; font-weight: 700; color: #000000; word-break: break-all;">' + memoEsc(m.title) + '</div>'
+    + '<div style="margin-top: 5px; padding: 3px 0; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; font-size: 14px; font-weight: 700; color: #00A8A8; word-break: break-all;">' + memoEsc(m.title) + '</div>'
     + '<div style="margin-top: 10px; font-size: 14px; font-weight: 400; line-height: 20px; color: #000000; text-align: left; white-space: pre-wrap; word-break: break-all;">' + memoEsc(m.body) + '</div></div>';
   const footer = '<button type="button" class="honeypot-button-delete" style="' + MEMO_BTN_STYLE + '" onclick="memoConfirmDelete(\'' + id + '\')">삭제</button>'
     + '<button type="button" class="honeypot-button-save" style="' + MEMO_BTN_STYLE + '" onclick="memoOpenEdit(\'' + id + '\')">수정</button>'
