@@ -7777,7 +7777,8 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
 
           <!-- 두 번째: 10개 백업 저장 / 복구 -->
           <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center;" onclick="saveBackupToStorageManual()">💾 백업 저장(최근 10개)</button>
-          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="showBackupList()">🕘 백업 목록 복구(최근 10개)</button>
+          <button class="form-input" style="background-color: #E8F5E9; color: #2E7D32; cursor: pointer; font-weight: 700; width: 100%; display: flex; justify-content: flex-start; align-items: center; margin-top: 0;" onclick="toggleBackupFold()">🕘 백업 목록 복구(최근 10개)</button>
+          <div id="backupFold" style="display: none; flex-direction: column; gap: 10px; background-color: #FFFCF7; border: 1px solid #E0E0E0; border-radius: 8px; padding: 10px;"><div id="backupFoldContainer" style="display: flex; flex-direction: column; gap: 10px;"></div></div>
           <div style="border-top: 2px solid #FF0000; margin: 6px 0; padding: 0;"></div>
 
           <!-- 세 번째: 클립보드 복사 / 붙여넣기 복구 -->
@@ -7946,14 +7947,9 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
     window.__kkulHookInstalled = true;
     const origSet = Storage.prototype.setItem;
     const origRemove = Storage.prototype.removeItem;
-    Storage.prototype.setItem = function (k, v) {
-      origSet.call(this, k, v);
-      if (k !== 'kkul_backups' && typeof window.kkulScheduleAutoBackup === 'function') window.kkulScheduleAutoBackup();
-    };
-    Storage.prototype.removeItem = function (k) {
-      origRemove.call(this, k);
-      if (k !== 'kkul_backups' && typeof window.kkulScheduleAutoBackup === 'function') window.kkulScheduleAutoBackup();
-    };
+    // 저장 기록 자체로는 백업하지 않음 (입력 중 저장이 섞이지 않도록). 완료 안내(showNotification)가 뜰 때 백업함
+    Storage.prototype.setItem = function (k, v) { origSet.call(this, k, v); };
+    Storage.prototype.removeItem = function (k) { origRemove.call(this, k); };
   } catch (e) { }
 })();
 // 앱 오류를 화면 알림으로 표시 (휴대폰에서 원인 확인용)
@@ -26551,8 +26547,31 @@ function getBackupsFromStorage() {
 }
 
 // ✅ 백업 목록 모달 표시
+function toggleBackupFold() {
+  const fold = document.getElementById('backupFold');
+  if (!fold) return;
+  if (fold.style.display === 'flex') { fold.style.display = 'none'; return; }
+  showBackupList();
+}
 function showBackupList() {
   console.log('%c📋 showBackupList() 함수 시작', 'color: #FF9800; font-weight: bold; font-size: 14px;');
+  const foldBox = document.getElementById('backupFoldContainer');
+  const fold = document.getElementById('backupFold');
+  if (fold && foldBox) {
+    const list = getBackupsFromStorage().slice().reverse();
+    foldBox.innerHTML = list.length ? list.map(function (backup) {
+      return '<div style="background-color: #FFFFFF; border: 1px solid #E0E0E0; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">'
+        + '<div style="flex: 1; min-width: 0;"><div style="font-weight: 600; color: #333; font-size: 14px; white-space: nowrap;">📅 ' + (function () { const d = new Date(backup.timestamp); return isNaN(d) ? backup.dateDisplay : d.toLocaleDateString('ko-KR'); })() + '</div>'
+        + '<div style="font-weight: 600; color: #333; font-size: 14px; margin-top: 2px;">' + (function () { const d = new Date(backup.timestamp); return isNaN(d) ? '' : d.toLocaleTimeString('ko-KR'); })() + '</div>'
+        + '<div style="font-size: 12px; color: #999; margin-top: 4px;">상품: ' + (backup.data && backup.data.products ? backup.data.products.length : 0) + '개</div></div>'
+        + '<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0;">'
+        + '<button onclick="loadBackupFromStorage(\'' + backup.timestamp + '\')" style="background-color: #4CAF50; color: white; border: none; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-weight: 600; font-size: 12px;">복구</button>'
+        + '<button onclick="deleteBackupFromStorage(\'' + backup.timestamp + '\')" style="background-color: #FF0000; color: white; border: none; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-weight: 600; font-size: 12px;">삭제</button>'
+        + '</div></div>';
+    }).join('') : '<p style="text-align: center; color: #999; padding: 12px 0; margin: 0;">저장된 백업이 없습니다.</p>';
+    fold.style.display = 'flex';
+    return;
+  }
 
   const backups = getBackupsFromStorage();
   const modal = document.getElementById('backupListModal');
@@ -26562,6 +26581,8 @@ function showBackupList() {
     showNotification('❌ 모달 요소를 찾을 수 없습니다.');
     return;
   }
+  // 모달이 숨겨진 페이지(기본설정) 안에 있어서 열리지 않으므로, 화면 최상위(body)로 옮긴 뒤 연다
+  if (modal.parentElement !== document.body) document.body.appendChild(modal);
 
   if (backups.length === 0) {
     container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">저장된 백업이 없습니다.</p>';
@@ -28130,6 +28151,30 @@ function memoConfirmDelete(id) {
   }, function () { }, '삭제', '#FF0000');
 }
 
+// 완료 안내(추가·수정·삭제·저장 완료)가 뜨는 순간 자동 백업
+(function kkulBackupOnComplete() {
+  const orig = window.showNotification;
+  if (typeof orig !== 'function') return;
+  window.showNotification = function (msg) {
+    const r = orig.apply(this, arguments);
+    try {
+      const t = String(msg || '');
+      if (/완료|저장되었습니다|삭제되었습니다|추가되었습니다|수정되었습니다|변경되었습니다|확인되었습니다/.test(t) && !/백업/.test(t) && typeof window.kkulScheduleAutoBackup === 'function') window.kkulScheduleAutoBackup();
+    } catch (e) { }
+    return r;
+  };
+})();
+// 입력 중 화면 위치 고정: 내용 입력칸이 늘어나도 모달·화면의 스크롤 위치를 그대로 유지
+document.addEventListener('input', function (e) {
+  if (!e.target || e.target.id !== 'memoBodyInput') return;
+  const m = document.getElementById('cfModal');
+  if (!m) return;
+  const top = m.scrollTop, wy = window.scrollY;
+  requestAnimationFrame(function () {
+    if (m.scrollTop !== top) m.scrollTop = top;
+    if (window.scrollY !== wy) window.scrollTo(0, wy);
+  });
+});
 // 화면 준비가 끝난 뒤 한 번 옮김 (메뉴 화면을 열기 전에도 기존 메모가 보존되도록)
 try { memoMigrate(); } catch (e) { }
 </script>
