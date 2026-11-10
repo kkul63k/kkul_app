@@ -3999,7 +3999,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
           // 고정 순서: 본인 → 배우자 → 그 외(추가 등록 순서 유지)
           var stockRank = groupOrderRank(stockFieldsConfig && stockFieldsConfig.fields && stockFieldsConfig.fields.groupName && stockFieldsConfig.fields.groupName.items);
           Object.keys(groups).sort(function (a, b) { return stockRank(a) - stockRank(b); }).forEach(function (g) {
-            var list = groups[g].sort(function (a, b) { return a.stockName.localeCompare(b.stockName); });
+            var list = groups[g].sort(function (a, b) { if (!!a.holding !== !!b.holding) return a.holding ? -1 : 1; return String(b.lastDate || '').localeCompare(String(a.lastDate || '')) || a.stockName.localeCompare(b.stockName); });
             html += '<div class="summary-card" style="margin-top:20px !important; margin-bottom:0 !important;">' +
               '<div style="display:flex; justify-content:flex-start; align-items:center; gap:8px;"><div style="display:flex; align-items:center; gap:6px;"><span class="badge group-badge" data-group="' + g + '">' + g + '</span></div><div style="font-size:17px; font-weight:600; color:#00A8A8;">표출된 상품요약</div></div>' +
               summaryBody(sumOf(list)) +
@@ -4318,7 +4318,7 @@ input#dxTx1, input#dxTx2, input#sxTx1, input#sxTx2 { border-radius: 4px !importa
               if (t.memo) body += '<div style="display:flex; align-items:flex-start; gap:12px; padding:4px 0;"><span style="font-size:14px; font-weight:400; color:#666; flex-shrink:0;">메모</span><span style="flex:1; min-width:0; font-size:14px; font-weight:700; color:#000; text-align:left; white-space:pre-wrap; word-break:break-all;">' + cfEsc(t.memo) + '</span></div>';
               return '<div class="summary-card" style="margin-top:20px !important; margin-bottom:0 !important;">' + '<div class="stock-trade-card" data-index="' + r.i + '" onclick="selectStockTrade(this)" style="cursor:pointer; background-color:' + (isSel ? '#FFF4E5' : '#F5F5F5') + '; border:' + (isSel ? '3px solid #FF8C00' : '1px solid #E0E0E0') + '; border-radius:12px; box-shadow:none; padding:4px 12px 8px; margin-top:0;">' +
                 '<div style="font-size:16px; font-weight:700; padding-top:0; padding-bottom:9.6875px; color:#FF0000;">체결 ' + (n + 1) + ' · ' + t.tradeType + ' · ' + t.tradeDate + '</div>' + tradeBodyHTML(body, n) + '</div></div>';
-            }).join('');
+            }).reverse().join('');
 
             // 주식 목록카드와 같은 4개 중첩카드 (목록카드 내용을 그대로 복사)
             var dPct = function (n) { n = n || 0; return (n > 0 ? '+' : '') + n.toFixed(2) + '%'; };
