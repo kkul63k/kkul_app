@@ -9383,13 +9383,13 @@ function kyungFormBody() {
       f('평가년월', '<input class="form-input cf-month-field" id="kyungEvalYM" readonly placeholder="예) 2027년 12월" onclick="kyungOpenYM()" style="cursor:pointer;">')
     + f('평가등급', '<select class="form-input" id="kyungGrade" style="appearance: none; background-image: url(&#39;data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%2300A8A8%27%3e%3cpolygon points=%2712,15 6,9 18,9%27%3e%3c/polygon%3e%3c/svg%3e&#39;); background-repeat: no-repeat; background-position: right 8px center; background-size: 30px; padding-right: 44px;"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="기타">기타</option></select>'))
     + row(false,
-      f('자산총계' + WON, inp('예) 2345'))
-    + f('순자본비율' + PCT, inp('예) 11.05')))
+      f('자산총계' + WON, inp('예) 2345', 'text'))
+    + f('순자본비율' + PCT, inp('예) 11.05', 'text')))
     + row(false,
-      f('<span style="font-size:12px; letter-spacing:-1px;">순고정이하여신비율</span><span style="font-size:11px; letter-spacing:-1px;">(%)</span>', inp('예) 1.23'))
-    + f('총자산순이익율' + PCT, inp('예) 0.57')))
+      f('<span style="font-size:12px; letter-spacing:-1px;">순고정이하여신비율</span><span style="font-size:11px; letter-spacing:-1px;">(%)</span>', inp('예) 1.23', 'text'))
+    + f('총자산순이익율' + PCT, inp('예) 0.57', 'text')))
     + row(false,
-      f('유동성비율' + PCT, inp('예) 120.14'))
+      f('유동성비율' + PCT, inp('예) 120.14', 'text'))
     + f('지역명 ' + OPT, inp('예) 화성, 서울 광진구, ...')))
     + '</div>'
     + '<div style="margin-top:16.67px;"><div class="form-label">메모 <span style="font-size:12px; font-weight:400; color:#FF0000;">(필수아님)</span></div><textarea class="form-input" id="rtCond" rows="1" oninput="rtAutoH(this)" placeholder="예) 신규고객" style="resize:none; overflow:hidden; white-space:pre-wrap; line-height:1.4; min-height:40px;"></textarea></div>';
