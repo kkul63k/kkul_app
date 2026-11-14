@@ -27838,6 +27838,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return maxB < 0 ? null : (bt - maxB);
   }
   function fit() {
+    // 메모 수정·추가 창이 열려 있으면 자동 스크롤 조정을 하지 않음 (클릭만 해도 위로 움직이는 현상 방지)
+    if (document.getElementById('memoBodyInput')) return;
     var bars = Array.prototype.filter.call(document.querySelectorAll('div'), function (d) { return isBar(d) && d.getClientRects().length > 0; });
     bars.forEach(function (B) {
       var S = scrollerOf(B);
@@ -28229,6 +28231,27 @@ function memoConfirmDelete(id) {
     } catch (e) { }
     return r;
   };
+})();
+// 메모 내용 칸을 편집하는 동안: 화면이 혼자 위로 움직이지 않도록 자동 스크롤을 막음 (손으로 직접 미는 스크롤은 그대로 허용)
+(function memoNoAutoScroll() {
+  let lockOn = false, lockTop = 0, userAt = 0;
+  ['touchmove', 'wheel'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { if (e.target && e.target.closest && e.target.closest('#cfModal')) userAt = Date.now(); }, { capture: true, passive: true });
+  });
+  document.addEventListener('focusin', function (e) {
+    if (!e.target || e.target.id !== 'memoBodyInput') return;
+    const m = document.getElementById('cfModal'); if (!m) return;
+    lockOn = true; lockTop = m.scrollTop;
+  }, true);
+  document.addEventListener('focusout', function (e) {
+    if (e.target && e.target.id === 'memoBodyInput') lockOn = false;
+  }, true);
+  document.addEventListener('scroll', function (e) {
+    const m = e.target;
+    if (!lockOn || !m || m.id !== 'cfModal') return;
+    if (Date.now() - userAt < 500) { lockTop = m.scrollTop; return; }
+    if (m.scrollTop !== lockTop) m.scrollTop = lockTop;
+  }, true);
 })();
 // 화면 준비가 끝난 뒤 한 번 옮김 (메뉴 화면을 열기 전에도 기존 메모가 보존되도록)
 try { memoMigrate(); } catch (e) { }
