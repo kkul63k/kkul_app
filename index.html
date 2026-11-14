@@ -2,7 +2,7 @@
 <!-- saved from url=(0124)file:///C:/%EB%B3%B4%EA%B4%80/%EA%BF%80%EB%8B%A8%EC%A7%80_%EC%9E%90%EC%82%B0%EA%B4%80%EB%A6%AC_v1_04.html#calc-cashflow-page -->
 <html lang="ko" data-theme="light" style="--font-primary:var(--font-noto-sans);"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <title>꿀단지</title>
   <!-- 웹앱 설정: 홈 화면 바로가기를 주소창 없이 열기 -->
   <link rel="manifest" href="manifest.json">
@@ -28234,23 +28234,29 @@ function memoConfirmDelete(id) {
 })();
 // 메모 내용 칸을 편집하는 동안: 화면이 혼자 위로 움직이지 않도록 자동 스크롤을 막음 (손으로 직접 미는 스크롤은 그대로 허용)
 (function memoNoAutoScroll() {
-  let lockOn = false, lockTop = 0, userAt = 0;
+  // 내용 칸에 커서가 있는 동안, 매 화면 갱신마다 모달 위치를 원래 자리로 되돌림 (글자 입력·클릭에 따른 자동 스크롤 차단)
+  // 손가락 터치·휠로 직접 움직인 경우에는 그 위치를 새 기준으로 삼아 그대로 둠
+  let lockOn = false, lockTop = 0, userAt = 0, rafId = null;
   ['touchmove', 'wheel'].forEach(function (ev) {
     document.addEventListener(ev, function (e) { if (e.target && e.target.closest && e.target.closest('#cfModal')) userAt = Date.now(); }, { capture: true, passive: true });
   });
+  function tick() {
+    if (!lockOn) { rafId = null; return; }
+    const m = document.getElementById('cfModal');
+    if (m) {
+      if (Date.now() - userAt < 500) lockTop = m.scrollTop;
+      else if (m.scrollTop !== lockTop) m.scrollTop = lockTop;
+    }
+    rafId = requestAnimationFrame(tick);
+  }
   document.addEventListener('focusin', function (e) {
     if (!e.target || e.target.id !== 'memoBodyInput') return;
     const m = document.getElementById('cfModal'); if (!m) return;
     lockOn = true; lockTop = m.scrollTop;
+    if (rafId === null) rafId = requestAnimationFrame(tick);
   }, true);
   document.addEventListener('focusout', function (e) {
     if (e.target && e.target.id === 'memoBodyInput') lockOn = false;
-  }, true);
-  document.addEventListener('scroll', function (e) {
-    const m = e.target;
-    if (!lockOn || !m || m.id !== 'cfModal') return;
-    if (Date.now() - userAt < 500) { lockTop = m.scrollTop; return; }
-    if (m.scrollTop !== lockTop) m.scrollTop = lockTop;
   }, true);
 })();
 // 화면 준비가 끝난 뒤 한 번 옮김 (메뉴 화면을 열기 전에도 기존 메모가 보존되도록)
